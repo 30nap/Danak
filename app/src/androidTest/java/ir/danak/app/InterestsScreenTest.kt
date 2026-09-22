@@ -38,6 +38,7 @@ class InterestsScreenTest {
                     },
                     onContinue = {},
                     continueLabel = "ادامه",
+                    allowEmpty = false,
                     onBack = null,
                 )
             }
@@ -58,6 +59,7 @@ class InterestsScreenTest {
                     onToggle = { toggles += it },
                     onContinue = {},
                     continueLabel = "ادامه",
+                    allowEmpty = false,
                     onBack = null,
                 )
             }
@@ -67,5 +69,25 @@ class InterestsScreenTest {
         rule.onNodeWithText(Category.Science.label).performClick()
 
         assertEquals(listOf(Category.Science, Category.Science), toggles)
+    }
+
+    @Test
+    fun editingMayClearEveryTopic() {
+        rule.setContent {
+            DanakTheme {
+                InterestsScreen(
+                    selected = emptySet(),
+                    onToggle = {},
+                    onContinue = {},
+                    continueLabel = "ذخیره",
+                    allowEmpty = true,
+                    onBack = {},
+                )
+            }
+        }
+
+        rule.onNode(hasText("ذخیره")).assertIsEnabled()
+        rule.onNodeWithText("موضوعی انتخاب نشده؛ دانک‌های همهٔ موضوعات نمایش داده می‌شوند.")
+            .assertExists()
     }
 }

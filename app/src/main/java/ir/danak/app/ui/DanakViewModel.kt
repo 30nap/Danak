@@ -2,7 +2,14 @@ package ir.danak.app.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import ir.danak.app.data.DanakStore
 import ir.danak.app.data.MockDanaks
+import ir.danak.app.data.UserPrefs
+import ir.danak.app.data.danakDataStore
 import ir.danak.app.model.Category
 import ir.danak.app.model.Danak
 import ir.danak.app.model.ThemeMode
@@ -10,47 +17,95 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
+import kotlinx.coroutines.launch
 
 /**
- * The whole of Danak's state. V0 has one screen's worth of state per destination and no
- * persistence, so one ViewModel scoped to the activity is the right size — splitting it
- * would only add wiring.
+ * The whole of Danak's state. One ViewModel scoped to the activity: V0 has little state and
+ * every screen reads the same few values, so splitting it would only add wiring.
+ *
+ * State is loaded from [DanakStore] once at start-up and written back after every change.
+ * The UI waits for [DanakUiState.isLoaded] (behind the splash screen) so it never flashes
+ * onboarding for a returning user.
  */
-class DanakViewModel : ViewModel() {
+class DanakViewModel(private val store: DanakStore) : ViewModel() {
 
     private val _state = MutableStateFlow(DanakUiState())
     val state: StateFlow<DanakUiState> = _state.asStateFlow()
 
-    fun toggleInterest(category: Category) = _state.update { current ->
-        val next = LinkedHashSet(current.interests)
+    init {
+        viewModelScope.launch {
+            val prefs = store.read()
+            _state.update { it.copy(prefs = prefs, isLoaded = true) }
+        }
+    }
+
+    fun toggleInterest(category: Category) = edit { prefs ->
+        val next = LinkedHashSet(prefs.interests)
         if (!next.remove(category)) next += category
-        current.copy(interests = next)
+        prefs.copy(interests = next)
     }
 
-    fun confirmInterests() = _state.update { it.copy(hasChosenInterests = true) }
+    fun confirmInterests() = edit { it.copy(hasChosenInterests = true) }
 
-    fun toggleSaved(id: String) = _state.update { current ->
-        // LinkedHashSet: insertion order is what makes "most recently saved" meaningful.
-        val next = LinkedHashSet(current.savedIds)
-        if (!next.remove(id)) next += id
-        current.copy(savedIds = next)
+    fun toggleSaved(id: String) = edit { prefs ->
+        if (id in prefs.savedIds) {
+            prefs.copy(savedIds = prefs.savedIds - id)
+        } else {
+            prefs.copy(savedIds = prefs.savedIds + id)
+        }
     }
 
-    fun setThemeMode(mode: ThemeMode) = _state.update { it.copy(themeMode = mode) }
+    /**
+     * Removes [id] from saved and returns where it was, so an undo can put it back in the
+     * same place instead of promoting it to "most recent".
+     */
+    fun removeSaved(id: String): Int {
+        val index = _state.value.prefs.savedIds.indexOf(id)
+        if (index >= 0) edit { it.copy(savedIds = it.savedIds - id) }
+        return index
+    }
+
+    fun restoreSaved(id: String, index: Int) = edit { prefs ->
+        if (id in prefs.savedIds) return@edit prefs
+        val list = prefs.savedIds.toMutableList()
+        list.add(index.coerceIn(0, list.size), id)
+        prefs.copy(savedIds = list)
+    }
+
+    fun setThemeMode(mode: ThemeMode) = edit { it.copy(themeMode = mode) }
 
     fun danakById(id: String): Danak? = MockDanaks.all.firstOrNull { it.id == id }
+
+    private fun edit(transform: (UserPrefs) -> UserPrefs) {
+        val updated = _state.updateAndGet { it.copy(prefs = transform(it.prefs)) }.prefs
+        // Each write carries the full snapshot and DataStore applies edits in order, so the
+        // last change always wins on disk.
+        viewModelScope.launch { store.write(updated) }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                val app = requireNotNull(this[APPLICATION_KEY])
+                DanakViewModel(DanakStore(app.danakDataStore))
+            }
+        }
+    }
 }
 
 @Immutable
 data class DanakUiState(
-    val interests: Set<Category> = emptySet(),
-    val hasChosenInterests: Boolean = false,
-    val savedIds: Set<String> = emptySet(),
-    val themeMode: ThemeMode = ThemeMode.Dark,
+    val prefs: UserPrefs = UserPrefs(),
+    val isLoaded: Boolean = false,
 ) {
+    val interests: Set<Category> get() = prefs.interests
+    val hasChosenInterests: Boolean get() = prefs.hasChosenInterests
+    val themeMode: ThemeMode get() = prefs.themeMode
+
     /**
-     * The feed respects the chosen interests, but never goes empty: with nothing selected
-     * — or after the picker is reopened and cleared — every Danak is shown.
+     * The feed respects the chosen interests, but never goes empty: with nothing selected,
+     * every Danak is shown.
      *
      * Computed once per state instance so passing it to a composable does not defeat
      * recomposition skipping.
@@ -61,8 +116,8 @@ data class DanakUiState(
 
     /** Saved items, most recently saved first. */
     val saved: List<Danak> by lazy {
-        savedIds.reversed().mapNotNull { id -> MockDanaks.all.firstOrNull { it.id == id } }
+        prefs.savedIds.asReversed().mapNotNull { id -> MockDanaks.all.firstOrNull { it.id == id } }
     }
 
-    fun isSaved(id: String): Boolean = id in savedIds
+    fun isSaved(id: String): Boolean = id in prefs.savedIds
 }

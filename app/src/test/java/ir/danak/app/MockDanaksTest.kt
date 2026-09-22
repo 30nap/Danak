@@ -12,8 +12,14 @@ class MockDanaksTest {
     private val all = MockDanaks.all
 
     @Test
-    fun `ships at least twenty danaks`() {
-        assertTrue("expected 20+ danaks, found ${all.size}", all.size >= 20)
+    fun `ships at least thirty danaks`() {
+        assertTrue("expected 30+ danaks, found ${all.size}", all.size >= 30)
+    }
+
+    @Test
+    fun `every category has at least four danaks`() {
+        val perCategory = all.groupingBy { it.category }.eachCount()
+        Category.entries.forEach { assertTrue("$it has ${perCategory[it]}", (perCategory[it] ?: 0) >= 4) }
     }
 
     @Test

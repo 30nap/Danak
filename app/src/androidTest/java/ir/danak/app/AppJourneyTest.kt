@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -17,6 +18,7 @@ import ir.danak.app.data.MockDanaks
 import ir.danak.app.model.Category
 import org.junit.Assert.assertTrue
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -28,8 +30,10 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AppJourneyTest {
 
+    private val rule = createAndroidComposeRule<MainActivity>()
+
     @get:Rule
-    val rule = createAndroidComposeRule<MainActivity>()
+    val chain: RuleChain = RuleChain.outerRule(ClearAppStateRule()).around(rule)
 
     private val chosen = listOf(Category.Psychology, Category.Science, Category.History)
     private val expectedFeed = MockDanaks.all.filter { it.category in chosen }
@@ -44,6 +48,10 @@ class AppJourneyTest {
     }
 
     private fun onboarding() {
+        // The splash holds until saved state is read; wait for the first real frame.
+        rule.waitUntil(10_000) {
+            rule.onAllNodesWithText("به چه موضوعاتی علاقه داری؟").fetchSemanticsNodes().isNotEmpty()
+        }
         rule.onNodeWithText("به چه موضوعاتی علاقه داری؟").assertIsDisplayed()
         rule.onNodeWithText("ادامه").assertIsNotEnabled()
         UiAudit.screenshot(rule, "01_onboarding_empty")
@@ -115,7 +123,15 @@ class AppJourneyTest {
         UiAudit.screenshot(rule, "08_saved_list")
         UiAudit.auditScreen(rule, "saved")
 
-        rule.onNodeWithContentDescription("حذف «${first.title}» از ذخیره‌شده‌ها").performClick()
+        val remove = "حذف «${first.title}» از ذخیره‌شده‌ها"
+        rule.onNodeWithContentDescription(remove).performClick()
+        rule.onNodeWithText("از ذخیره‌شده‌ها حذف شد").assertIsDisplayed()
+        UiAudit.screenshot(rule, "09_saved_undo")
+
+        // Undo brings it back; removing again leaves the list empty.
+        rule.onNodeWithText("بازگرداندن").performClick()
+        rule.onNodeWithText(first.title).assertIsDisplayed()
+        rule.onNodeWithContentDescription(remove).performClick()
         rule.onNodeWithText("هنوز چیزی ذخیره نکرده‌ای").assertIsDisplayed()
         UiAudit.screenshot(rule, "09_saved_empty")
 
@@ -125,6 +141,11 @@ class AppJourneyTest {
     }
 
     private fun settingsAndTheme() {
+        // Move two pages in; changing interests below must bring the feed back to the start.
+        rule.onRoot().performTouchInput { swipeUp() }
+        rule.onRoot().performTouchInput { swipeUp() }
+        rule.onNodeWithText(expectedFeed[2].title).assertIsDisplayed()
+
         rule.onNodeWithContentDescription("تنظیمات").performClick()
         rule.onNodeWithText("تاریک").assertIsSelected()
         UiAudit.screenshot(rule, "10_settings_dark")
@@ -136,11 +157,18 @@ class AppJourneyTest {
 
         rule.onNodeWithText("موضوعات مورد علاقه").performClick()
         rule.onNodeWithText(chosen.first().label).assertIsSelected()
+        // Clearing every topic is allowed here and means "show everything".
+        chosen.forEach { rule.onNodeWithText(it.label).performClick() }
+        rule.onNodeWithText("موضوعی انتخاب نشده؛ دانک‌های همهٔ موضوعات نمایش داده می‌شوند.")
+            .assertIsDisplayed()
+        rule.onNodeWithText("ذخیره").assertIsEnabled()
         UiAudit.screenshot(rule, "12_edit_interests_light")
         rule.onNodeWithText("ذخیره").performClick()
+        rule.onNodeWithText("همهٔ موضوعات").assertIsDisplayed()
 
         rule.onNodeWithContentDescription("بازگشت").performClick()
-        rule.onNodeWithText(expectedFeed[0].title).assertIsDisplayed()
+        // New feed, back at the top — not left on page 2 of a list that no longer exists.
+        rule.onNodeWithText(MockDanaks.all[0].title).assertIsDisplayed()
         UiAudit.screenshot(rule, "13_feed_light")
         UiAudit.auditScreen(rule, "feed_light")
 

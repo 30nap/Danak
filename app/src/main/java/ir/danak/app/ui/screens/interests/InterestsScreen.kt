@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -45,8 +44,11 @@ import ir.danak.app.model.Category
 import ir.danak.app.ui.theme.PillShape
 
 /**
- * Shown once before the first feed, and reachable again from settings. No account, no
- * required answer beyond picking at least one topic.
+ * Shown once before the first feed, and reachable again from settings. No account.
+ *
+ * On first launch at least one topic is required, so the first feed is personal. When
+ * editing later, [allowEmpty] lets the user clear everything, which the feed reads as
+ * "show me all topics".
  */
 @Composable
 fun InterestsScreen(
@@ -54,6 +56,7 @@ fun InterestsScreen(
     onToggle: (Category) -> Unit,
     onContinue: () -> Unit,
     continueLabel: String,
+    allowEmpty: Boolean,
     onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
@@ -111,15 +114,25 @@ fun InterestsScreen(
             }
         }
 
-        Box(
+        Column(
             Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
                 .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            if (allowEmpty && selected.isEmpty()) {
+                Text(
+                    text = "موضوعی انتخاب نشده؛ دانک‌های همهٔ موضوعات نمایش داده می‌شوند.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
             Button(
                 onClick = onContinue,
-                enabled = selected.isNotEmpty(),
+                enabled = allowEmpty || selected.isNotEmpty(),
                 shape = PillShape,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

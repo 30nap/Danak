@@ -15,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ir.danak.app.BuildConfig
 import ir.danak.app.ui.screens.detail.DetailScreen
@@ -27,6 +27,9 @@ import ir.danak.app.ui.screens.interests.InterestsScreen
 import ir.danak.app.ui.screens.saved.SavedScreen
 import ir.danak.app.ui.screens.settings.SettingsScreen
 import ir.danak.app.ui.theme.DanakTheme
+import ir.danak.app.ui.theme.ImmersiveSurface
+import ir.danak.app.ui.theme.SystemBarsEffect
+import ir.danak.app.ui.theme.resolvesToDark
 
 private object Routes {
     const val ONBOARDING = "onboarding"
@@ -42,21 +45,32 @@ private object Routes {
 private const val TRANSITION_MS = 260
 
 @Composable
-fun DanakApp(viewModel: DanakViewModel = viewModel()) {
+fun DanakApp(viewModel: DanakViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     DanakTheme(themeMode = state.themeMode) {
         val navController = rememberNavController()
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val route = backStackEntry?.destination?.route
+        SystemBarsEffect(
+            darkBackground = route == Routes.FEED || route == Routes.DETAIL ||
+                state.themeMode.resolvesToDark(),
+        )
+
         Box(
             Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
         ) {
-            DanakNavHost(
-                navController = navController,
-                state = state,
-                viewModel = viewModel,
-            )
+            // The splash screen covers this frame; the graph is only built once we know
+            // whether this is a first launch.
+            if (state.isLoaded) {
+                DanakNavHost(
+                    navController = navController,
+                    state = state,
+                    viewModel = viewModel,
+                )
+            }
         }
     }
 }
@@ -89,19 +103,23 @@ private fun DanakNavHost(
                     }
                 },
                 continueLabel = "ادامه",
+                allowEmpty = false,
                 onBack = null,
             )
         }
 
         composable(Routes.FEED) {
-            FeedScreen(
-                danaks = state.feed,
-                isSaved = state::isSaved,
-                onToggleSave = viewModel::toggleSaved,
-                onOpenDetail = { id -> navController.navigate(Routes.detail(id)) },
-                onOpenSaved = { navController.navigate(Routes.SAVED) },
-                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-            )
+            ImmersiveSurface {
+                FeedScreen(
+                    danaks = state.feed,
+                    isSaved = state::isSaved,
+                    onToggleSave = viewModel::toggleSaved,
+                    onOpenDetail = { id -> navController.navigate(Routes.detail(id)) },
+                    onOpenSaved = { navController.navigate(Routes.SAVED) },
+                    onOpenSettings = { navController.navigate(Routes.SETTINGS) },
+                    onEditInterests = { navController.navigate(Routes.EDIT_INTERESTS) },
+                )
+            }
         }
 
         composable(
@@ -121,12 +139,14 @@ private fun DanakNavHost(
                 // The only way here is a stale id, so there is nothing to show.
                 LaunchedEffect(danakId) { navController.popBackStack() }
             } else {
-                DetailScreen(
-                    danak = danak,
-                    saved = state.isSaved(danak.id),
-                    onToggleSave = { viewModel.toggleSaved(danak.id) },
-                    onBack = { navController.popBackStack() },
-                )
+                ImmersiveSurface {
+                    DetailScreen(
+                        danak = danak,
+                        saved = state.isSaved(danak.id),
+                        onToggleSave = { viewModel.toggleSaved(danak.id) },
+                        onBack = { navController.popBackStack() },
+                    )
+                }
             }
         }
 
@@ -134,7 +154,8 @@ private fun DanakNavHost(
             SavedScreen(
                 saved = state.saved,
                 onOpen = { id -> navController.navigate(Routes.detail(id)) },
-                onRemove = viewModel::toggleSaved,
+                onRemove = viewModel::removeSaved,
+                onRestore = viewModel::restoreSaved,
                 onBack = { navController.popBackStack() },
             )
         }
@@ -156,6 +177,8 @@ private fun DanakNavHost(
                 onToggle = viewModel::toggleInterest,
                 onContinue = { navController.popBackStack() },
                 continueLabel = "ذخیره",
+                // Clearing every topic is a real choice here: it means "show me everything".
+                allowEmpty = true,
                 onBack = { navController.popBackStack() },
             )
         }

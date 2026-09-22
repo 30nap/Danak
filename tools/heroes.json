@@ -161,5 +161,58 @@
   "accent": "#B7C6D1",
   "seed": 803,
   "intensity": 0.85
+ },
+ {
+  "name": "hero_anchoring",
+  "motif": "anchor",
+  "accent": "#FFB278",
+  "seed": 104,
+  "warm": 0.1
+ },
+ {
+  "name": "hero_sound_space",
+  "motif": "sound_void",
+  "accent": "#9C8CFF",
+  "seed": 204
+ },
+ {
+  "name": "hero_gps",
+  "motif": "trilateration",
+  "accent": "#6FB8FF",
+  "seed": 304
+ },
+ {
+  "name": "hero_git",
+  "motif": "git_branches",
+  "accent": "#7BE0D6",
+  "seed": 404
+ },
+ {
+  "name": "hero_gresham",
+  "motif": "coins",
+  "accent": "#63D88F",
+  "seed": 504,
+  "intensity": 0.8
+ },
+ {
+  "name": "hero_cuneiform",
+  "motif": "cuneiform",
+  "accent": "#E08A8A",
+  "seed": 604,
+  "warm": 0.22
+ },
+ {
+  "name": "hero_pomodoro",
+  "motif": "pomodoro",
+  "accent": "#FFD36E",
+  "seed": 704,
+  "warm": 0.08,
+  "intensity": 0.8
+ },
+ {
+  "name": "hero_olbers",
+  "motif": "olbers",
+  "accent": "#B7C6D1",
+  "seed": 804
  }
 ]

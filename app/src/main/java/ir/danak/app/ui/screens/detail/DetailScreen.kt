@@ -1,5 +1,7 @@
 package ir.danak.app.ui.screens.detail
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,10 +28,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -154,10 +160,15 @@ fun DetailScreen(
             Spacer(Modifier.height(CONTENT_OVERLAP))
         }
 
+        // Once the text scrolls up to the controls, the bar turns solid so the two never
+        // overlap; over the artwork it stays a soft gradient.
+        val solidThreshold = with(LocalDensity.current) { (heroHeight - 180.dp).toPx() }
+        val solidBar by remember(solidThreshold) { derivedStateOf { scroll.value > solidThreshold } }
         DetailTopBar(
             saved = saved,
             onToggleSave = onToggleSave,
             onBack = onBack,
+            solid = solidBar,
             modifier = Modifier.align(Alignment.TopCenter),
         )
     }
@@ -168,19 +179,28 @@ private fun DetailTopBar(
     saved: Boolean,
     onToggleSave: () -> Unit,
     onBack: () -> Unit,
+    solid: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val barColor by animateColorAsState(
+        targetValue = if (solid) MaterialTheme.colorScheme.background else Color.Transparent,
+        animationSpec = tween(200),
+        label = "detailBar",
+    )
     Box(modifier.fillMaxWidth()) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(128.dp),
-        ) {
-            TopScrim(MaterialTheme.colorScheme.background)
+        if (!solid) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(128.dp),
+            ) {
+                TopScrim(MaterialTheme.colorScheme.background)
+            }
         }
         Box(
             Modifier
                 .fillMaxWidth()
+                .background(barColor)
                 .padding(WindowInsets.statusBars.asPaddingValues())
                 .padding(horizontal = 8.dp, vertical = 4.dp),
         ) {

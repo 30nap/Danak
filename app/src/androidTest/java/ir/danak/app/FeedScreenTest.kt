@@ -10,7 +10,10 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ir.danak.app.data.MockDanaks
 import ir.danak.app.ui.screens.feed.FeedScreen
@@ -39,6 +42,7 @@ class FeedScreenTest {
                     onOpenDetail = {},
                     onOpenSaved = {},
                     onOpenSettings = {},
+                    onEditInterests = {},
                 )
             }
         }
@@ -64,6 +68,7 @@ class FeedScreenTest {
                     onOpenDetail = {},
                     onOpenSaved = {},
                     onOpenSettings = {},
+                    onEditInterests = {},
                 )
             }
         }
@@ -84,11 +89,37 @@ class FeedScreenTest {
                     onOpenDetail = { opened = it },
                     onOpenSaved = {},
                     onOpenSettings = {},
+                    onEditInterests = {},
                 )
             }
         }
 
         rule.onAllNodesWithText("بیشتر بدان").onFirst().performClick()
         assertEquals(danaks.first().id, opened)
+    }
+
+    @Test
+    fun theFeedEndsWithAWayForward() {
+        rule.setContent {
+            DanakTheme {
+                FeedScreen(
+                    danaks = danaks,
+                    isSaved = { false },
+                    onToggleSave = {},
+                    onOpenDetail = {},
+                    onOpenSaved = {},
+                    onOpenSettings = {},
+                    onEditInterests = {},
+                )
+            }
+        }
+
+        repeat(danaks.size) { rule.onRoot().performTouchInput { swipeUp() } }
+        rule.onNodeWithText("همهٔ دانک‌ها را خواندی").assertIsDisplayed()
+        UiAudit.screenshot(rule, "15_end_of_feed")
+        UiAudit.auditScreen(rule, "end_of_feed")
+
+        rule.onNodeWithText("از اول").performClick()
+        rule.onNodeWithText(danaks.first().title).assertIsDisplayed()
     }
 }

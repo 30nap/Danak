@@ -427,6 +427,142 @@ def m_contours(d, ac, rng):
             d.line(pts + [pts[0]], fill=lerp((0, 0, 0), ac, 0.10 + 0.42 * depth),
                    width=int((1.4 + 1.6 * depth) * S), joint='curve')
 
+
+def m_anchor(d, ac, rng):
+    """Anchoring: estimates scatter, but cluster around the number seen first."""
+    y0 = SH * 0.36
+    d.line([(SW * 0.06, y0), (SW * 0.94, y0)], fill=ac, width=int(3.5 * S))
+    for _ in range(260):
+        x = SW * rng.uniform(0.07, 0.93)
+        y = y0 + rng.normal(0, 1) * SH * 0.085
+        t = max(0.0, 1.0 - abs(y - y0) / (SH * 0.22))
+        r = (2.0 + 3.5 * t) * S
+        d.ellipse((x - r, y - r, x + r, y + r), fill=lerp((0, 0, 0), ac, 0.15 + 0.55 * t))
+
+def m_sound_void(d, ac, rng):
+    """Sound needs a medium: waves travel until the air ends, then nothing."""
+    cx, cy = SW * 0.05, SH * 0.36
+    wall = SW * 0.58
+    for k in range(1, 14):
+        rad = SW * 0.045 * k
+        pts = []
+        for i in range(121):
+            a = math.radians(-70 + 140 * i / 120)
+            x, y = cx + math.cos(a) * rad, cy + math.sin(a) * rad
+            if x < wall:
+                pts.append((x, y))
+        if len(pts) > 1:
+            d.line(pts, fill=lerp((0, 0, 0), ac, 0.70 - k * 0.04), width=int(2.4 * S), joint='curve')
+    d.line([(wall, SH * 0.08), (wall, SH * 0.64)], fill=lerp((0, 0, 0), ac, 0.18), width=int(1.4 * S))
+    for _ in range(40):
+        x, y = SW * rng.uniform(0.64, 0.97), SH * rng.uniform(0.08, 0.64)
+        r = rng.uniform(1.2, 3.0) * S
+        d.ellipse((x - r, y - r, x + r, y + r), fill=lerp((0, 0, 0), ac, rng.uniform(0.2, 0.6)))
+
+def m_trilateration(d, ac, rng):
+    """Three satellites, three distances, one point where the circles meet."""
+    px, py = SW * 0.52, SH * 0.40
+    sats = [(SW * 0.18, SH * 0.14), (SW * 0.86, SH * 0.20), (SW * 0.30, SH * 0.64)]
+    for sx, sy in sats:
+        rad = math.hypot(px - sx, py - sy)
+        d.ellipse((sx - rad, sy - rad, sx + rad, sy + rad),
+                  outline=lerp((0, 0, 0), ac, 0.34), width=int(2.0 * S))
+        r = 8 * S
+        d.rectangle((sx - r, sy - r * 0.5, sx + r, sy + r * 0.5), fill=lerp((0, 0, 0), ac, 0.8))
+    r = 11 * S
+    d.ellipse((px - r, py - r, px + r, py + r), fill=ac)
+
+def m_git_branches(d, ac, rng):
+    """A main line with branches that fork off and merge back."""
+    x0 = SW * 0.30
+    top, bottom = SH * 0.08, SH * 0.66
+    d.line([(x0, top), (x0, bottom)], fill=ac, width=int(4 * S))
+    lanes = [SW * 0.50, SW * 0.68, SW * 0.84]
+    y = top + SH * 0.04
+    for i in range(6):
+        lane = lanes[i % 3]
+        y1 = y + SH * rng.uniform(0.02, 0.05)
+        y2 = y1 + SH * rng.uniform(0.10, 0.18)
+        if y2 > bottom:
+            break
+        c = lerp((0, 0, 0), ac, 0.55)
+        d.line([(x0, y1), (lane, y1 + SH * 0.03), (lane, y2 - SH * 0.03), (x0, y2)],
+               fill=c, width=int(3 * S), joint='curve')
+        for k in range(3):
+            cy = y1 + SH * 0.03 + (y2 - y1 - SH * 0.06) * (k + 0.5) / 3
+            r = 7 * S
+            d.ellipse((lane - r, cy - r, lane + r, cy + r), fill=c)
+        y = y1 + SH * 0.07
+    for k in range(12):
+        cy = top + (bottom - top) * (k + 0.5) / 12
+        r = 8 * S
+        d.ellipse((x0 - r, cy - r, x0 + r, cy + r), fill=ac)
+
+def m_coins(d, ac, rng):
+    """Good coins leave circulation; the debased ones stay in hand."""
+    for row in range(6):
+        for col in range(5):
+            cx = SW * (0.14 + col * 0.18)
+            cy = SH * (0.12 + row * 0.095)
+            good = col >= 3
+            r = SW * 0.062
+            if good:
+                cy -= SH * 0.04 * (col - 2) + SH * 0.01 * row
+            c = lerp((0, 0, 0), ac, 0.72 if good else 0.20)
+            d.ellipse((cx - r, cy - r, cx + r, cy + r), outline=c, width=int(3 * S))
+            d.ellipse((cx - r * 0.62, cy - r * 0.62, cx + r * 0.62, cy + r * 0.62),
+                      outline=lerp((0, 0, 0), c, 0.6), width=int(1.6 * S))
+
+def m_cuneiform(d, ac, rng):
+    """Rows of wedge marks pressed into a clay tablet."""
+    tx0, ty0, tx1, ty1 = SW * 0.10, SH * 0.08, SW * 0.90, SH * 0.66
+    d.rounded_rectangle((tx0, ty0, tx1, ty1), radius=int(40 * S),
+                        outline=lerp((0, 0, 0), ac, 0.30), width=int(2.4 * S))
+    for row in range(11):
+        y = ty0 + SH * 0.035 + row * SH * 0.050
+        d.line([(tx0 + SW * 0.04, y + SH * 0.034), (tx1 - SW * 0.04, y + SH * 0.034)],
+               fill=lerp((0, 0, 0), ac, 0.12), width=int(1.2 * S))
+        x = tx0 + SW * 0.06
+        while x < tx1 - SW * 0.08:
+            w = SW * rng.uniform(0.022, 0.036)
+            h = SH * 0.022
+            c = lerp((0, 0, 0), ac, rng.uniform(0.35, 0.8))
+            if rng.random() < 0.6:
+                d.polygon([(x, y), (x + w, y), (x + w / 2, y + h * 0.45)], fill=c)
+                d.line([(x + w / 2, y + h * 0.4), (x + w / 2, y + h)], fill=c, width=int(2 * S))
+            else:
+                d.polygon([(x, y + h * 0.5), (x + w * 0.5, y + h * 0.2), (x + w * 0.5, y + h * 0.8)], fill=c)
+                d.line([(x + w * 0.45, y + h * 0.5), (x + w * 1.2, y + h * 0.5)], fill=c, width=int(2 * S))
+            x += w * rng.uniform(1.5, 2.4)
+
+def m_pomodoro(d, ac, rng):
+    """Four focus arcs with short breaks between them, and one long break."""
+    cx, cy, R = SW * 0.5, SH * 0.36, SW * 0.34
+    start = -90
+    for k in range(4):
+        sweep = 62
+        d.arc((cx - R, cy - R, cx + R, cy + R), start, start + sweep,
+              fill=lerp((0, 0, 0), ac, 0.85 - k * 0.1), width=int(14 * S))
+        start += sweep + 11
+    d.arc((cx - R, cy - R, cx + R, cy + R), start, 270,
+          fill=lerp((0, 0, 0), ac, 0.16), width=int(14 * S))
+    for i in range(60):
+        a = math.radians(i * 6)
+        r1 = R * 0.80
+        r2 = R * (0.74 if i % 5 == 0 else 0.77)
+        d.line([(cx + math.cos(a) * r1, cy + math.sin(a) * r1),
+                (cx + math.cos(a) * r2, cy + math.sin(a) * r2)],
+               fill=lerp((0, 0, 0), ac, 0.28), width=int(1.6 * S))
+
+def m_olbers(d, ac, rng):
+    """A starfield that thins with distance, leaving the night mostly dark."""
+    for _ in range(900):
+        x = SW * rng.random()
+        y = SH * 0.70 * rng.random() ** 0.8
+        depth = rng.random() ** 2.4
+        r = (0.8 + 4.5 * depth) * S
+        d.ellipse((x - r, y - r, x + r, y + r), fill=lerp((0, 0, 0), ac, 0.12 + 0.8 * depth))
+
 MOTIFS = {
     'open_loops': m_open_loops, 'confidence_curve': m_confidence_curve,
     'filtered_rays': m_filtered_rays, 'spectrum': m_spectrum, 'diffusion': m_diffusion,
@@ -436,6 +572,9 @@ MOTIFS = {
     'arches': m_arches, 'type_grid': m_type_grid, 'routes': m_routes,
     'time_blocks': m_time_blocks, 'repetition': m_repetition, 'switch': m_switch,
     'hexcomb': m_hexcomb, 'heatflow': m_heatflow, 'contours': m_contours,
+    'anchor': m_anchor, 'sound_void': m_sound_void, 'trilateration': m_trilateration,
+    'git_branches': m_git_branches, 'coins': m_coins, 'cuneiform': m_cuneiform,
+    'pomodoro': m_pomodoro, 'olbers': m_olbers,
 }
 
 def render(name, motif, accent_hex, seed, warm=0.0, intensity=1.0, out_dir='.'):

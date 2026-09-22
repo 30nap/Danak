@@ -7,10 +7,10 @@ package ir.danak.app.model
  * interest picker, where a little colour helps the grid read as a set of choices.
  */
 enum class Category(val label: String, val emoji: String) {
-    Technology("تکنولوژی", "🧠"),
+    Technology("تکنولوژی", "🛰️"),
     Programming("برنامه‌نویسی", "⌨️"),
     Science("علم", "🔬"),
-    Psychology("روان‌شناسی", "💡"),
+    Psychology("روان‌شناسی", "🧠"),
     Economy("اقتصاد", "📈"),
     History("تاریخ", "🏛️"),
     Productivity("بهره‌وری", "⚡"),

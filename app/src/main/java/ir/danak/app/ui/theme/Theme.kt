@@ -57,27 +57,20 @@ private val DanakLightColors = lightColorScheme(
     scrim = Color.Black,
 )
 
+/** Whether [mode] resolves to dark right now. */
+@Composable
+fun ThemeMode.resolvesToDark(): Boolean = when (this) {
+    ThemeMode.Light -> false
+    ThemeMode.Dark -> true
+    ThemeMode.System -> isSystemInDarkTheme()
+}
+
 @Composable
 fun DanakTheme(
     themeMode: ThemeMode = ThemeMode.System,
     content: @Composable () -> Unit,
 ) {
-    val dark = when (themeMode) {
-        ThemeMode.Light -> false
-        ThemeMode.Dark -> true
-        ThemeMode.System -> isSystemInDarkTheme()
-    }
-    val colors = if (dark) DanakDarkColors else DanakLightColors
-
-    val context = LocalContext.current
-    SideEffect {
-        val activity = context.findActivity() ?: return@SideEffect
-        // The app draws edge to edge; only the system icon tint has to follow the theme.
-        WindowCompat.getInsetsController(activity.window, activity.window.decorView).apply {
-            isAppearanceLightStatusBars = !dark
-            isAppearanceLightNavigationBars = !dark
-        }
-    }
+    val colors = if (themeMode.resolvesToDark()) DanakDarkColors else DanakLightColors
 
     // Danak is a Persian app end to end, so the layout direction is a product decision,
     // not a locale one.
@@ -88,6 +81,35 @@ fun DanakTheme(
             shapes = DanakShapes,
             content = content,
         )
+    }
+}
+
+/**
+ * The feed and the detail are always dark, whatever the app theme. Their artwork is built
+ * for a dark ground: over a light background the gradient turns muddy grey and the chip
+ * and top-bar controls lose their contrast. The chosen theme still applies to every list
+ * and settings screen.
+ */
+@Composable
+fun ImmersiveSurface(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = DanakDarkColors,
+        typography = DanakTypography,
+        shapes = DanakShapes,
+        content = content,
+    )
+}
+
+/** Keeps the status and navigation bar icons readable over whatever is behind them. */
+@Composable
+fun SystemBarsEffect(darkBackground: Boolean) {
+    val context = LocalContext.current
+    SideEffect {
+        val activity = context.findActivity() ?: return@SideEffect
+        WindowCompat.getInsetsController(activity.window, activity.window.decorView).apply {
+            isAppearanceLightStatusBars = !darkBackground
+            isAppearanceLightNavigationBars = !darkBackground
+        }
     }
 }
 

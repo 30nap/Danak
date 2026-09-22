@@ -89,6 +89,15 @@ jobs:
             app/build/test-results/
           if-no-files-found: ignore
 
+  links:
+    name: Source links resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check every Danak source link
+        run: python3 tools/check_links.py --suggest-fa
+
   ui-tests:
     name: UI tests on emulator
     needs: build

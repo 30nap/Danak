@@ -56,6 +56,9 @@ fun HeroScrim(
                         startFraction to Color.Transparent,
                         (startFraction + 0.24f) to background.copy(alpha = 0.62f),
                         (startFraction + 0.42f) to background.copy(alpha = 0.94f),
+                        // Fully opaque a little before the edge and held there: ending the
+                        // ramp on the last pixel left a one-pixel line of artwork showing.
+                        0.93f to background,
                         1f to background,
                     ),
                 ),
