@@ -50,10 +50,8 @@ android {
     }
 
     lint {
-        // Findings go to the build log as well as the HTML report, so they can be read
-        // straight from CI without downloading an artifact.
+        // A plain-text report next to the HTML one, so CI can print findings into the log.
         textReport = true
-        textOutput = file("stdout")
     }
 }
 

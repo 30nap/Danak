@@ -42,6 +42,14 @@ jobs:
       - name: Lint
         run: ./gradlew lintDebug
 
+      - name: Print lint findings
+        if: always()
+        run: cat app/build/reports/lint-results-debug.txt 2>/dev/null || echo "no lint text report"
+
+      # Minified and resource-shrunk, like a real release; unsigned because no key lives in CI.
+      - name: Assemble release (R8)
+        run: ./gradlew assembleRelease
+
       - name: Summary
         if: always()
         run: |
@@ -53,12 +61,15 @@ jobs:
             else
               echo "- Debug APK: **not built**"
             fi
+            REL=$(ls app/build/outputs/apk/release/*.apk 2>/dev/null | head -1)
+            [ -n "$REL" ] && echo "- Release APK (R8, unsigned): $(du -h "$REL" | cut -f1)"
+            [ -f app/build/reports/lint-results-debug.txt ] && echo "- Lint: $(tail -1 app/build/reports/lint-results-debug.txt)"
             for f in app/build/test-results/testDebugUnitTest/*.xml; do
               [ -f "$f" ] || continue
               grep -o 'testsuite name="[^"]*" tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' "$f" \
                 | sed 's/^/- /'
             done
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Upload debug APK
         if: always()
