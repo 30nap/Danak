@@ -71,7 +71,7 @@ fun FeedScreen(
                     saved = isSaved(danak.id),
                     onToggleSave = { onToggleSave(danak.id) },
                     onOpenDetail = { onOpenDetail(danak.id) },
-                    pageOffset = pagerState.offsetForPage(page),
+                    pageOffset = { pagerState.offsetForPage(page) },
                 )
             }
 

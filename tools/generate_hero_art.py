@@ -10,9 +10,13 @@ import math, random, os, sys
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 import numpy as np
 
-W, H = 1080, 1620
+# Output is 9:16, close enough to a modern phone that ContentScale.Crop trims little.
+W, H = 1080, 1920
+# Motifs are drawn at 2:3 and composed onto the taller ground. Sizing them off H instead
+# would stretch every arch, bar and wave the moment the output aspect changed.
+MOTIF_H = int(W * 1.5)
 S = 2                      # supersample factor
-SW, SH = W * S, H * S
+SW, SH = W * S, MOTIF_H * S
 
 def hexc(h):
     h = h.lstrip('#')
@@ -37,14 +41,15 @@ def glow(layer, radius, gain):
     b = layer.filter(ImageFilter.GaussianBlur(radius))
     return ImageChops.add(layer, b.point(lambda v: min(255, int(v * gain))))
 
-def compose(base, strokes, blooms):
-    """strokes: crisp marks. blooms: (layer, blur, gain) soft light added on top."""
+def compose(base, blooms):
+    """blooms: (motif layer, blur radius, gain) screened onto the ground as soft light."""
     out = base
     for layer, rad, gain in blooms:
-        small = layer.resize((W, H), Image.LANCZOS)
-        out = ImageChops.screen(out, glow(small, rad, gain))
-    if strokes is not None:
-        out = ImageChops.screen(out, strokes.resize((W, H), Image.LANCZOS))
+        # The motif is 2:3; pad it to the full frame so the extra height stays background.
+        small = layer.resize((W, MOTIF_H), Image.LANCZOS)
+        framed = Image.new('RGB', (W, H), (0, 0, 0))
+        framed.paste(small, (0, 0))
+        out = ImageChops.screen(out, glow(framed, rad, gain))
     return out
 
 def finish(img, seed):
@@ -272,12 +277,12 @@ def m_sunk_layers(d, ac, rng):
 
 def m_arches(d, ac, rng):
     """A colonnade losing its arches from right to left — empire, mid-collapse."""
-    base = SH * 0.70
-    heights = [0.34, 0.33, 0.315, 0.24, 0.15, 0.09]
+    base = SH * 0.60
+    heights = [0.32, 0.31, 0.295, 0.22, 0.14, 0.085]
     intact = [True, True, True, False, False, False]
     for i, (hh, ok) in enumerate(zip(heights, intact)):
-        w = SW * 0.132
-        x = SW * 0.055 + i * SW * 0.155
+        w = SW * 0.148
+        x = SW * 0.045 + i * SW * 0.158
         top = base - SH * hh
         c = lerp((0, 0, 0), ac, 0.62 - i * 0.075)
         if ok:
@@ -439,7 +444,7 @@ def render(name, motif, accent_hex, seed, warm=0.0, intensity=1.0, out_dir='.'):
     im, d = canvas()
     MOTIFS[motif](d, ac, rng)
     base = ground(ac, warm)
-    img = compose(base, None, [(im, 26, 1.25 * intensity), (im, 7, 0.95 * intensity)])
+    img = compose(base, [(im, 26, 1.25 * intensity), (im, 7, 0.95 * intensity)])
     img = finish(img, seed)
     path = os.path.join(out_dir, f'{name}.webp')
     img.save(path, 'WEBP', quality=84, method=6)

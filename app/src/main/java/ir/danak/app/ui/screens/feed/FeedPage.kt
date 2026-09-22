@@ -59,11 +59,9 @@ fun FeedPage(
     saved: Boolean,
     onToggleSave: () -> Unit,
     onOpenDetail: () -> Unit,
-    pageOffset: Float,
+    pageOffset: () -> Float,
     modifier: Modifier = Modifier,
 ) {
-    val distance = pageOffset.absoluteValue.coerceAtMost(1f)
-
     Box(modifier.fillMaxSize()) {
         DanakHeroImage(
             image = danak.image,
@@ -73,10 +71,13 @@ fun FeedPage(
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
+                    // Read inside the layer block, so a swipe only redraws the page
+                    // instead of recomposing every page that the pager keeps alive.
+                    val offset = pageOffset()
                     // The hero drifts at a fraction of the swipe, which gives the feed
                     // depth without ever detaching the image from the gesture.
-                    translationY = -pageOffset * size.height * 0.14f
-                    alpha = 1f - distance * 0.35f
+                    translationY = -offset * size.height * 0.14f
+                    alpha = 1f - offset.absoluteValue.coerceAtMost(1f) * 0.35f
                 },
         )
 
@@ -92,9 +93,10 @@ fun FeedPage(
                 .padding(WindowInsets.navigationBars.asPaddingValues())
                 .padding(start = 24.dp, end = 24.dp, bottom = 20.dp)
                 .graphicsLayer {
+                    val offset = pageOffset()
                     // Text settles into place a little after the image does.
-                    translationY = pageOffset * size.height * 0.22f
-                    alpha = 1f - distance
+                    translationY = offset * size.height * 0.22f
+                    alpha = 1f - offset.absoluteValue.coerceAtMost(1f)
                 },
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
@@ -183,7 +185,7 @@ private fun FeedPageDarkPreview() {
             saved = false,
             onToggleSave = {},
             onOpenDetail = {},
-            pageOffset = 0f,
+            pageOffset = { 0f },
         )
     }
 }
@@ -197,7 +199,7 @@ private fun FeedPageLightPreview() {
             saved = true,
             onToggleSave = {},
             onOpenDetail = {},
-            pageOffset = 0f,
+            pageOffset = { 0f },
         )
     }
 }

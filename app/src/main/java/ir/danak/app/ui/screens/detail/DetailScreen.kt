@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,7 +42,14 @@ import ir.danak.app.ui.components.SourceLink
 import ir.danak.app.ui.components.TopScrim
 import ir.danak.app.ui.util.formatReadingTime
 
-private const val HERO_HEIGHT_FRACTION = 0.52f
+private const val HERO_HEIGHT_FRACTION = 0.48f
+
+/**
+ * The content starts this far above the hero's bottom edge. Without it the gradient
+ * finishes well before the first line of text and leaves a dead black band between them;
+ * with it, the title reads as rising out of the artwork.
+ */
+private val CONTENT_OVERLAP = 56.dp
 
 /**
  * The deeper layer of a Danak. It keeps the same hero, the same chip and the same title
@@ -80,14 +88,16 @@ fun DetailScreen(
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                 )
-                HeroScrim(background = background, startFraction = 0.34f)
+                HeroScrim(background = background, startFraction = 0.40f)
             }
 
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .background(background)
-                    .padding(start = 24.dp, end = 24.dp, top = 4.dp),
+                    // No background of its own: the tail of the hero gradient shows
+                    // through behind the chip and title.
+                    .offset(y = -CONTENT_OVERLAP)
+                    .padding(start = 24.dp, end = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 CategoryChip(danak.category)
@@ -135,6 +145,9 @@ fun DetailScreen(
                 Spacer(Modifier.height(28.dp))
                 Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
             }
+
+            // Hands back the scroll range the overlap took away.
+            Spacer(Modifier.height(CONTENT_OVERLAP))
         }
 
         DetailTopBar(
