@@ -51,11 +51,18 @@ git clone <repo> && cd Danak
 پیش‌نیازها: JDK 17 یا بالاتر و Android SDK با API 36.
 اگر از Android Studio استفاده می‌کنی، پروژه را باز کن و SDK لازم خودکار دانلود می‌شود.
 
-> **توجه دربارهٔ build**
-> این پروژه در محیطی نوشته شده که دسترسی به `dl.google.com` (میزبان Google Maven و
-> Android SDK) توسط سیاست شبکه مسدود بود؛ بنابراین APK در آن محیط ساخته نشده است.
-> کد با کامپایلر Kotlin از نظر ساختاری بررسی شده، اما اولین `./gradlew assembleDebug`
-> روی ماشین تو، اولین build واقعی پروژه خواهد بود.
+### CI (GitHub Actions)
+
+`.github/workflows/android.yml` روی هر push اجرا می‌شود:
+
+| Job | کار |
+|---|---|
+| Build, unit tests, lint | `assembleDebug` · `testDebugUnitTest` · `lintDebug` · `assembleRelease` (با R8) |
+| UI tests on emulator | تست‌های Compose روی امولاتور API 34، یک بار با فونت عادی و یک بار با فونت ۱٫۳× |
+
+خروجی‌ها به‌صورت artifact آپلود می‌شوند: APK دیباگ، گزارش‌ها، اسکرین‌شات همهٔ صفحه‌ها و
+گزارش دسترس‌پذیری. برای اینکه اسکرین‌شات‌ها داخل لاگ هم چاپ شوند، از Actions یک اجرای
+دستی با `dump_screenshots` بزن یا `[screenshots]` را در پیام کامیت بگذار.
 
 ---
 
