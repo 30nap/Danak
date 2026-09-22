@@ -124,12 +124,18 @@ class AppJourneyTest {
         UiAudit.auditScreen(rule, "saved")
 
         val remove = "حذف «${first.title}» از ذخیره‌شده‌ها"
+        // With auto-advance the test clock would skip the snackbar's timeout and dismiss
+        // it before it could be seen, so time is stepped by hand while it is up.
+        rule.mainClock.autoAdvance = false
         rule.onNodeWithContentDescription(remove).performClick()
+        rule.mainClock.advanceTimeBy(500)
         rule.onNodeWithText("از ذخیره‌شده‌ها حذف شد").assertIsDisplayed()
         UiAudit.screenshot(rule, "09_saved_undo")
 
         // Undo brings it back; removing again leaves the list empty.
         rule.onNodeWithText("بازگرداندن").performClick()
+        rule.mainClock.advanceTimeBy(500)
+        rule.mainClock.autoAdvance = true
         rule.onNodeWithText(first.title).assertIsDisplayed()
         rule.onNodeWithContentDescription(remove).performClick()
         rule.onNodeWithText("هنوز چیزی ذخیره نکرده‌ای").assertIsDisplayed()
