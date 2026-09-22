@@ -18,6 +18,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ir.danak.app.data.MockDanaks
 import ir.danak.app.ui.screens.feed.FeedScreen
 import ir.danak.app.ui.theme.DanakTheme
+import ir.danak.app.ui.theme.ImmersiveSurface
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -101,16 +102,19 @@ class FeedScreenTest {
     @Test
     fun theFeedEndsWithAWayForward() {
         rule.setContent {
+            // Wrapped the way the app wraps it, so the screenshot shows the real, dark page.
             DanakTheme {
-                FeedScreen(
-                    danaks = danaks,
-                    isSaved = { false },
-                    onToggleSave = {},
-                    onOpenDetail = {},
-                    onOpenSaved = {},
-                    onOpenSettings = {},
-                    onEditInterests = {},
-                )
+                ImmersiveSurface {
+                    FeedScreen(
+                        danaks = danaks,
+                        isSaved = { false },
+                        onToggleSave = {},
+                        onOpenDetail = {},
+                        onOpenSaved = {},
+                        onOpenSettings = {},
+                        onEditInterests = {},
+                    )
+                }
             }
         }
 

@@ -59,6 +59,12 @@ object UiAudit {
         // Pages the pager keeps composed off screen are not part of what the user sees.
         val nodes = rule.onAllNodes(hasClickAction()).fetchSemanticsNodes()
             .filter { it.touchBoundsInRoot.overlaps(root) }
+            // A node the viewport cuts off (the edge of a neighbouring pager page) reports
+            // only its visible slice; measuring that would flag a 52dp button as 32dp.
+            .filter { node ->
+                val full = node.layoutInfo.coordinates.size
+                node.boundsInRoot.height >= full.height - 1 && node.boundsInRoot.width >= full.width - 1
+            }
         for (node in nodes) {
             val label = node.config.getOrNull(SemanticsProperties.ContentDescription)?.joinToString()
                 ?: node.config.getOrNull(SemanticsProperties.Text)?.joinToString()
