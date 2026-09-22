@@ -48,6 +48,13 @@ android {
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
+
+    lint {
+        // Findings go to the build log as well as the HTML report, so they can be read
+        // straight from CI without downloading an artifact.
+        textReport = true
+        textOutput = file("stdout")
+    }
 }
 
 kotlin {
