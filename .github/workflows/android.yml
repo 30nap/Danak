@@ -119,6 +119,23 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      # The emulator action downloads the emulator and system image itself, with no retry;
+      # a truncated download (seen as "ZipFile unknown archive") then fails the job before
+      # any test runs. Installing them here with retries leaves the action nothing to fetch.
+      # Only the download is retried — the tests themselves still run exactly once.
+      - name: Pre-install emulator and system image
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          for attempt in 1 2 3; do
+            if yes | "$SDKMANAGER" --install emulator "system-images;android-34;google_apis;x86_64" > /dev/null; then
+              break
+            fi
+            echo "sdkmanager failed on attempt $attempt; retrying"
+            sleep $((attempt * 15))
+          done
+          test -x "$ANDROID_HOME/emulator/emulator"
+          test -d "$ANDROID_HOME/system-images/android-34/google_apis/x86_64"
+
       - name: Instrumented tests (normal and large font)
         uses: reactivecircus/android-emulator-runner@v2
         with:
