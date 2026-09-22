@@ -2,7 +2,6 @@ package ir.danak.app.ui.components
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +24,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import ir.danak.app.ui.theme.PillShape
 import ir.danak.app.ui.util.sourceDomain
 
@@ -45,7 +45,7 @@ fun SourceLink(
             .clip(PillShape)
             .clickable {
                 try {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(sourceUrl)))
+                    context.startActivity(Intent(Intent.ACTION_VIEW, sourceUrl.toUri()))
                 } catch (_: ActivityNotFoundException) {
                     Toast.makeText(context, "مرورگری برای باز کردن پیوند پیدا نشد", Toast.LENGTH_SHORT)
                         .show()

@@ -28,7 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -65,7 +66,10 @@ fun DetailScreen(
 ) {
     val scroll = rememberScrollState()
     val background = MaterialTheme.colorScheme.background
-    val heroHeight = LocalConfiguration.current.screenHeightDp.dp * HERO_HEIGHT_FRACTION
+    // The real window, not Configuration.screenHeightDp, which is rounded and inset
+    // differently across target SDKs.
+    val windowHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+    val heroHeight = windowHeight * HERO_HEIGHT_FRACTION
 
     Box(modifier.fillMaxSize().background(background)) {
         Column(
