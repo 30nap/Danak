@@ -1,14 +1,13 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "ir.danak.app"
-    compileSdk = 36
+    // AndroidX releases from 2026 on need compileSdk 37; targetSdk stays at 36 until the
+    // Android 17 behaviour changes have been tested.
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "ir.danak.app"
@@ -18,7 +17,6 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -55,12 +53,6 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
-}
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -77,8 +69,11 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
 
     implementation(libs.coil.compose)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.core.splashscreen)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
