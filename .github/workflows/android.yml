@@ -134,7 +134,8 @@ jobs:
           cat ui-output/screenshots/a11y-report.txt 2>/dev/null || true
 
       - name: Dump screenshots into the log
-        if: always() && inputs.dump_screenshots
+        # Opt in from the Actions UI, or by putting [screenshots] in the pushed commit message.
+        if: always() && (inputs.dump_screenshots || contains(github.event.head_commit.message, '[screenshots]'))
         run: |
           pip install --quiet pillow
           python3 - <<'PY'
