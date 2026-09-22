@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches NightBase in the Compose palette, so the launch window and the first
+         frame of the app are the same colour. -->
+    <color name="danak_launch_background">#FF080A0B</color>
+    <color name="danak_icon_background">#FF0E1412</color>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Stem -->
+    <path
+        android:pathData="M54,80 C54,71 54,63 54,57"
+        android:strokeColor="#3FBF6F"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round" />
+
+    <!-- Leading leaf -->
+    <path
+        android:pathData="M56,55 C56,41 66,31 81,29 C81,43 71,54 56,55 Z"
+        android:fillColor="#5CE08C" />
+
+    <!-- Trailing leaf -->
+    <path
+        android:pathData="M52,60 C52,48 43,39 29,38 C29,50 38,59 52,60 Z"
+        android:fillColor="#35A85F" />
+</vector>
