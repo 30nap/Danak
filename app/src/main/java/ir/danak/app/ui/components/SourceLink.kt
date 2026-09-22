@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ir.danak.app.ui.theme.PillShape
+import ir.danak.app.ui.util.browsableUrl
 import ir.danak.app.ui.util.sourceDomain
 
 /**
@@ -45,7 +46,7 @@ fun SourceLink(
             .clip(PillShape)
             .clickable {
                 try {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, sourceUrl.toUri()))
+                    context.startActivity(Intent(Intent.ACTION_VIEW, browsableUrl(sourceUrl).toUri()))
                 } catch (_: ActivityNotFoundException) {
                     Toast.makeText(context, "مرورگری برای باز کردن پیوند پیدا نشد", Toast.LENGTH_SHORT)
                         .show()

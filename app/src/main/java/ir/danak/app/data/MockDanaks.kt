@@ -10,9 +10,10 @@ import ir.danak.app.model.DanakSection
  * V0 ships its content as a static list — there is no backend yet, and wrapping twenty-four
  * constants in a repository would add a layer without adding a capability.
  *
- * Every entry links to the Wikipedia article for the concept it explains. That is a
- * deliberate V0 choice: real, stable, checkable links beat invented article URLs on a
- * publisher's site.
+ * Every entry links to the Wikipedia article for the concept it explains — the Persian
+ * edition wherever one exists, English otherwise. Real, stable, checkable links beat
+ * invented article URLs on a publisher's site, and tools/check_links.py verifies all of
+ * them in CI.
  */
 object MockDanaks {
 
@@ -55,7 +56,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_zeigarnik),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Zeigarnik_effect",
+            sourceUrl = "https://fa.wikipedia.org/wiki/اثر_زیگارنیک",
         ),
 
         Danak(
@@ -91,7 +92,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_dunning_kruger),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Dunning-Kruger_effect",
+            sourceUrl = "https://fa.wikipedia.org/wiki/اثر_دانینگ–کروگر",
         ),
 
         Danak(
@@ -127,7 +128,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_confirmation),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Confirmation_bias",
+            sourceUrl = "https://fa.wikipedia.org/wiki/سوگیری_تأییدی",
         ),
 
         // ---------------------------------------------------------- علم
@@ -162,7 +163,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_blue_sky),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Rayleigh_scattering",
+            sourceUrl = "https://fa.wikipedia.org/wiki/پراکنش_ریلی",
         ),
 
         Danak(
@@ -197,7 +198,7 @@ object MockDanaks {
             readingSeconds = 60,
             image = DanakImage.Local(R.drawable.hero_entropy),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Second_law_of_thermodynamics",
+            sourceUrl = "https://fa.wikipedia.org/wiki/قانون_دوم_ترمودینامیک",
         ),
 
         Danak(
@@ -231,7 +232,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_tidal_lock),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Tidal_locking",
+            sourceUrl = "https://fa.wikipedia.org/wiki/قفل_کشندی",
         ),
     )
 
@@ -270,7 +271,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_public_key),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Public-key_cryptography",
+            sourceUrl = "https://fa.wikipedia.org/wiki/رمزنگاری_کلید_عمومی",
         ),
 
         Danak(
@@ -306,7 +307,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_battery),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Lithium-ion_battery",
+            sourceUrl = "https://fa.wikipedia.org/wiki/باتری_یون‌لیتیم",
         ),
 
         Danak(
@@ -340,7 +341,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_cdn),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Content_delivery_network",
+            sourceUrl = "https://fa.wikipedia.org/wiki/شبکه_تحویل_محتوا",
         ),
 
         Danak(
@@ -375,7 +376,7 @@ object MockDanaks {
             readingSeconds = 60,
             image = DanakImage.Local(R.drawable.hero_big_o),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Big_O_notation",
+            sourceUrl = "https://fa.wikipedia.org/wiki/نماد_O_بزرگ",
         ),
 
         Danak(
@@ -410,7 +411,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_float_point),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/IEEE_754",
+            sourceUrl = "https://fa.wikipedia.org/wiki/IEEE_۷۵۴",
         ),
 
         Danak(
@@ -446,7 +447,7 @@ object MockDanaks {
             readingSeconds = 60,
             image = DanakImage.Local(R.drawable.hero_db_index),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Database_index",
+            sourceUrl = "https://fa.wikipedia.org/wiki/فهرست_(پایگاه_داده)",
         ),
     )
 
@@ -483,7 +484,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_opportunity),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Opportunity_cost",
+            sourceUrl = "https://fa.wikipedia.org/wiki/هزینه_فرصت",
         ),
 
         Danak(
@@ -515,7 +516,7 @@ object MockDanaks {
             ),
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_rule_72),
-            sourceName = "ویکی‌پدیا",
+            sourceName = "ویکی‌پدیا (انگلیسی)",
             sourceUrl = "https://en.wikipedia.org/wiki/Rule_of_72",
         ),
 
@@ -550,7 +551,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_sunk_cost),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Sunk_cost",
+            sourceUrl = "https://fa.wikipedia.org/wiki/هزینه_ازدست‌رفته",
         ),
 
         Danak(
@@ -587,7 +588,7 @@ object MockDanaks {
             readingSeconds = 65,
             image = DanakImage.Local(R.drawable.hero_rome),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire",
+            sourceUrl = "https://fa.wikipedia.org/wiki/سقوط_امپراتوری_روم_غربی",
         ),
 
         Danak(
@@ -623,7 +624,7 @@ object MockDanaks {
             readingSeconds = 60,
             image = DanakImage.Local(R.drawable.hero_printing),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Printing_press",
+            sourceUrl = "https://fa.wikipedia.org/wiki/چاپ_فشاری",
         ),
 
         Danak(
@@ -658,7 +659,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_silk_road),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Silk_Road",
+            sourceUrl = "https://fa.wikipedia.org/wiki/جاده_ابریشم",
         ),
     )
 
@@ -696,7 +697,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_parkinson),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Parkinson%27s_law",
+            sourceUrl = "https://fa.wikipedia.org/wiki/قانون_پارکینسون",
         ),
 
         Danak(
@@ -730,7 +731,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_spaced_rep),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Spaced_repetition",
+            sourceUrl = "https://fa.wikipedia.org/wiki/تکرار_فاصله‌دار",
         ),
 
         Danak(
@@ -763,7 +764,7 @@ object MockDanaks {
             ),
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_context_switch),
-            sourceName = "ویکی‌پدیا",
+            sourceName = "ویکی‌پدیا (انگلیسی)",
             sourceUrl = "https://en.wikipedia.org/wiki/Task_switching_(psychology)",
         ),
 
@@ -799,7 +800,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_honey),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Honey",
+            sourceUrl = "https://fa.wikipedia.org/wiki/عسل",
         ),
 
         Danak(
@@ -833,7 +834,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_thermal),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Thermal_conductivity",
+            sourceUrl = "https://fa.wikipedia.org/wiki/رسانندگی_گرمایی",
         ),
 
         Danak(
@@ -867,7 +868,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_deep_sea),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Deep_sea",
+            sourceUrl = "https://fa.wikipedia.org/wiki/ژرف‌دریا",
         ),
     )
 
@@ -905,7 +906,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_anchoring),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Anchoring_effect",
+            sourceUrl = "https://fa.wikipedia.org/wiki/لنگر_انداختن",
         ),
 
         Danak(
@@ -939,7 +940,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_sound_space),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Sound",
+            sourceUrl = "https://fa.wikipedia.org/wiki/صدا",
         ),
 
         Danak(
@@ -974,7 +975,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_gps),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Global_Positioning_System",
+            sourceUrl = "https://fa.wikipedia.org/wiki/سامانه_موقعیت‌یاب_جهانی",
         ),
 
         Danak(
@@ -1007,7 +1008,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_git),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Git",
+            sourceUrl = "https://fa.wikipedia.org/wiki/گیت_(نرم‌افزار)",
         ),
 
         Danak(
@@ -1041,7 +1042,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_gresham),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Gresham%27s_law",
+            sourceUrl = "https://fa.wikipedia.org/wiki/قانون_گرشام",
         ),
 
         Danak(
@@ -1074,7 +1075,7 @@ object MockDanaks {
             readingSeconds = 55,
             image = DanakImage.Local(R.drawable.hero_cuneiform),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Cuneiform",
+            sourceUrl = "https://fa.wikipedia.org/wiki/خط_میخی",
         ),
 
         Danak(
@@ -1107,7 +1108,7 @@ object MockDanaks {
             readingSeconds = 45,
             image = DanakImage.Local(R.drawable.hero_pomodoro),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Pomodoro_Technique",
+            sourceUrl = "https://fa.wikipedia.org/wiki/فن_پومودورو",
         ),
 
         Danak(
@@ -1141,7 +1142,7 @@ object MockDanaks {
             readingSeconds = 50,
             image = DanakImage.Local(R.drawable.hero_olbers),
             sourceName = "ویکی‌پدیا",
-            sourceUrl = "https://en.wikipedia.org/wiki/Olbers%27s_paradox",
+            sourceUrl = "https://fa.wikipedia.org/wiki/پارادوکس_اولبرس",
         ),
     )
 

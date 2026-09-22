@@ -47,10 +47,6 @@ android {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
 
-    lint {
-        // A plain-text report next to the HTML one, so CI can print findings into the log.
-        textReport = true
-    }
 }
 
 dependencies {
