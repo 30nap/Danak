@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ir.danak.app.model.Danak
-import ir.danak.app.ui.components.FeedProgress
 import ir.danak.app.ui.components.TopScrim
 import kotlinx.coroutines.launch
 
@@ -96,17 +95,6 @@ fun FeedScreen(
             }
 
             SettleHaptics(pagerState)
-
-            // Sits in the artwork's band, above where any title can reach even at large
-            // font sizes, so it never touches the text.
-            FeedProgress(
-                pageCount = danaks.size,
-                currentPage = pagerState.currentPage.coerceAtMost(danaks.lastIndex),
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(WindowInsets.statusBars.asPaddingValues())
-                    .padding(start = 10.dp, top = 96.dp),
-            )
         }
 
         FeedTopBar(

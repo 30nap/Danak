@@ -52,9 +52,12 @@ fun HeroScrim(
                     // Four stops rather than two: a linear fade leaves a visible grey haze
                     // over the middle of the image.
                     colorStops = arrayOf(
-                        0f to Color.Transparent,
-                        startFraction to Color.Transparent,
-                        (startFraction + 0.24f) to background.copy(alpha = 0.62f),
+                        // A light veil over the whole photo: real photographs range from
+                        // night skies to white studio backdrops, and this keeps them sitting
+                        // in the same dark app rather than flashing between pages.
+                        0f to background.copy(alpha = 0.10f),
+                        startFraction to background.copy(alpha = 0.14f),
+                        (startFraction + 0.24f) to background.copy(alpha = 0.66f),
                         (startFraction + 0.42f) to background.copy(alpha = 0.94f),
                         // Fully opaque a little before the edge and held there: ending the
                         // ramp on the last pixel left a one-pixel line of artwork showing.

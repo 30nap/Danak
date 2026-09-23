@@ -10,6 +10,7 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onRoot
 import androidx.test.platform.app.InstrumentationRegistry
@@ -100,4 +101,14 @@ fun ComposeTestRule.visibleNodeWithText(text: String): SemanticsNodeInteraction 
         if (all[i].isDisplayed()) return all[i]
     }
     throw AssertionError("No visible node with text \"$text\" (found $count offscreen)")
+}
+
+/** As [visibleNodeWithText], for icon-only controls identified by their description. */
+fun ComposeTestRule.visibleNodeWithDescription(description: String): SemanticsNodeInteraction {
+    val all = onAllNodesWithContentDescription(description)
+    val count = all.fetchSemanticsNodes().size
+    for (i in 0 until count) {
+        if (all[i].isDisplayed()) return all[i]
+    }
+    throw AssertionError("No visible node described \"$description\" (found $count offscreen)")
 }

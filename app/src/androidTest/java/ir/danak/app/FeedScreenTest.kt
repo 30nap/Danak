@@ -52,11 +52,11 @@ class FeedScreenTest {
         // beyondViewportPageCount keeps the next page composed, so the action labels
         // exist more than once; the first in tree order is the visible page.
         rule.onAllNodesWithText("بیشتر بدان").onFirst().assertIsDisplayed()
-        rule.onAllNodesWithText("ذخیره").onFirst().assertIsDisplayed()
+        rule.visibleNodeWithDescription("ذخیره کردن").assertIsDisplayed()
     }
 
     @Test
-    fun savingSwapsTheButtonLabel() {
+    fun savingSwapsTheBookmarkState() {
         rule.setContent {
             var savedIds by remember { mutableStateOf(emptySet<String>()) }
             DanakTheme {
@@ -74,8 +74,8 @@ class FeedScreenTest {
             }
         }
 
-        rule.onAllNodesWithText("ذخیره").onFirst().performClick()
-        rule.onAllNodesWithText("ذخیره شد").onFirst().assertIsDisplayed()
+        rule.visibleNodeWithDescription("ذخیره کردن").performClick()
+        rule.visibleNodeWithDescription("حذف از ذخیره‌شده‌ها").assertIsDisplayed()
     }
 
     @Test

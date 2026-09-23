@@ -1,6 +1,7 @@
 package ir.danak.app.ui.screens.feed
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -39,7 +41,7 @@ import ir.danak.app.model.ThemeMode
 import ir.danak.app.ui.components.CategoryChip
 import ir.danak.app.ui.components.DanakHeroImage
 import ir.danak.app.ui.components.HeroScrim
-import ir.danak.app.ui.components.SaveChipButton
+import ir.danak.app.ui.components.SaveCircleButton
 import ir.danak.app.ui.components.SourceLink
 import ir.danak.app.ui.theme.DanakTheme
 import ir.danak.app.ui.theme.PillShape
@@ -98,36 +100,40 @@ fun FeedPage(
                     translationY = offset * size.height * 0.22f
                     alpha = 1f - offset.absoluteValue.coerceAtMost(1f)
                 },
-            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
+            // Spacing is set per gap rather than uniformly: the title gets room to breathe,
+            // the secondary lines sit close to what they describe.
             CategoryChip(danak.category)
+            Spacer(Modifier.height(12.dp))
 
+            // The title is the page — everything else is secondary to it.
             Text(
                 text = danak.title,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.semantics { heading() },
             )
+            Spacer(Modifier.height(10.dp))
 
+            // Two or three lines: enough to make the title worth opening, never a wall.
             Text(
                 text = danak.summary,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 5,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
+            Spacer(Modifier.height(10.dp))
 
             ReadingTime(danak.readingSeconds)
-
-            Spacer(Modifier.height(2.dp))
+            Spacer(Modifier.height(20.dp))
 
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                SaveChipButton(saved = saved, onToggle = onToggleSave)
-
+                // Primary action first, so in RTL it leads from the right; it sizes to its
+                // label instead of spanning the row, which kept it from dominating.
                 Button(
                     onClick = onOpenDetail,
                     shape = PillShape,
@@ -135,9 +141,10 @@ fun FeedPage(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                     ),
+                    contentPadding = PaddingValues(horizontal = 24.dp),
                     modifier = Modifier
-                        .weight(1f)
-                        .height(52.dp),
+                        .height(46.dp)
+                        .widthIn(min = 148.dp),
                 ) {
                     Text("بیشتر بدان", style = MaterialTheme.typography.labelLarge)
                     Spacer(Modifier.width(8.dp))
@@ -148,7 +155,12 @@ fun FeedPage(
                         modifier = Modifier.size(16.dp),
                     )
                 }
+
+                Spacer(Modifier.weight(1f))
+
+                SaveCircleButton(saved = saved, onToggle = onToggleSave)
             }
+            Spacer(Modifier.height(8.dp))
 
             SourceLink(sourceName = danak.sourceName, sourceUrl = danak.sourceUrl)
         }

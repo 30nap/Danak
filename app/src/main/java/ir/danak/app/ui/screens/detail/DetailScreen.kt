@@ -1,24 +1,31 @@
 package ir.danak.app.ui.screens.detail
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,21 +40,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import ir.danak.app.model.Danak
+import ir.danak.app.model.PhotoCredit
 import ir.danak.app.ui.components.CategoryChip
 import ir.danak.app.ui.components.DanakHeroImage
 import ir.danak.app.ui.components.HeroScrim
 import ir.danak.app.ui.components.SaveIconButton
 import ir.danak.app.ui.components.SourceLink
 import ir.danak.app.ui.components.TopScrim
+import ir.danak.app.ui.util.browsableUrl
 import ir.danak.app.ui.util.formatReadingTime
+import ir.danak.app.ui.util.splitIntoParagraphs
 
 private const val HERO_HEIGHT_FRACTION = 0.48f
 
@@ -126,21 +139,30 @@ fun DetailScreen(
                 )
 
                 for (section in danak.sections) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         if (section.heading != null) {
                             Text(
                                 text = section.heading,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.semantics { heading() },
+                                modifier = Modifier
+                                    .padding(top = 6.dp)
+                                    .semantics { heading() },
                             )
                         }
-                        Text(
-                            text = section.body,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        // Short paragraphs read far more easily on a phone than one block.
+                        for (paragraph in remember(section.body) { splitIntoParagraphs(section.body) }) {
+                            Text(
+                                text = paragraph,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
+                }
+
+                if (danak.keyTakeaway != null) {
+                    KeyTakeaway(danak.keyTakeaway)
                 }
 
                 Spacer(Modifier.height(4.dp))
@@ -151,6 +173,9 @@ fun DetailScreen(
                     sourceUrl = danak.sourceUrl,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
+                if (danak.photoCredit != null) {
+                    PhotoCreditLine(danak.photoCredit)
+                }
 
                 Spacer(Modifier.height(28.dp))
                 Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
@@ -221,4 +246,68 @@ private fun DetailTopBar(
             )
         }
     }
+}
+
+/**
+ * The one sentence worth remembering, set apart just enough to find again: a faint accent
+ * wash and a small label, no border or icon clutter.
+ */
+@Composable
+private fun KeyTakeaway(text: String) {
+    val accent = MaterialTheme.colorScheme.primary
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp)
+            .background(accent.copy(alpha = 0.07f), MaterialTheme.shapes.medium)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier
+                    .size(6.dp)
+                    .background(accent, CircleShape),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "نکتهٔ کلیدی",
+                style = MaterialTheme.typography.labelMedium,
+                color = accent,
+                modifier = Modifier.semantics { heading() },
+            )
+        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+}
+
+/**
+ * Attribution the photo's licence asks for. Kept to one quiet line under the source; it
+ * links to the photo's page on Wikimedia Commons.
+ */
+@Composable
+private fun PhotoCreditLine(credit: PhotoCredit) {
+    val context = LocalContext.current
+    Text(
+        text = "عکس: ${credit.author} · ${credit.license} · ویکی‌مدیا کامنز",
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                try {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, browsableUrl(credit.pageUrl).toUri()))
+                } catch (_: ActivityNotFoundException) {
+                    // No browser: the credit is still shown, which is what the licence needs.
+                }
+            }
+            .heightIn(min = 44.dp)
+            .padding(vertical = 12.dp),
+    )
 }

@@ -89,16 +89,16 @@ class AppJourneyTest {
             .fetchSemanticsNode().boundsInRoot
         assertTrue("category chip should hug the right edge", chip.right > width * 0.8f)
 
-        val save = rule.visibleNodeWithText("ذخیره").fetchSemanticsNode().boundsInRoot
+        val save = rule.visibleNodeWithDescription("ذخیره کردن").fetchSemanticsNode().boundsInRoot
         val more = rule.visibleNodeWithText("بیشتر بدان").fetchSemanticsNode().boundsInRoot
-        assertTrue("save sits before «بیشتر بدان» in RTL, i.e. to its right", save.left > more.left)
+        assertTrue("«بیشتر بدان» leads the row in RTL, i.e. sits right of save", more.left > save.left)
     }
 
     private fun saveAndDetail() {
         val first = expectedFeed[0]
 
-        rule.visibleNodeWithText("ذخیره").performClick()
-        rule.visibleNodeWithText("ذخیره شد").assertIsDisplayed()
+        rule.visibleNodeWithDescription("ذخیره کردن").performClick()
+        rule.visibleNodeWithDescription("حذف از ذخیره‌شده‌ها").assertIsDisplayed()
         UiAudit.screenshot(rule, "05_feed_saved")
 
         rule.visibleNodeWithText("بیشتر بدان").performClick()
@@ -143,7 +143,7 @@ class AppJourneyTest {
 
         rule.onNodeWithContentDescription("بازگشت").performClick()
         // Removed from saved in the list, so the feed must show it unsaved again.
-        rule.visibleNodeWithText("ذخیره").assertIsDisplayed()
+        rule.visibleNodeWithDescription("ذخیره کردن").assertIsDisplayed()
     }
 
     private fun settingsAndTheme() {

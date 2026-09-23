@@ -56,4 +56,29 @@ class MockDanaksTest {
         val repeats = all.zipWithNext().filter { (a, b) -> a.category == b.category }
         assertTrue("categories clump at: ${repeats.map { it.first.id }}", repeats.isEmpty())
     }
+
+    @Test
+    fun `feed summaries stay within two or three lines`() {
+        // ~45–50 Persian characters fit a line at the feed's body size on a typical phone.
+        for (danak in all) {
+            assertTrue("${danak.id}: ${danak.summary.length} chars", danak.summary.length <= 115)
+        }
+    }
+
+    @Test
+    fun `every danak ends on a key takeaway`() {
+        for (danak in all) {
+            assertTrue("${danak.id}: no key takeaway", !danak.keyTakeaway.isNullOrBlank())
+        }
+    }
+
+    @Test
+    fun `every photo is credited to its commons page`() {
+        for (danak in all) {
+            val credit = danak.photoCredit
+            assertTrue("${danak.id}: no photo credit", credit != null)
+            assertTrue("${danak.id}: ${credit!!.pageUrl}", credit.pageUrl.startsWith("https://commons.wikimedia.org/wiki/File:"))
+            assertTrue("${danak.id}: blank licence", credit.license.isNotBlank())
+        }
+    }
 }

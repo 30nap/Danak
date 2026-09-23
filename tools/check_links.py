@@ -56,6 +56,9 @@ def persian_title(english_url):
 def main():
     source = open(CONTENT, encoding="utf-8").read()
     pairs = re.findall(r'id = "([^"]+)".*?sourceUrl = "([^"]+)"', source, re.S)
+    # Photo credit pages are links the app opens too.
+    pairs += [(f"{i} (photo)", u) for i, u in
+              re.findall(r'id = "([^"]+)".*?pageUrl = "([^"]+)"', source, re.S)]
     suggest = "--suggest-fa" in sys.argv
     failures = []
     for danak_id, url in pairs:
@@ -64,7 +67,7 @@ def main():
         print(f"{'OK  ' if ok else 'FAIL'} {status} {danak_id:<20} {url}")
         if not ok:
             failures.append(url)
-        if suggest and "en.wikipedia.org/wiki/" in url:
+        if suggest and "en.wikipedia.org/wiki/" in url and "(photo)" not in danak_id:
             fa = persian_title(url)
             if fa:
                 print(f"SUGGEST {danak_id} https://fa.wikipedia.org/wiki/{fa.replace(' ', '_')}")

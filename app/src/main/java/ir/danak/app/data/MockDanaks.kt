@@ -5,6 +5,7 @@ import ir.danak.app.model.Category
 import ir.danak.app.model.Danak
 import ir.danak.app.model.DanakImage
 import ir.danak.app.model.DanakSection
+import ir.danak.app.model.PhotoCredit
 
 /**
  * V0 ships its content as a static list — there is no backend yet, and wrapping twenty-four
@@ -24,9 +25,8 @@ object MockDanaks {
             id = "zeigarnik",
             category = Category.Psychology,
             title = "چرا مغز کارهای ناتمام را بهتر به خاطر می‌سپارد؟",
-            summary = "وقتی کاری را نیمه‌تمام رها می‌کنیم، مغز آن را مانند یک پرونده باز نگه " +
-                "می‌دارد. این پدیده که «اثر زایگارنیک» نام دارد، توضیح می‌دهد چرا بعضی " +
-                "کارهای ناتمام مرتب به ذهنمان برمی‌گردند.",
+            summary = "مغز کار نیمه‌تمام را مثل پرونده‌ای باز نگه می‌دارد؛ برای همین کارهای ناتمام مدام " +
+                "به ذهنمان برمی‌گردند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -57,15 +57,21 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_zeigarnik),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/اثر_زیگارنیک",
+            keyTakeaway = "برای ادامه دادن آسان‌تر، وسط کار دست بکش؛ برای آرام شدن، قدم بعدی را روی کاغذ " +
+                "بنویس.",
+            photoCredit = PhotoCredit(
+                author = "Shixart1985",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Person_writing_in_notebook_while_using_laptop_at_a_modern_workspace.jpg",
+            ),
         ),
 
         Danak(
             id = "dunning_kruger",
             category = Category.Psychology,
             title = "چرا کم‌تجربه‌ترین‌ها اغلب مطمئن‌ترین‌اند؟",
-            summary = "برای اینکه بفهمی در کاری ضعیفی، به همان مهارتی نیاز داری که نداری. " +
-                "همین حلقهٔ بسته باعث می‌شود تازه‌کارها توانایی خود را بیش از واقع " +
-                "تخمین بزنند.",
+            summary = "برای فهمیدن اینکه در کاری ضعیفی، همان مهارتی لازم است که نداری؛ برای همین " +
+                "تازه‌کارها مطمئن‌ترند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -93,15 +99,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_dunning_kruger),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/اثر_دانینگ–کروگر",
+            keyTakeaway = "حس اطمینان معیار مهارت نیست؛ فقط بازخورد بیرونی حلقه را می‌شکند.",
+            photoCredit = PhotoCredit(
+                author = "Mænsard vokser",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Hiker_on_path_501_from_Monte_Alben_to_Monte_della_Croce_-_Bergamo,_Lombardy,_Italy_-_2020-09-13.jpg",
+            ),
         ),
 
         Danak(
             id = "confirmation_bias",
             category = Category.Psychology,
             title = "چرا فقط چیزی را می‌بینیم که از قبل باور داریم؟",
-            summary = "ذهن ما شواهد را بی‌طرفانه جمع نمی‌کند؛ سراغ چیزی می‌رود که باور فعلی‌اش " +
-                "را تأیید کند. «سوگیری تأیید» یکی از پایدارترین خطاهای شناختی است و " +
-                "با هوش بیشتر از بین نمی‌رود.",
+            summary = "ذهن ما شواهد را بی‌طرفانه جمع نمی‌کند؛ سراغ چیزی می‌رود که باور فعلی‌اش را تأیید " +
+                "کند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -129,6 +140,13 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_confirmation),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/سوگیری_تأییدی",
+            keyTakeaway = "بپرس «چه چیزی باید درست باشد تا من اشتباه کرده باشم؟» — نه «چه چیزی حرفم را تأیید " +
+                "می‌کند؟»",
+            photoCredit = PhotoCredit(
+                author = "Flazingo Photos",
+                license = "CC BY-SA 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Job_Listings.jpg",
+            ),
         ),
 
         // ---------------------------------------------------------- علم
@@ -136,8 +154,8 @@ object MockDanaks {
             id = "blue_sky",
             category = Category.Science,
             title = "چرا آسمان آبی است اما غروب قرمز؟",
-            summary = "مولکول‌های هوا نور آبی را بسیار بیشتر از نور قرمز پراکنده می‌کنند. " +
-                "همین یک واقعیت، هم آبی بودن آسمان را توضیح می‌دهد و هم قرمزی غروب را.",
+            summary = "هوا نور آبی را حدود شش برابر بیشتر از قرمز پخش می‌کند؛ همین آبی آسمان و قرمزی غروب " +
+                "را توضیح می‌دهد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -164,15 +182,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_blue_sky),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/پراکنش_ریلی",
+            keyTakeaway = "آبی و قرمز آسمان هر دو از یک پدیده‌اند: پراکندگی ریلی، فقط با طول مسیر متفاوت نور.",
+            photoCredit = PhotoCredit(
+                author = "Basile Morin",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Red_clouds_over_Mekong_banks_with_dwellings_and_pirogues_at_sunrise_in_Don_Det_Laos.jpg",
+            ),
         ),
 
         Danak(
             id = "entropy",
             category = Category.Science,
             title = "چرا زمان فقط به یک سمت می‌رود؟",
-            summary = "قوانین بنیادی فیزیک تقریباً همه نسبت به جهت زمان متقارن‌اند. تنها " +
-                "قانون دوم ترمودینامیک است که به زمان یک جهت می‌دهد — و دلیلش آمار است، " +
-                "نه نیرو.",
+            summary = "قوانین فیزیک تقریباً همه به جهت زمان بی‌اعتنا هستند؛ فقط آنتروپی به زمان جهت " +
+                "می‌دهد — و دلیلش آمار است.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -199,14 +222,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_entropy),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/قانون_دوم_ترمودینامیک",
+            keyTakeaway = "بی‌نظمی بیشتر می‌شود چون حالت‌های بی‌نظم بسیار بیشترند، نه چون نیرویی سیستم را هل " +
+                "می‌دهد.",
+            photoCredit = PhotoCredit(
+                author = "Dietmar Rabich",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_R%C3%B6dder,_G%C3%A4rtnerei_Wessinghage_--_2021_--_0364.jpg",
+            ),
         ),
 
         Danak(
             id = "tidal_locking",
             category = Category.Science,
             title = "چرا همیشه یک روی ماه را می‌بینیم؟",
-            summary = "ماه دور خودش می‌چرخد، اما دقیقاً با همان دوره‌ای که دور زمین می‌گردد. " +
-                "این تصادف نیست؛ نتیجهٔ میلیاردها سال اصطکاک کشندی است.",
+            summary = "ماه با همان سرعتی دور خودش می‌چرخد که دور زمین؛ نتیجهٔ میلیاردها سال ترمز کشندی.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -233,6 +262,12 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_tidal_lock),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/قفل_کشندی",
+            keyTakeaway = "«سمت تاریک ماه» وجود ندارد؛ فقط سمتی هست که از زمین دیده نمی‌شود.",
+            photoCredit = PhotoCredit(
+                author = "W.carter",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Full_moon_over_Gullmarn_fjord_at_Holma_Marina_2.jpg",
+            ),
         ),
     )
 
@@ -242,9 +277,7 @@ object MockDanaks {
             id = "public_key",
             category = Category.Technology,
             title = "چطور بدون ردوبدل کردن رمز، رمز می‌سازیم؟",
-            summary = "تا نیم قرن پیش، هر ارتباط رمزنگاری‌شده به یک کلید مشترک نیاز داشت که " +
-                "باید از قبل به‌صورت امن منتقل می‌شد. رمزنگاری کلید عمومی این نیاز را " +
-                "به‌کلی حذف کرد.",
+            summary = "رمزنگاری کلید عمومی اجازه می‌دهد بدون ردوبدل کردن هیچ رمزی، امن با هم حرف بزنیم.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -272,15 +305,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_public_key),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/رمزنگاری_کلید_عمومی",
+            keyTakeaway = "امنیت اینترنت روی عملیاتی بنا شده که انجامش آسان و برگرداندنش عملاً ناممکن است.",
+            photoCredit = PhotoCredit(
+                author = "Trougnouf",
+                license = "CC BY 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Solex_99_30_padlock_with_keys_(DSCF2659).jpg",
+            ),
         ),
 
         Danak(
             id = "battery_aging",
             category = Category.Technology,
             title = "چرا باتری گوشی با گذشت زمان ضعیف می‌شود؟",
-            summary = "باتری لیتیوم-یونی با هر بار شارژ کمی از ظرفیتش را از دست می‌دهد. " +
-                "علت، واکنش‌های شیمیایی برگشت‌ناپذیری است که گرما و شارژ کامل آن را " +
-                "تسریع می‌کنند.",
+            summary = "باتری لیتیوم-یونی با هر شارژ کمی فرسوده می‌شود؛ گرما و شارژ کامل این روند را تند " +
+                "می‌کنند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -308,14 +346,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_battery),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/باتری_یون‌لیتیم",
+            keyTakeaway = "شارژ بین ۲۰ تا ۸۰ درصد و دور از گرما، عمر باتری را بیشتر از هر ترفندی بالا می‌برد.",
+            photoCredit = PhotoCredit(
+                author = "LG전자",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Inductive_charging_of_LG_smartphone_(2).jpg",
+            ),
         ),
 
         Danak(
             id = "cdn",
             category = Category.Technology,
             title = "چرا سایت‌ها از نزدیک‌ترین نقطه به تو بارگذاری می‌شوند؟",
-            summary = "سرعت نور یک سقف فیزیکی است. شبکهٔ توزیع محتوا به‌جای جنگیدن با این " +
-                "محدودیت، محتوا را از قبل به نزدیکی کاربر می‌برد.",
+            summary = "سرعت نور یک سقف است؛ شبکهٔ توزیع محتوا به‌جای جنگیدن با آن، داده را نزدیک تو " +
+                "می‌آورد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -342,14 +386,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_cdn),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/شبکه_تحویل_محتوا",
+            keyTakeaway = "کوتاه‌ترین مسیر شبکه، مسیری است که هرگز طی نشود.",
+            photoCredit = PhotoCredit(
+                author = "PiDatacenters",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Racks_Amravati_Data_Center.jpg",
+            ),
         ),
 
         Danak(
             id = "big_o",
             category = Category.Programming,
             title = "چرا یک کد سریع روی داده‌های بزرگ کند می‌شود؟",
-            summary = "سرعت یک الگوریتم را نباید با ثانیه سنجید، بلکه با آهنگ رشدش نسبت به " +
-                "اندازهٔ ورودی. نماد O بزرگ دقیقاً همین را توصیف می‌کند.",
+            summary = "سرعت الگوریتم را با ثانیه نمی‌سنجند، با آهنگ رشدش همراه بزرگ شدن ورودی.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -377,14 +426,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_big_o),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/نماد_O_بزرگ",
+            keyTakeaway = "حلقهٔ تو در تو روی دادهٔ کم بی‌خطر است و روی دادهٔ زیاد فاجعه.",
+            photoCredit = PhotoCredit(
+                author = "Markus Spiske",
+                license = "CC0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_(Unsplash).jpg",
+            ),
         ),
 
         Danak(
             id = "floating_point",
             category = Category.Programming,
             title = "چرا ۰٫۱ + ۰٫۲ در کامپیوتر برابر ۰٫۳ نیست؟",
-            summary = "کامپیوتر اعداد اعشاری را در مبنای دو ذخیره می‌کند. بعضی کسرهای ساده " +
-                "در مبنای ده، در مبنای دو دورهٔ بی‌نهایت دارند و مجبور به گرد شدن‌اند.",
+            summary = "کامپیوتر اعشار را در مبنای دو ذخیره می‌کند و ۰٫۱ در مبنای دو هیچ‌وقت تمام نمی‌شود.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -412,15 +466,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_float_point),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/IEEE_۷۵۴",
+            keyTakeaway = "پول را در نوع اعشاری ذخیره نکن؛ عدد صحیح یا نوع دهدهی دقیق به کار ببر.",
+            photoCredit = PhotoCredit(
+                author = "Coyau",
+                license = "CC BY-SA 3.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Aurora_electronic_calculator_DT210_05.jpg",
+            ),
         ),
 
         Danak(
             id = "db_index",
             category = Category.Programming,
             title = "ایندکس پایگاه داده دقیقاً چه کار می‌کند؟",
-            summary = "بدون ایندکس، پایگاه داده برای یافتن یک ردیف کل جدول را می‌خواند. " +
-                "ایندکس همان کاری را می‌کند که فهرست انتهای کتاب: مسیر را از خطی به " +
-                "لگاریتمی تبدیل می‌کند.",
+            summary = "ایندکس کار فهرست انتهای کتاب را می‌کند: به‌جای خواندن کل جدول، مستقیم به ردیف " +
+                "می‌رسد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -448,6 +507,12 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_db_index),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/فهرست_(پایگاه_داده)",
+            keyTakeaway = "هر ایندکس خواندن را سریع و نوشتن را کند می‌کند؛ فقط برای پرسش‌های واقعی بساز.",
+            photoCredit = PhotoCredit(
+                author = "יעל י",
+                license = "CC BY-SA 3.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Drawers_NLI.jpg",
+            ),
         ),
     )
 
@@ -457,8 +522,7 @@ object MockDanaks {
             id = "opportunity_cost",
             category = Category.Economy,
             title = "هزینهٔ واقعی هر انتخاب، چیزی است که انتخاب نکردی",
-            summary = "هزینهٔ یک تصمیم فقط پولی نیست که می‌دهی؛ بهترین گزینه‌ای است که با " +
-                "همان پول و زمان از دست می‌دهی. این مفهوم، «هزینهٔ فرصت» نام دارد.",
+            summary = "هزینهٔ واقعی هر انتخاب، بهترین گزینه‌ای است که به خاطرش از دست می‌دهی.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -485,14 +549,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_opportunity),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/هزینه_فرصت",
+            keyTakeaway = "هر گزینه را با بهترین جایگزینش بسنج، نه با «هیچ کاری نکردن».",
+            photoCredit = PhotoCredit(
+                author = "Alan Hughes",
+                license = "CC BY-SA 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Crossroads_Signpost_-_geograph.org.uk_-_5217734.jpg",
+            ),
         ),
 
         Danak(
             id = "rule_of_72",
             category = Category.Economy,
             title = "با یک تقسیم ساده بفهم پولت کی دو برابر می‌شود",
-            summary = "عدد ۷۲ را بر نرخ سالانه تقسیم کن؛ حاصل، تعداد سال‌هایی است که طول " +
-                "می‌کشد مقدار دو برابر شود. همین قاعده برای تورم هم کار می‌کند.",
+            summary = "عدد ۷۲ را بر نرخ سالانه تقسیم کن تا بفهمی چند سال طول می‌کشد مقدار دو برابر شود.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -518,15 +587,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_rule_72),
             sourceName = "ویکی‌پدیا (انگلیسی)",
             sourceUrl = "https://en.wikipedia.org/wiki/Rule_of_72",
+            keyTakeaway = "همین تقسیم ساده نشان می‌دهد تورم با چه سرعتی ارزش پول نقد را نصف می‌کند.",
+            photoCredit = PhotoCredit(
+                author = "Dori",
+                license = "Public domain",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Stack_of_coins_0214.jpg",
+            ),
         ),
 
         Danak(
             id = "sunk_cost",
             category = Category.Economy,
             title = "چرا ادامه دادن به کار اشتباه، سخت‌تر از شروع آن است؟",
-            summary = "پولی که خرج شده برنمی‌گردد و نباید در تصمیم بعدی وزنی داشته باشد. " +
-                "اما ذهن ما دقیقاً برعکس عمل می‌کند و هرچه بیشتر خرج کرده باشیم، " +
-                "سخت‌تر رها می‌کنیم.",
+            summary = "پولی که خرج شده برنمی‌گردد، اما ذهن ما هرچه بیشتر خرج کرده باشد، سخت‌تر رها " +
+                "می‌کند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -552,14 +626,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_sunk_cost),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/هزینه_ازدست‌رفته",
+            keyTakeaway = "بپرس «اگر امروز از صفر تصمیم می‌گرفتم، باز همین را انتخاب می‌کردم؟»",
+            photoCredit = PhotoCredit(
+                author = "טל שמע",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Habonim-Dor_Beach.jpg",
+            ),
         ),
 
         Danak(
             id = "fall_of_rome",
             category = Category.History,
             title = "روم یک‌شبه سقوط نکرد؛ قرن‌ها طول کشید",
-            summary = "تصویر رایج از «سقوط روم» یک فروپاشی ناگهانی است. واقعیت، فرسایشی " +
-                "طولانی بود که در آن اقتصاد، ارتش و مرزها هم‌زمان تضعیف شدند.",
+            summary = "روم یک‌شبه فرو نریخت؛ اقتصاد، ارتش و مرزهایش قرن‌ها هم‌زمان فرسوده شدند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -589,15 +668,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_rome),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/سقوط_امپراتوری_روم_غربی",
+            keyTakeaway = "سامانه‌ها با یک ضربه نمی‌افتند؛ وقتی می‌افتند که دیگر ظرفیت جذب ضربه ندارند.",
+            photoCredit = PhotoCredit(
+                author = "Claude Lorrain",
+                license = "Public domain",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Claude_Lorrain_-_Capriccio_with_ruins_of_the_Roman_Forum_-_Google_Art_Project.jpg",
+            ),
         ),
 
         Danak(
             id = "printing_press",
             category = Category.History,
             title = "چاپ، دانش را از انحصار بیرون آورد",
-            summary = "پیش از گوتنبرگ، هر کتاب را باید دست‌نویس می‌کردند. پس از او، قیمت " +
-                "کتاب در چند دهه سقوط کرد و برای نخستین بار ایده‌ها سریع‌تر از " +
-                "قدرت‌ها حرکت کردند.",
+            summary = "پیش از گوتنبرگ هر کتاب دست‌نویس بود؛ پس از او ایده‌ها سریع‌تر از قدرت‌ها جابه‌جا " +
+                "شدند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -625,15 +709,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_printing),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/چاپ_فشاری",
+            keyTakeaway = "چاپ فقط کتاب را ارزان نکرد؛ متن یکسان و قابل ارجاع ساخت که علم بدون آن ممکن نبود.",
+            photoCredit = PhotoCredit(
+                author = "International Printing Museum",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:PrintMus_038.jpg",
+            ),
         ),
 
         Danak(
             id = "silk_road",
             category = Category.History,
             title = "جادهٔ ابریشم یک جاده نبود",
-            summary = "نامش یک مسیر واحد را تداعی می‌کند، اما در واقع شبکه‌ای از راه‌های " +
-                "بازرگانی بود که کمتر کسی تمام طولش را طی می‌کرد — و مهم‌ترین چیزی " +
-                "که جابه‌جا کرد، کالا نبود.",
+            summary = "جادهٔ ابریشم یک جاده نبود، شبکه‌ای از راه‌ها بود — و مهم‌ترین بارش ایده بود، نه " +
+                "ابریشم.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -660,6 +749,12 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_silk_road),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/جاده_ابریشم",
+            keyTakeaway = "کاغذ، ریاضیات و ادیان از همان مسیرهایی گذشتند که کاروان‌ها.",
+            photoCredit = PhotoCredit(
+                author = "Asfour hamza",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Camel_caravan_going_through_sand_in_the_Sahara_Desert.jpg",
+            ),
         ),
     )
 
@@ -669,8 +764,7 @@ object MockDanaks {
             id = "parkinson_law",
             category = Category.Productivity,
             title = "کار دقیقاً به اندازهٔ زمانی که داری طول می‌کشد",
-            summary = "اگر برای یک گزارش یک هفته وقت بگذاری، یک هفته طول می‌کشد. اگر دو " +
-                "ساعت بگذاری، اغلب دو ساعت. «قانون پارکینسون» توضیح می‌دهد چرا.",
+            summary = "کار آن‌قدر کش می‌آید که تمام زمان در دسترس را پر کند؛ مهلت کوتاه‌تر، کار متمرکزتر.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -698,14 +792,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_parkinson),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/قانون_پارکینسون",
+            keyTakeaway = "برای هر کار مهلتی کوتاه‌تر از حد طبیعی بگذار — اما نه برای کارهایی که تفکر عمیق " +
+                "می‌خواهند.",
+            photoCredit = PhotoCredit(
+                author = "John Morgan",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Hourglass_with_sand.jpg",
+            ),
         ),
 
         Danak(
             id = "spaced_repetition",
             category = Category.Productivity,
             title = "مرور درست‌زمان، از مرور زیاد مؤثرتر است",
-            summary = "فراموشی با یک منحنی قابل پیش‌بینی جلو می‌رود. اگر دقیقاً پیش از " +
-                "فراموش شدن مرور کنی، هر بار مدت ماندگاری مطلب طولانی‌تر می‌شود.",
+            summary = "اگر درست پیش از فراموش کردن مرور کنی، هر بار مطلب مدت بیشتری در ذهن می‌ماند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -732,14 +832,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_spaced_rep),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/تکرار_فاصله‌دار",
+            keyTakeaway = "مرور یعنی بیرون کشیدن از ذهن، نه دوباره خواندن؛ آشنایی را با دانستن اشتباه نگیر.",
+            photoCredit = PhotoCredit(
+                author = "Shixart1985",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Woman_reading_a_book._Legs_up_the_wall_pose.jpg",
+            ),
         ),
 
         Danak(
             id = "context_switching",
             category = Category.Productivity,
             title = "هر بار جابه‌جایی بین کارها، هزینه‌ای پنهان دارد",
-            summary = "ذهن مانند پردازنده نمی‌تواند آنی بین کارها سوئیچ کند. بخشی از توجه " +
-                "روی کار قبلی باقی می‌ماند و بازدهی کار جدید را کم می‌کند.",
+            summary = "ذهن نمی‌تواند آنی بین کارها جابه‌جا شود؛ بخشی از توجه روی کار قبلی جا می‌ماند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -766,14 +871,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_context_switch),
             sourceName = "ویکی‌پدیا (انگلیسی)",
             sourceUrl = "https://en.wikipedia.org/wiki/Task_switching_(psychology)",
+            keyTakeaway = "پیش از رها کردن هر کار، قدم بعدی‌اش را در یک خط بنویس.",
+            photoCredit = PhotoCredit(
+                author = "Daniel Schwen",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Tolono_Xing_1.jpg",
+            ),
         ),
 
         Danak(
             id = "honey",
             category = Category.Curiosities,
             title = "چرا عسل هیچ‌وقت فاسد نمی‌شود؟",
-            summary = "در مقبره‌های مصر باستان ظرف‌های عسل پیدا شده که هنوز قابل خوردن " +
-                "بودند. راز ماندگاری عسل، سه ویژگی شیمیایی هم‌زمان است.",
+            summary = "عسل‌هایی از مقبره‌های مصر باستان هنوز خوردنی بوده‌اند؛ راز ماندگاری عسل سه ویژگی " +
+                "شیمیایی است.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -801,14 +912,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_honey),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/عسل",
+            keyTakeaway = "آب کم، اسیدیته و کمی آب اکسیژنه، سه سدی‌اند که میکروب از آن‌ها عبور نمی‌کند.",
+            photoCredit = PhotoCredit(
+                author = "Thomas Bresson",
+                license = "CC BY 2.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:ComputerHotline_-_Apis_mellifera_(by)_(1).jpg",
+            ),
         ),
 
         Danak(
             id = "thermal_feel",
             category = Category.Curiosities,
             title = "چرا فلز سردتر از چوب حس می‌شود، با اینکه نیست؟",
-            summary = "میز چوبی و پایهٔ فلزی‌اش دقیقاً هم‌دما هستند، اما فلز سردتر به نظر " +
-                "می‌رسد. پوست ما دما را نمی‌سنجد؛ سرعت از دست دادن گرما را می‌سنجد.",
+            summary = "فلز و چوب کنار هم هم‌دما هستند، اما فلز سردتر حس می‌شود؛ پوست سرعت از دست دادن " +
+                "گرما را می‌سنجد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -835,14 +952,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_thermal),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/رسانندگی_گرمایی",
+            keyTakeaway = "حس سرما دربارهٔ دمای جسم نیست، دربارهٔ سرعتی است که گرما را از تو می‌گیرد.",
+            photoCredit = PhotoCredit(
+                author = "Dietmar Rabich",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Wiese_am_Strandbadweg_--_2016_--_5670-6.jpg",
+            ),
         ),
 
         Danak(
             id = "deep_sea",
             category = Category.Curiosities,
             title = "نقشهٔ سطح مریخ را بهتر از کف اقیانوس می‌شناسیم",
-            summary = "اقیانوس‌ها بیش از دو سوم سطح زمین را پوشانده‌اند، اما بخش بزرگی از " +
-                "بستر آن‌ها هرگز با وضوح بالا نقشه‌برداری نشده است. دلیلش فیزیک است.",
+            summary = "نقشهٔ سطح مریخ را بهتر از کف اقیانوس‌های زمین داریم؛ دلیلش فیزیک آب است.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -869,6 +991,12 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_deep_sea),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/ژرف‌دریا",
+            keyTakeaway = "ماهواره‌ها از میان آب نمی‌بینند؛ کف اقیانوس را فقط باید با صوت و از نزدیک کاوید.",
+            photoCredit = PhotoCredit(
+                author = "Brocken Inaglory",
+                license = "CC BY-SA 3.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Underwater_portrait_of_green_turtle.jpg",
+            ),
         ),
     )
 
@@ -878,8 +1006,7 @@ object MockDanaks {
             id = "anchoring",
             category = Category.Psychology,
             title = "اولین عددی که می‌بینی، حدس بعدی‌ات را می‌سازد",
-            summary = "حتی یک عدد کاملاً تصادفی، تخمین‌های بعدی ما را به سمت خودش می‌کشد. " +
-                "این پدیده «اثر لنگر» نام دارد و در قیمت‌گذاری و مذاکره همه‌جا حاضر است.",
+            summary = "حتی یک عدد کاملاً تصادفی، تخمین بعدی ما را به سمت خودش می‌کشد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -907,14 +1034,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_anchoring),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/لنگر_انداختن",
+            keyTakeaway = "پیش از مذاکره، عددت را از داده‌های بیرونی تعیین کن تا عدد طرف مقابل لنگرت نشود.",
+            photoCredit = PhotoCredit(
+                author = "JoachimKohler-HB",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Anker_am_Bug_der_DS_%22Storf_I%22_in_Bergen_NOR_(2015).jpg",
+            ),
         ),
 
         Danak(
             id = "sound_in_space",
             category = Category.Science,
             title = "چرا در فضا هیچ صدایی شنیده نمی‌شود؟",
-            summary = "صدا لرزش مولکول‌هاست که از یکی به دیگری منتقل می‌شود. در خلأ فضا " +
-                "مولکولی تقریباً وجود ندارد، پس چیزی هم برای لرزیدن نیست.",
+            summary = "صدا لرزش مولکول‌هاست و در خلأ فضا مولکولی نیست که بلرزد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -941,15 +1073,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_sound_space),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/صدا",
+            keyTakeaway = "فضانوردان با رادیو حرف می‌زنند، چون امواج الکترومغناطیسی به هوا نیازی ندارند.",
+            photoCredit = PhotoCredit(
+                author = "NASA",
+                license = "Public domain",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Bruce_McCandless_II_during_EVA_in_1984.jpg",
+            ),
         ),
 
         Danak(
             id = "gps",
             category = Category.Technology,
             title = "GPS بدون نظریهٔ نسبیت، روزی کیلومترها خطا داشت",
-            summary = "گوشی تو موقعیتش را از روی زمان رسیدن سیگنال ماهواره‌ها حساب می‌کند. " +
-                "ساعت ماهواره‌ها روزانه حدود ۳۸ میکروثانیه تندتر کار می‌کند و اگر اصلاح " +
-                "نشود، خطا روزی حدود ده کیلومتر رشد می‌کند.",
+            summary = "ساعت ماهواره‌های GPS روزی ۳۸ میکروثانیه تند می‌رود؛ بدون اصلاح نسبیت، خطا روزی " +
+                "کیلومترها می‌شد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -976,14 +1113,19 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_gps),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/سامانه_موقعیت‌یاب_جهانی",
+            keyTakeaway = "هر میکروثانیه خطای زمان، حدود ۳۰۰ متر خطای مکان است.",
+            photoCredit = PhotoCredit(
+                author = "European Space Agency",
+                license = "CC BY-SA 3.0 igo",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:MetOp_Second_Generation_A-type_satellite_above_Earth_ESA511188.jpg",
+            ),
         ),
 
         Danak(
             id = "git_branches",
             category = Category.Programming,
             title = "چرا ساختن شاخه در Git تقریباً هیچ هزینه‌ای ندارد؟",
-            summary = "در Git، یک شاخه کپی کد نیست؛ فقط یک فایل کوچک است که شناسهٔ یک " +
-                "کامیت را در خود دارد. ساختن شاخه یعنی نوشتن حدود چهل کاراکتر.",
+            summary = "در Git، شاخه کپی کد نیست؛ فقط اشاره‌گری کوچک به یک کامیت است.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -1009,15 +1151,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_git),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/گیت_(نرم‌افزار)",
+            keyTakeaway = "چون شاخه ارزان است، برای هر آزمایش کوچک یکی بساز و بی‌هزینه دورش بینداز.",
+            photoCredit = PhotoCredit(
+                author = "W.carter",
+                license = "Public domain",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Waxing_moon_in_trees.jpg",
+            ),
         ),
 
         Danak(
             id = "greshams_law",
             category = Category.Economy,
             title = "چرا «پول بد، پول خوب را از بازار بیرون می‌کند»؟",
-            summary = "وقتی دو نوع سکه با یک ارزش اسمی در گردش باشند و یکی فلز گران‌تری " +
-                "داشته باشد، مردم سکهٔ بهتر را نگه می‌دارند و بدتر را خرج می‌کنند. " +
-                "این «قانون گرشام» است.",
+            summary = "وقتی دو سکه ارزش اسمی یکسان دارند، مردم سکهٔ بهتر را نگه می‌دارند و بدتر را خرج " +
+                "می‌کنند.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -1043,14 +1190,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_gresham),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/قانون_گرشام",
+            keyTakeaway = "قانون گرشام فقط وقتی کار می‌کند که قیمت برابر دو پول به زور قانون ثابت شده باشد.",
+            photoCredit = PhotoCredit(
+                author = "Hans Hillewaert",
+                license = "CC BY-SA 3.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Silver_coin_hoard.jpg",
+            ),
         ),
 
         Danak(
             id = "cuneiform",
             category = Category.History,
             title = "نخستین نوشتهٔ بشر، شعر نبود؛ حسابداری بود",
-            summary = "قدیمی‌ترین لوح‌های خط میخی از سومر، بیشتر فهرست جیرهٔ نان، شمار دام " +
-                "و انبار غله‌اند. نوشتن برای یادداشت حساب‌ها اختراع شد، نه برای قصه.",
+            summary = "قدیمی‌ترین لوح‌های خط میخی بیشتر فهرست جیره و دام‌اند؛ نوشتن برای حسابداری اختراع " +
+                "شد.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -1076,14 +1229,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_cuneiform),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/خط_میخی",
+            keyTakeaway = "کتیبهٔ سه‌زبانهٔ بیستون کلید خواندن دوبارهٔ خط میخی شد.",
+            photoCredit = PhotoCredit(
+                author = "ناشناس",
+                license = "CC BY-SA 3.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Cuneiform_tablet_BM62788.jpg",
+            ),
         ),
 
         Danak(
             id = "pomodoro",
             category = Category.Productivity,
             title = "۲۵ دقیقه کار، ۵ دقیقه استراحت: چرا جواب می‌دهد؟",
-            summary = "تکنیک پومودورو کار را به بازه‌های کوتاه و محافظت‌شده تقسیم می‌کند. " +
-                "قدرتش در زمان‌سنج نیست؛ در این است که شروع کردن را آسان می‌کند.",
+            summary = "۲۵ دقیقه کار و ۵ دقیقه استراحت؛ قدرت پومودورو در آسان کردن شروع است، نه در " +
+                "زمان‌سنج.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -1109,15 +1268,20 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_pomodoro),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/فن_پومودورو",
+            keyTakeaway = "مرز روشن میان تمرکز و استراحت مهم است، نه طول دقیق آن.",
+            photoCredit = PhotoCredit(
+                author = "Retro00064",
+                license = "Public domain",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:Lux_Minute_Minder_timer.jpg",
+            ),
         ),
 
         Danak(
             id = "olbers_paradox",
             category = Category.Curiosities,
             title = "اگر ستاره‌ها بی‌شمارند، چرا آسمان شب تاریک است؟",
-            summary = "اگر کیهان بی‌انتها و همیشگی بود، هر خط دید ما در نهایت به یک ستاره " +
-                "می‌رسید و آسمان شب باید مثل سطح خورشید می‌درخشید. تاریکی شب خودش یک " +
-                "سرنخ دربارهٔ آغاز کیهان است.",
+            summary = "اگر ستاره‌ها بی‌شمار بودند، آسمان شب باید می‌درخشید؛ تاریکی شب سرنخی از آغاز کیهان " +
+                "است.",
             sections = listOf(
                 DanakSection(
                     heading = null,
@@ -1143,6 +1307,12 @@ object MockDanaks {
             image = DanakImage.Local(R.drawable.hero_olbers),
             sourceName = "ویکی‌پدیا",
             sourceUrl = "https://fa.wikipedia.org/wiki/پارادوکس_اولبرس",
+            keyTakeaway = "آسمان شب تاریک است چون کیهان عمر محدودی دارد و نور دورترین ستاره‌ها هنوز نرسیده.",
+            photoCredit = PhotoCredit(
+                author = "Giles Laurent",
+                license = "CC BY-SA 4.0",
+                pageUrl = "https://commons.wikimedia.org/wiki/File:036_Milky_Way_during_Perseids_seen_from_Oeschinensee_with_water_reflections_Photo_by_Giles_Laurent.jpg",
+            ),
         ),
     )
 

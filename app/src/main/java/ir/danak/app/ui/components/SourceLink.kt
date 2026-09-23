@@ -62,23 +62,23 @@ fun SourceLink(
     ) {
         Text(
             text = sourceName,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = domain,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Icon(
             imageVector = Icons.AutoMirrored.Filled.OpenInNew,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-            modifier = Modifier.size(14.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+            modifier = Modifier.size(12.dp),
         )
     }
 }
