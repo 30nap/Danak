@@ -1,6 +1,8 @@
 {
  "zeigarnik": {
-  "query": "open notebook pen desk"
+  "query": "open notebook pen desk",
+  "pick": "File:Person writing in notebook while using laptop at a modern workspace.jpg",
+  "focus": 0.45
  },
  "dunning_kruger": {
   "query": "hiker mountain summit view",
@@ -30,10 +32,12 @@
  "public_key": {
   "query": "padlock key",
   "pick": "File:Solex 99 30 padlock with keys (DSCF2659).jpg",
-  "focus": 0.45
+  "focus": 0.62
  },
  "battery_aging": {
-  "query": "smartphone charging"
+  "query": "smartphone charging",
+  "pick": "File:Inductive charging of LG smartphone (2).jpg",
+  "focus": 0.5
  },
  "cdn": {
   "query": "data center server racks",
@@ -56,7 +60,9 @@
   "focus": 0.5
  },
  "opportunity_cost": {
-  "query": "crossroads signpost"
+  "query": "crossroads signpost",
+  "pick": "File:Crossroads Signpost - geograph.org.uk - 5217734.jpg",
+  "focus": 0.5
  },
  "rule_of_72": {
   "query": "stacks of coins",
@@ -89,7 +95,7 @@
   "focus": 0.5
  },
  "spaced_repetition": {
-  "query": "flashcards"
+  "query": "woman reading book"
  },
  "context_switching": {
   "query": "railway switch tracks junction",
@@ -107,12 +113,14 @@
   "focus": 0.5
  },
  "deep_sea": {
-  "query": "sea turtle underwater"
+  "query": "sea turtle underwater",
+  "pick": "File:Underwater portrait of green turtle.jpg",
+  "focus": 0.5
  },
  "anchoring": {
   "query": "ship anchor",
   "pick": "File:Anker am Bug der DS \"Storf I\" in Bergen NOR (2015).jpg",
-  "focus": 0.55
+  "focus": 0.3
  },
  "sound_in_space": {
   "query": "astronaut spacewalk Earth",
@@ -120,7 +128,9 @@
   "focus": 0.5
  },
  "gps": {
-  "query": "satellite in orbit above Earth"
+  "query": "satellite in orbit above Earth",
+  "pick": "File:MetOp Second Generation A-type satellite above Earth ESA511188.jpg",
+  "focus": 0.5
  },
  "git_branches": {
   "query": "tree branches silhouette",
@@ -138,7 +148,9 @@
   "focus": 0.5
  },
  "pomodoro": {
-  "query": "kitchen timer"
+  "query": "kitchen timer",
+  "pick": "File:Lux Minute Minder timer.jpg",
+  "focus": 0.5
  },
  "olbers_paradox": {
   "query": "milky way night sky",
