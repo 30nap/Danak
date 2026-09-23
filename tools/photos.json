@@ -1,34 +1,148 @@
 {
- "zeigarnik":         {"query": "unfinished to do list notebook desk"},
- "dunning_kruger":    {"query": "hiker mountain summit view"},
- "confirmation_bias": {"query": "magnifying glass newspaper"},
- "blue_sky":          {"query": "red sunset sky clouds"},
- "entropy":           {"query": "shattered glass"},
- "tidal_locking":     {"query": "full moon"},
- "public_key":        {"query": "padlock key"},
- "battery_aging":     {"query": "lithium ion battery cells"},
- "cdn":               {"query": "data center server racks"},
- "big_o":             {"query": "source code on computer screen"},
- "floating_point":    {"query": "calculator display digits"},
- "db_index":          {"query": "library card catalog drawers"},
- "opportunity_cost":  {"query": "fork in the road forest"},
- "rule_of_72":        {"query": "stacks of coins"},
- "sunk_cost":         {"query": "shipwreck beach"},
- "fall_of_rome":      {"query": "Roman Forum ruins"},
- "printing_press":    {"query": "Gutenberg printing press replica"},
- "silk_road":         {"query": "camel caravan desert"},
- "parkinson_law":     {"query": "hourglass sand"},
- "spaced_repetition": {"query": "student studying books library"},
- "context_switching": {"query": "railway switch tracks junction"},
- "honey":             {"query": "honeycomb honey bees"},
- "thermal_feel":      {"query": "frost on metal"},
- "deep_sea":          {"query": "underwater ocean sunlight rays"},
- "anchoring":         {"query": "ship anchor"},
- "sound_in_space":    {"query": "astronaut spacewalk Earth"},
- "gps":               {"query": "GPS satellite"},
- "git_branches":      {"query": "tree branches silhouette"},
- "greshams_law":      {"query": "silver coins"},
- "cuneiform":         {"query": "cuneiform clay tablet"},
- "pomodoro":          {"query": "tomato kitchen timer"},
- "olbers_paradox":    {"query": "milky way night sky"}
+ "zeigarnik": {
+  "query": "open notebook pen desk"
+ },
+ "dunning_kruger": {
+  "query": "hiker mountain summit view",
+  "pick": "File:Hiker on path 501 from Monte Alben to Monte della Croce - Bergamo, Lombardy, Italy - 2020-09-13.jpg",
+  "focus": 0.5
+ },
+ "confirmation_bias": {
+  "query": "magnifying glass newspaper",
+  "pick": "File:Job Listings.jpg",
+  "focus": 0.35
+ },
+ "blue_sky": {
+  "query": "red sunset sky clouds",
+  "pick": "File:Red clouds over Mekong banks with dwellings and pirogues at sunrise in Don Det Laos.jpg",
+  "focus": 0.5
+ },
+ "entropy": {
+  "query": "shattered glass",
+  "pick": "File:Dülmen, Rödder, Gärtnerei Wessinghage -- 2021 -- 0364.jpg",
+  "focus": 0.5
+ },
+ "tidal_locking": {
+  "query": "full moon",
+  "pick": "File:Full moon over Gullmarn fjord at Holma Marina 2.jpg",
+  "focus": 0.42
+ },
+ "public_key": {
+  "query": "padlock key",
+  "pick": "File:Solex 99 30 padlock with keys (DSCF2659).jpg",
+  "focus": 0.45
+ },
+ "battery_aging": {
+  "query": "smartphone charging"
+ },
+ "cdn": {
+  "query": "data center server racks",
+  "pick": "File:Racks Amravati Data Center.jpg",
+  "focus": 0.5
+ },
+ "big_o": {
+  "query": "source code on computer screen",
+  "pick": "File:Code on computer monitor (Unsplash).jpg",
+  "focus": 0.4
+ },
+ "floating_point": {
+  "query": "calculator display digits",
+  "pick": "File:Aurora electronic calculator DT210 05.jpg",
+  "focus": 0.5
+ },
+ "db_index": {
+  "query": "library card catalog drawers",
+  "pick": "File:Drawers NLI.jpg",
+  "focus": 0.5
+ },
+ "opportunity_cost": {
+  "query": "crossroads signpost"
+ },
+ "rule_of_72": {
+  "query": "stacks of coins",
+  "pick": "File:Stack of coins 0214.jpg",
+  "focus": 0.5
+ },
+ "sunk_cost": {
+  "query": "shipwreck beach",
+  "pick": "File:Habonim-Dor Beach.jpg",
+  "focus": 0.4
+ },
+ "fall_of_rome": {
+  "query": "Roman Forum ruins",
+  "pick": "File:Claude Lorrain - Capriccio with ruins of the Roman Forum - Google Art Project.jpg",
+  "focus": 0.35
+ },
+ "printing_press": {
+  "query": "Gutenberg printing press replica",
+  "pick": "File:PrintMus 038.jpg",
+  "focus": 0.5
+ },
+ "silk_road": {
+  "query": "camel caravan desert",
+  "pick": "File:Camel caravan going through sand in the Sahara Desert.jpg",
+  "focus": 0.45
+ },
+ "parkinson_law": {
+  "query": "hourglass sand",
+  "pick": "File:Hourglass with sand.jpg",
+  "focus": 0.5
+ },
+ "spaced_repetition": {
+  "query": "flashcards"
+ },
+ "context_switching": {
+  "query": "railway switch tracks junction",
+  "pick": "File:Tolono Xing 1.jpg",
+  "focus": 0.5
+ },
+ "honey": {
+  "query": "honeycomb honey bees",
+  "pick": "File:ComputerHotline - Apis mellifera (by) (1).jpg",
+  "focus": 0.45
+ },
+ "thermal_feel": {
+  "query": "frost on metal",
+  "pick": "File:Dülmen, Wiese am Strandbadweg -- 2016 -- 5670-6.jpg",
+  "focus": 0.5
+ },
+ "deep_sea": {
+  "query": "sea turtle underwater"
+ },
+ "anchoring": {
+  "query": "ship anchor",
+  "pick": "File:Anker am Bug der DS \"Storf I\" in Bergen NOR (2015).jpg",
+  "focus": 0.55
+ },
+ "sound_in_space": {
+  "query": "astronaut spacewalk Earth",
+  "pick": "File:Bruce McCandless II during EVA in 1984.jpg",
+  "focus": 0.5
+ },
+ "gps": {
+  "query": "satellite in orbit above Earth"
+ },
+ "git_branches": {
+  "query": "tree branches silhouette",
+  "pick": "File:Waxing moon in trees.jpg",
+  "focus": 0.5
+ },
+ "greshams_law": {
+  "query": "silver coins",
+  "pick": "File:Silver coin hoard.jpg",
+  "focus": 0.5
+ },
+ "cuneiform": {
+  "query": "cuneiform clay tablet",
+  "pick": "File:Cuneiform tablet BM62788.jpg",
+  "focus": 0.5
+ },
+ "pomodoro": {
+  "query": "kitchen timer"
+ },
+ "olbers_paradox": {
+  "query": "milky way night sky",
+  "pick": "File:036 Milky Way during Perseids seen from Oeschinensee with water reflections Photo by Giles Laurent.jpg",
+  "focus": 0.5
+ }
 }
