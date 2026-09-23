@@ -1,0 +1,28 @@
+name: Hero photos
+
+# Fetches hero photos from Wikimedia Commons into the job log (see tools/fetch_photos.py).
+# Runs only when the photo list or the fetcher changes.
+on:
+  push:
+    paths:
+      - tools/photos.json
+      - tools/fetch_photos.py
+      - .github/workflows/photos.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    name: Fetch photos (shard ${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install --quiet pillow
+      - run: python3 tools/fetch_photos.py --shard ${{ matrix.shard }} --shards 4
