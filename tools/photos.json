@@ -95,7 +95,9 @@
   "focus": 0.5
  },
  "spaced_repetition": {
-  "query": "woman reading book"
+  "query": "woman reading book",
+  "pick": "File:Woman reading a book. Legs up the wall pose.jpg",
+  "focus": 0.5
  },
  "context_switching": {
   "query": "railway switch tracks junction",
