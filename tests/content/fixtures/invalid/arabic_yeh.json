@@ -1,0 +1,9 @@
+{
+  "description": "Arabic yeh instead of Persian ی.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "title": "خط ميخي برای حسابداری اختراع شد"
+    }
+  }
+}

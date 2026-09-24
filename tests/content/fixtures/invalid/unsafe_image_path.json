@@ -1,0 +1,9 @@
+{
+  "description": "The image path climbs out of images/.",
+  "expect": "schema",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "image.src": "images/../../../etc/passwd.png"
+    }
+  }
+}

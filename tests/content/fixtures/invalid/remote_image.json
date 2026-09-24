@@ -1,0 +1,9 @@
+{
+  "description": "Content must ship its own image.",
+  "expect": "remote-image",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "image.src": "https://example.com/beta.webp"
+    }
+  }
+}

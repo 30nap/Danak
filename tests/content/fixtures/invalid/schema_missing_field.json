@@ -1,0 +1,9 @@
+{
+  "description": "A required field is missing.",
+  "expect": "schema",
+  "edit": {
+    "danaks/0001-alpha.json": {
+      "keyTakeaway": null
+    }
+  }
+}

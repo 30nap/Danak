@@ -1,0 +1,9 @@
+{
+  "description": "Two Danaks teach the same concept (keys differ only in case).",
+  "expect": "duplicate-concept",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "conceptKey": "q180910"
+    }
+  }
+}

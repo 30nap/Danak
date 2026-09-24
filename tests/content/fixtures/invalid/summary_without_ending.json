@@ -1,0 +1,9 @@
+{
+  "description": "A summary that does not end a sentence.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "summary": "قدیمی‌ترین لوح‌های خط میخی بیشتر فهرست جیره و دام‌اند، نه شعر و داستان"
+    }
+  }
+}

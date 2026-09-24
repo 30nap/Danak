@@ -1,0 +1,7 @@
+{
+  "description": "A file that is not JSON.",
+  "expect": "json",
+  "write": {
+    "danaks/0002-beta.json": "{\"id\": "
+  }
+}

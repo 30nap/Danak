@@ -1,0 +1,31 @@
+{
+  "id": "beta",
+  "category": "history",
+  "title": "خط میخی برای حسابداری اختراع شد",
+  "summary": "قدیمی‌ترین لوح‌های خط میخی بیشتر فهرست جیره و دام‌اند، نه شعر و داستان.",
+  "sections": [
+    {
+      "body": "این بند نخست متن آزمایشی است و فقط برای آزمودن اعتبارسنج نوشته شده است."
+    },
+    {
+      "heading": "چرا مهم است؟",
+      "body": "بند دوم هم کوتاه است؛ اما باید با نقطه تمام شود."
+    }
+  ],
+  "keyTakeaway": "نکتهٔ کلیدی آزمایشی در یک جملهٔ کوتاه.",
+  "readingSeconds": 30,
+  "source": {
+    "url": "https://fa.wikipedia.org/wiki/خط_میخی",
+    "publisher": "ویکی‌پدیا",
+    "title": "عنوان",
+    "license": "CC BY-SA 4.0"
+  },
+  "image": {
+    "src": "images/beta.webp",
+    "credit": {
+      "author": "آزمون",
+      "license": "CC0",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Beta.jpg"
+    }
+  }
+}

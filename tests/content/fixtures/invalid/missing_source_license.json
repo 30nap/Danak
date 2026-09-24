@@ -1,0 +1,9 @@
+{
+  "description": "The source licence required by sources.yml is missing.",
+  "expect": "license",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "source.license": null
+    }
+  }
+}

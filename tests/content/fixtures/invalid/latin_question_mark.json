@@ -1,0 +1,9 @@
+{
+  "description": "A Latin ? in a Persian title.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0001-alpha.json": {
+      "title": "چرا آسمان در روز آبی است?"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Two spaces in a row.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "keyTakeaway": "نکتهٔ کلیدی  آزمایشی در یک جملهٔ کوتاه."
+    }
+  }
+}

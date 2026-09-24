@@ -1,0 +1,9 @@
+{
+  "description": "The publisher does not match sources.yml.",
+  "expect": "source-publisher",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "source.publisher": "Wikipedia"
+    }
+  }
+}

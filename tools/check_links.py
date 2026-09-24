@@ -7,13 +7,14 @@ article and prints it, which is how the Persian source links were chosen.
 Usage: python3 tools/check_links.py [--suggest-fa]
 """
 import json
+import pathlib
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
-CONTENT = "app/src/main/assets/content/content.json"
+CONTENT = pathlib.Path(__file__).resolve().parent.parent / "content" / "danaks"
 USER_AGENT = "DanakLinkCheck/1.0 (+https://github.com/30nap/Danak)"
 
 
@@ -53,7 +54,7 @@ def persian_title(english_url):
 
 
 def main():
-    danaks = json.load(open(CONTENT, encoding="utf-8"))["danaks"]
+    danaks = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(CONTENT.glob("*.json"))]
     pairs = [(d["id"], d["source"]["url"]) for d in danaks]
     # Photo credit pages are links the app opens too.
     pairs += [(f"{d['id']} (photo)", d["image"]["credit"]["pageUrl"]) for d in danaks]

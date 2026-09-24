@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://30nap.github.io/Danak/schema/index-v1.schema.json",
+  "title": "Danak published index, v1",
+  "description": "The entry point of a published content set (/v1/index.json). Lists every Danak in feed order with the path of its file and the SHA-256 of that file's bytes. Files are named by content hash, so they never change once published: a client fetches only entries whose sha256 it does not already have.",
+  "type": "object",
+  "required": ["schemaVersion", "danaks"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "danaks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$" },
+          "path": {
+            "description": "Relative to the index. The file holds one Danak as defined in danak-v1.schema.json#/$defs/danak; its image.src is relative to the same directory as this index.",
+            "type": "string",
+            "pattern": "^content/[a-z0-9_]+_[0-9a-f]{8}\\.json$"
+          },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

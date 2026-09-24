@@ -1,0 +1,9 @@
+{
+  "description": "A host that is not in sources.yml.",
+  "expect": "untrusted-source",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "source.url": "https://example.com/article"
+    }
+  }
+}

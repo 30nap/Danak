@@ -1,0 +1,39 @@
+# Trusted sources for Danak content.
+#
+# A Danak may cite a text source only if its URL's host is listed under `text`, and its
+# `publisher` and `license` must match the entry exactly. Its photo must come from a host
+# under `images`, under one of that entry's licences. tools/danak_content.py enforces all of
+# this; adding a source is a reviewed change to this file, never something a pipeline does.
+#
+# derivatives: what the licence allows Danak to do with the text
+#   allowed      rewriting and summarising are fine
+#   share-alike  allowed, and the Danak must be shared under the same licence
+#   none         only linking is allowed; such a source cannot back a Danak
+version: 1
+
+text:
+  - id: wikipedia-fa
+    publisher: ویکی‌پدیا
+    hosts: [fa.wikipedia.org]
+    license: CC BY-SA 4.0
+    licenseUrl: https://creativecommons.org/licenses/by-sa/4.0/
+    derivatives: share-alike
+
+  - id: wikipedia-en
+    publisher: ویکی‌پدیا (انگلیسی)
+    hosts: [en.wikipedia.org]
+    license: CC BY-SA 4.0
+    licenseUrl: https://creativecommons.org/licenses/by-sa/4.0/
+    derivatives: share-alike
+
+images:
+  - id: wikimedia-commons
+    hosts: [commons.wikimedia.org]
+    pageUrlPrefix: "https://commons.wikimedia.org/wiki/File:"
+    # Full-match regular expressions, case-insensitive. Only licences that allow reuse in
+    # an app with attribution; nothing non-commercial (NC) or no-derivatives (ND).
+    licenses:
+      - 'CC0( 1\.0)?'
+      - 'Public domain'
+      - 'CC BY [1-4]\.0'
+      - 'CC BY-SA [1-4]\.0( IGO)?'

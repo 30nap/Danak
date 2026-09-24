@@ -1,0 +1,7 @@
+{
+  "description": "An image no Danak uses.",
+  "expect": "orphan-image",
+  "write": {
+    "images/gamma.webp": "@copy:images/alpha.webp"
+  }
+}

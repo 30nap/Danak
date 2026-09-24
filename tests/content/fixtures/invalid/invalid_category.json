@@ -1,0 +1,9 @@
+{
+  "description": "A category outside the schema enum.",
+  "expect": "schema",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "category": "astrology"
+    }
+  }
+}

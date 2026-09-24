@@ -1,0 +1,7 @@
+{
+  "description": "A file in danaks/ without the NNNN-<id>.json name.",
+  "expect": "filename",
+  "write": {
+    "danaks/beta-copy.json": "@copy:danaks/0002-beta.json"
+  }
+}

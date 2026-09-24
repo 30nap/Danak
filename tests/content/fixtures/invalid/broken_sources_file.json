@@ -1,0 +1,7 @@
+{
+  "description": "sources.yml loses a required field.",
+  "expect": "sources",
+  "write": {
+    "sources.yml": "version: 1\ntext:\n  - id: wikipedia-fa\n    publisher: ویکی‌پدیا\n    hosts: [fa.wikipedia.org]\n    derivatives: share-alike\nimages: []\n"
+  }
+}

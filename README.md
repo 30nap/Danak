@@ -70,15 +70,23 @@ app/src/main/java/ir/danak/app/
     ├── theme/             colours, typography, shapes
     └── util/              Persian numerals, paragraphs, links
 
-app/src/main/assets/content/
-├── content.json           the bundled Danaks (content pack, schema v1)
+app/src/main/assets/content/  the Danaks bundled in the app (a copy of reviewed content)
+├── content.json           content pack, schema v1
 └── images/                one hero photo per Danak, named by id
 
+content/                   reviewed content, published to GitHub Pages (see content/README.md)
+├── sources.yml            trusted sources and their licences
+├── danaks/                one Danak per file, NNNN-<id>.json
+└── images/                hero photos
+
 schema/
-└── danak-v1.schema.json   JSON Schema for content packs
+├── danak-v1.schema.json   Danak / content pack format: the contract with the app
+└── index-v1.schema.json   published index format
+
+tests/content/             validator tests with valid and invalid fixtures
 
 tools/
-├── validate_content.py    validates a content pack against the schema
+├── danak_content.py       validates content/, builds the static site, checks the app bundle
 ├── check_links.py         verifies every source and photo-credit link
 ├── fetch_photos.py        downloads hero photos from Wikimedia Commons (CI only)
 └── photos.json            the chosen photo for each Danak
@@ -91,23 +99,33 @@ tools/
 | Job | What it does |
 |---|---|
 | Build, unit tests, lint | debug and R8 release builds, unit tests, lint |
-| Content valid, source links resolve | validates the bundled pack against schema v1, then opens every source and photo-credit URL |
 | UI tests on emulator | Compose tests on API 34 at normal and 1.3× font size, with screenshots and an accessibility audit |
 
 The debug APK, reports and screenshots are uploaded as workflow artifacts.
+
+`.github/workflows/content.yml` runs when content, schemas or content tools change, and weekly:
+
+| Job | What it does |
+|---|---|
+| Validate and build | validator tests, validates `content/`, checks the app bundle against it, builds the static site |
+| Source links resolve | opens every source and photo-credit URL |
+| Publish to GitHub Pages | on the default branch only, after validation passes |
 
 `.github/workflows/photos.yml` runs only when `tools/photos.json` or the fetcher changes.
 
 ## Content
 
-Danaks are data, not code. A *content pack* is a `content.json` file plus the photos it
-points to, in the format defined by [`schema/danak-v1.schema.json`](schema/danak-v1.schema.json).
-The app bundles one pack under `app/src/main/assets/content/` and reads it at start-up.
-Adding or editing a Danak means editing that file, then running:
+Danaks are data, not code, in the format defined by
+[`schema/danak-v1.schema.json`](schema/danak-v1.schema.json). Reviewed content lives in
+[`content/`](content/README.md), one file per Danak, and is published to GitHub Pages as
+static files under `/v1/`. The app bundles a copy under `app/src/main/assets/content/` and
+reads it at start-up; CI checks that the copy matches `content/` exactly.
 
 ```bash
-pip install jsonschema
-python3 tools/validate_content.py
+pip install jsonschema pyyaml
+python3 tools/danak_content.py validate          # check content/
+python3 tools/danak_content.py build --out _site # build the site locally
+python3 -m unittest discover -s tests/content     # validator tests
 ```
 
 ## Content and credits
@@ -116,6 +134,6 @@ python3 tools/validate_content.py
   it is based on.
 - **Photos** — from [Wikimedia Commons](https://commons.wikimedia.org), limited to CC0,
   public domain, CC BY and CC BY-SA. Each photo's author and licence are shown in the
-  app and recorded in `app/src/main/assets/content/content.json`.
+  app and recorded with each Danak in `content/danaks/`.
 - **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn), SIL Open Font
   License 1.1 (`third_party/Vazirmatn-OFL.txt`).

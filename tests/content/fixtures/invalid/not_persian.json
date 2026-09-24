@@ -1,0 +1,9 @@
+{
+  "description": "An English summary.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "summary": "The oldest cuneiform tablets are mostly lists of rations and livestock."
+    }
+  }
+}

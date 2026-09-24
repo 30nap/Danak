@@ -1,0 +1,7 @@
+{
+  "description": "The file name and the id disagree.",
+  "expect": "filename",
+  "write": {
+    "danaks/0003-gamma.json": "@copy:danaks/0002-beta.json"
+  }
+}

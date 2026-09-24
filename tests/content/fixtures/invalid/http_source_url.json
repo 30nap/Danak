@@ -1,0 +1,9 @@
+{
+  "description": "A plain-http source.",
+  "expect": "schema",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "source.url": "http://fa.wikipedia.org/wiki/خط_میخی"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "A .webp file that is not a WebP image.",
+  "expect": "image-format",
+  "write": {
+    "images/beta.webp": "not an image"
+  }
+}

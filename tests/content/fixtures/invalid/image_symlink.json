@@ -1,0 +1,7 @@
+{
+  "description": "The image is a symlink pointing outside images/.",
+  "expect": "unsafe-path",
+  "symlink": {
+    "images/beta.webp": "../sources.yml"
+  }
+}

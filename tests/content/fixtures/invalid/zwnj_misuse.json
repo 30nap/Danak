@@ -1,0 +1,9 @@
+{
+  "description": "A half-space next to a space.",
+  "expect": "persian",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "keyTakeaway": "نکتهٔ کلیدی‌ آزمایشی در یک جملهٔ کوتاه."
+    }
+  }
+}

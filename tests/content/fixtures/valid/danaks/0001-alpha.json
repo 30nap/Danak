@@ -1,0 +1,32 @@
+{
+  "id": "alpha",
+  "category": "science",
+  "title": "چرا آسمان در روز آبی است؟",
+  "summary": "نور آبی بیشتر از نور قرمز در هوا پخش می‌شود و آسمان را آبی می‌کند.",
+  "sections": [
+    {
+      "body": "این بند نخست متن آزمایشی است و فقط برای آزمودن اعتبارسنج نوشته شده است."
+    },
+    {
+      "heading": "چرا مهم است؟",
+      "body": "بند دوم هم کوتاه است؛ اما باید با نقطه تمام شود."
+    }
+  ],
+  "keyTakeaway": "نکتهٔ کلیدی آزمایشی در یک جملهٔ کوتاه.",
+  "readingSeconds": 30,
+  "source": {
+    "url": "https://fa.wikipedia.org/wiki/پراکندگی_ریلی",
+    "publisher": "ویکی‌پدیا",
+    "title": "عنوان",
+    "license": "CC BY-SA 4.0"
+  },
+  "image": {
+    "src": "images/alpha.webp",
+    "credit": {
+      "author": "آزمون",
+      "license": "CC0",
+      "pageUrl": "https://commons.wikimedia.org/wiki/File:Alpha.jpg"
+    }
+  },
+  "conceptKey": "Q180910"
+}

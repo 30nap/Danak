@@ -1,0 +1,9 @@
+{
+  "description": "Two Danaks cite the same article.",
+  "expect": "duplicate-source",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "source.url": "https://fa.wikipedia.org/wiki/پراکندگی_ریلی/"
+    }
+  }
+}

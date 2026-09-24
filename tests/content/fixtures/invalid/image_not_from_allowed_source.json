@@ -1,0 +1,9 @@
+{
+  "description": "An image credited to a site not in sources.yml.",
+  "expect": "image-license",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "image.credit.pageUrl": "https://example.com/photo"
+    }
+  }
+}

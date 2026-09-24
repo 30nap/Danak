@@ -1,0 +1,9 @@
+{
+  "description": "The image belongs to another Danak.",
+  "expect": "image-path",
+  "edit": {
+    "danaks/0002-beta.json": {
+      "image.src": "images/alpha.webp"
+    }
+  }
+}

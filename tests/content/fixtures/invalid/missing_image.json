@@ -1,0 +1,7 @@
+{
+  "description": "The image file is gone.",
+  "expect": "missing-image",
+  "delete": [
+    "images/beta.webp"
+  ]
+}

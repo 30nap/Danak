@@ -1,0 +1,7 @@
+{
+  "description": "Two files carry the same id.",
+  "expect": "duplicate-id",
+  "write": {
+    "danaks/0003-alpha.json": "@copy:danaks/0001-alpha.json"
+  }
+}
