@@ -42,6 +42,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import ir.danak.app.model.ThemeMode
+import ir.danak.app.ui.theme.faintText
 import ir.danak.app.ui.util.toPersianDigits
 
 @Composable
@@ -124,7 +125,7 @@ private fun SettingsSection(
         Text(
             text = title,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.faintText,
             modifier = Modifier.padding(start = 4.dp),
         )
         content()
@@ -251,7 +252,7 @@ private fun SettingsRow(
         Icon(
             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            tint = MaterialTheme.colorScheme.faintText,
             modifier = Modifier.size(20.dp),
         )
     }
@@ -290,7 +291,7 @@ private fun AboutCard(appVersion: String) {
         Text(
             text = "نسخهٔ ${appVersion.toPersianDigits()}",
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.faintText,
         )
     }
 }

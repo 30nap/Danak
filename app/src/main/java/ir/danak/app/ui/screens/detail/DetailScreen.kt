@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -58,6 +59,7 @@ import ir.danak.app.ui.components.HeroScrim
 import ir.danak.app.ui.components.SaveIconButton
 import ir.danak.app.ui.components.SourceLink
 import ir.danak.app.ui.components.TopScrim
+import ir.danak.app.ui.theme.faintText
 import ir.danak.app.ui.util.browsableUrl
 import ir.danak.app.ui.util.formatReadingTime
 import ir.danak.app.ui.util.splitIntoParagraphs
@@ -70,6 +72,9 @@ private const val HERO_HEIGHT_FRACTION = 0.48f
  * with it, the title reads as rising out of the artwork.
  */
 private val CONTENT_OVERLAP = 56.dp
+
+/** The widest a line of body text is allowed to run. */
+private val MAX_TEXT_WIDTH = 640.dp
 
 /**
  * The deeper layer of a Danak. It keeps the same hero, the same chip and the same title
@@ -116,6 +121,10 @@ fun DetailScreen(
 
             Column(
                 Modifier
+                    // Centred at a readable measure on tablets and in landscape, rather
+                    // than one line of Persian running the full width of the screen.
+                    .align(Alignment.CenterHorizontally)
+                    .widthIn(max = MAX_TEXT_WIDTH)
                     .fillMaxWidth()
                     // No background of its own: the tail of the hero gradient shows
                     // through behind the chip and title.
@@ -295,7 +304,7 @@ private fun PhotoCreditLine(credit: PhotoCredit) {
     Text(
         text = "عکس: ${credit.author} · ${credit.license} · ویکی‌مدیا کامنز",
         style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+        color = MaterialTheme.colorScheme.faintText,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier

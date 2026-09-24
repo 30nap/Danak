@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -182,11 +184,14 @@ private fun InterestCard(
     Column(
         modifier = modifier
             .scale(scale)
-            .height(84.dp)
+            // A floor, not a fixed height: at large font sizes a fixed 84dp clipped the
+            // topic name in half.
+            .heightIn(min = 84.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(containerColor)
             .border(1.5.dp, borderColor, MaterialTheme.shapes.medium)
-            .selectable(selected = selected, onClick = onClick)
+            // Several topics can be picked, so it announces as a checkbox, not a radio.
+            .selectable(selected = selected, role = Role.Checkbox, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {

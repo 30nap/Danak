@@ -7,7 +7,7 @@ Persian. Each vertical swipe shows one short, well-sourced idea — psychology, 
 technology, programming, economics, history, productivity and curiosities — with a
 deeper read one tap away. No account, no social feed, no clutter.
 
-Current version: **0.1.0**
+Current version: **0.1.1**
 
 ## Features
 

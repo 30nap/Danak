@@ -14,13 +14,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ir.danak.app.BuildConfig
+import ir.danak.app.ui.components.prefetchHero
 import ir.danak.app.ui.screens.detail.DetailScreen
 import ir.danak.app.ui.screens.feed.FeedScreen
 import ir.danak.app.ui.screens.interests.InterestsScreen
@@ -81,6 +85,7 @@ private fun DanakNavHost(
     state: DanakUiState,
     viewModel: DanakViewModel,
 ) {
+    val context = LocalContext.current
     // Captured once: interests are chosen in-session, and letting this flip afterwards
     // would rebuild the graph under the user.
     val startDestination = remember {
@@ -92,14 +97,19 @@ private fun DanakNavHost(
         enterTransition = { fadeIn(tween(TRANSITION_MS)) },
         exitTransition = { fadeOut(tween(TRANSITION_MS)) },
     ) {
-        composable(Routes.ONBOARDING) {
+        composable(Routes.ONBOARDING) { entry ->
             InterestsScreen(
                 selected = state.interests,
                 onToggle = viewModel::toggleInterest,
                 onContinue = {
-                    viewModel.confirmInterests()
-                    navController.navigate(Routes.FEED) {
-                        popUpTo(Routes.ONBOARDING) { inclusive = true }
+                    entry.whenResumed {
+                        // Start the first photo now, so the feed opens on it rather than
+                        // fading it in once the transition is over.
+                        state.feed.firstOrNull()?.let { prefetchHero(context, it.image) }
+                        viewModel.confirmInterests()
+                        navController.navigate(Routes.FEED) {
+                            popUpTo(Routes.ONBOARDING) { inclusive = true }
+                        }
                     }
                 },
                 continueLabel = "ادامه",
@@ -108,16 +118,16 @@ private fun DanakNavHost(
             )
         }
 
-        composable(Routes.FEED) {
+        composable(Routes.FEED) { entry ->
             ImmersiveSurface {
                 FeedScreen(
                     danaks = state.feed,
                     isSaved = state::isSaved,
                     onToggleSave = viewModel::toggleSaved,
-                    onOpenDetail = { id -> navController.navigate(Routes.detail(id)) },
-                    onOpenSaved = { navController.navigate(Routes.SAVED) },
-                    onOpenSettings = { navController.navigate(Routes.SETTINGS) },
-                    onEditInterests = { navController.navigate(Routes.EDIT_INTERESTS) },
+                    onOpenDetail = { id -> entry.whenResumed { navController.navigate(Routes.detail(id)) } },
+                    onOpenSaved = { entry.whenResumed { navController.navigate(Routes.SAVED) } },
+                    onOpenSettings = { entry.whenResumed { navController.navigate(Routes.SETTINGS) } },
+                    onEditInterests = { entry.whenResumed { navController.navigate(Routes.EDIT_INTERESTS) } },
                 )
             }
         }
@@ -144,43 +154,53 @@ private fun DanakNavHost(
                         danak = danak,
                         saved = state.isSaved(danak.id),
                         onToggleSave = { viewModel.toggleSaved(danak.id) },
-                        onBack = { navController.popBackStack() },
+                        onBack = { entry.whenResumed { navController.popBackStack() } },
                     )
                 }
             }
         }
 
-        composable(Routes.SAVED) {
+        composable(Routes.SAVED) { entry ->
             SavedScreen(
                 saved = state.saved,
-                onOpen = { id -> navController.navigate(Routes.detail(id)) },
+                onOpen = { id -> entry.whenResumed { navController.navigate(Routes.detail(id)) } },
                 onRemove = viewModel::removeSaved,
                 onRestore = viewModel::restoreSaved,
-                onBack = { navController.popBackStack() },
+                onBack = { entry.whenResumed { navController.popBackStack() } },
             )
         }
 
-        composable(Routes.SETTINGS) {
+        composable(Routes.SETTINGS) { entry ->
             SettingsScreen(
                 themeMode = state.themeMode,
                 onThemeModeChange = viewModel::setThemeMode,
                 interestCount = state.interests.size,
-                onEditInterests = { navController.navigate(Routes.EDIT_INTERESTS) },
-                onBack = { navController.popBackStack() },
+                onEditInterests = { entry.whenResumed { navController.navigate(Routes.EDIT_INTERESTS) } },
+                onBack = { entry.whenResumed { navController.popBackStack() } },
                 appVersion = BuildConfig.VERSION_NAME,
             )
         }
 
-        composable(Routes.EDIT_INTERESTS) {
+        composable(Routes.EDIT_INTERESTS) { entry ->
             InterestsScreen(
                 selected = state.interests,
                 onToggle = viewModel::toggleInterest,
-                onContinue = { navController.popBackStack() },
+                onContinue = { entry.whenResumed { navController.popBackStack() } },
                 continueLabel = "ذخیره",
                 // Clearing every topic is a real choice here: it means "show me everything".
                 allowEmpty = true,
-                onBack = { navController.popBackStack() },
+                onBack = { entry.whenResumed { navController.popBackStack() } },
             )
         }
     }
+}
+
+/**
+ * Runs a navigation action only while this destination is the settled, visible one. A second
+ * tap during a transition, or on a screen that is already leaving, is dropped: without this,
+ * a double tap on «بیشتر بدان» stacked two detail screens, and a double tap on back popped
+ * the feed itself and left a blank window.
+ */
+private inline fun NavBackStackEntry.whenResumed(action: () -> Unit) {
+    if (lifecycle.currentState == Lifecycle.State.RESUMED) action()
 }

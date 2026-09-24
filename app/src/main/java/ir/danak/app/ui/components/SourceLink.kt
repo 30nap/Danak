@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ir.danak.app.ui.theme.PillShape
+import ir.danak.app.ui.theme.faintText
 import ir.danak.app.ui.util.browsableUrl
 import ir.danak.app.ui.util.sourceDomain
 
@@ -63,21 +64,21 @@ fun SourceLink(
         Text(
             text = sourceName,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.faintText,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = domain,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+            color = MaterialTheme.colorScheme.faintText,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Icon(
             imageVector = Icons.AutoMirrored.Filled.OpenInNew,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+            tint = MaterialTheme.colorScheme.faintText,
             modifier = Modifier.size(12.dp),
         )
     }

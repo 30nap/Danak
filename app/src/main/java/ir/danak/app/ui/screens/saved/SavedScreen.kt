@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ir.danak.app.model.Danak
 import ir.danak.app.ui.components.DanakHeroImage
+import ir.danak.app.ui.theme.faintText
 import ir.danak.app.ui.util.formatReadingTimeShort
 import kotlinx.coroutines.launch
 
@@ -177,7 +178,7 @@ private fun SavedRow(
             Text(
                 text = danak.category.label,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                color = MaterialTheme.colorScheme.faintText,
             )
             Text(
                 text = danak.title,
@@ -189,14 +190,14 @@ private fun SavedRow(
             Text(
                 text = formatReadingTimeShort(danak.readingSeconds),
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.faintText,
             )
         }
         IconButton(onClick = onRemove) {
             Icon(
                 Icons.Outlined.DeleteOutline,
                 contentDescription = "حذف «${danak.title}» از ذخیره‌شده‌ها",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp),
             )
         }

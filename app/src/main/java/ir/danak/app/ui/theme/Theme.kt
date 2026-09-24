@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -38,11 +40,11 @@ private val DanakDarkColors = darkColorScheme(
 )
 
 private val DanakLightColors = lightColorScheme(
-    primary = DanakGreenDim,
+    primary = DanakGreenOnLight,
     onPrimary = Color.White,
     primaryContainer = Color(0xFFD4F5E1),
     onPrimaryContainer = Color(0xFF0C3E22),
-    secondary = DanakGreenDim,
+    secondary = DanakGreenOnLight,
     onSecondary = Color.White,
     background = DayBase,
     onBackground = DayText,
@@ -56,6 +58,14 @@ private val DanakLightColors = lightColorScheme(
     outlineVariant = DayOutline,
     scrim = Color.Black,
 )
+
+/**
+ * Metadata that should sit back — a source's domain, a photo credit, a timestamp. Fading
+ * the muted colour with alpha took these to 2–3:1, so this is a solid colour chosen to be
+ * as quiet as possible while still reading at 4.5:1 on the page and card backgrounds.
+ */
+val ColorScheme.faintText: Color
+    get() = if (background.luminance() < 0.5f) NightTextFaint else DayTextFaint
 
 /** Whether [mode] resolves to dark right now. */
 @Composable

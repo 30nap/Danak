@@ -1,5 +1,6 @@
 package ir.danak.app.ui.components
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
+import coil.imageLoader
 import coil.request.ImageRequest
 import ir.danak.app.model.DanakImage
 
@@ -32,6 +34,17 @@ fun DanakHeroImage(
         contentScale = ContentScale.Crop,
         modifier = modifier,
     )
+}
+
+/**
+ * Starts decoding [image] into Coil's memory cache ahead of time, so the first frame that
+ * shows it is a finished photo instead of a dark page the photo then fades into.
+ *
+ * The request has no size or transformations, so its cache entry is exactly the one a
+ * later [DanakHeroImage] of the same image looks up.
+ */
+fun prefetchHero(context: Context, image: DanakImage) {
+    context.imageLoader.enqueue(ImageRequest.Builder(context).data(image.model).build())
 }
 
 /**

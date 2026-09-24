@@ -1,9 +1,9 @@
 package ir.danak.app.ui.screens.feed
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.PagerState
@@ -48,6 +50,12 @@ import ir.danak.app.ui.theme.PillShape
 import ir.danak.app.ui.util.formatReadingTime
 import kotlin.math.absoluteValue
 
+/** Below this height the page switches to its compact arrangement. */
+private val COMPACT_HEIGHT = 560.dp
+
+/** The widest a line of feed text is allowed to run. */
+private val MAX_TEXT_WIDTH = 560.dp
+
 /**
  * How far this page is from settled, in pages: 0 when it fills the screen, ±1 when it is
  * exactly one swipe away. Drives the parallax and the fade of the outgoing page.
@@ -64,7 +72,13 @@ fun FeedPage(
     pageOffset: () -> Float,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        // A landscape phone or a split-screen window leaves little more than 360dp of
+        // height: at full size the title and three summary lines climbed under the top bar.
+        val compact = maxHeight < COMPACT_HEIGHT
+        val topBarBottom =
+            WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + FeedTopBarHeight
+
         DanakHeroImage(
             image = danak.image,
             // The artwork is atmosphere; the title below carries the meaning, so
@@ -91,9 +105,16 @@ fun FeedPage(
         Column(
             Modifier
                 .align(Alignment.BottomStart)
+                // On a tablet a full-width column would stretch a line of Persian across
+                // the whole screen; this keeps it at a readable measure.
+                .widthIn(max = MAX_TEXT_WIDTH)
                 .fillMaxWidth()
+                // Never taller than the space under the top bar. If a long title at a large
+                // font size still does not fit, the summary gives up lines (with an
+                // ellipsis) rather than the title sliding under the controls.
+                .heightIn(max = (maxHeight - topBarBottom).coerceAtLeast(0.dp))
                 .padding(WindowInsets.navigationBars.asPaddingValues())
-                .padding(start = 24.dp, end = 24.dp, bottom = 20.dp)
+                .padding(start = 24.dp, end = 24.dp, bottom = if (compact) 8.dp else 20.dp)
                 .graphicsLayer {
                     val offset = pageOffset()
                     // Text settles into place a little after the image does.
@@ -103,30 +124,48 @@ fun FeedPage(
         ) {
             // Spacing is set per gap rather than uniformly: the title gets room to breathe,
             // the secondary lines sit close to what they describe.
-            CategoryChip(danak.category)
-            Spacer(Modifier.height(12.dp))
+            if (compact) {
+                // Short window: the reading time moves up beside the chip to save a row.
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    CategoryChip(danak.category)
+                    ReadingTime(danak.readingSeconds)
+                }
+            } else {
+                CategoryChip(danak.category)
+            }
+            Spacer(Modifier.height(if (compact) 8.dp else 12.dp))
 
             // The title is the page — everything else is secondary to it.
             Text(
                 text = danak.title,
-                style = MaterialTheme.typography.headlineLarge,
+                style = if (compact) {
+                    MaterialTheme.typography.headlineSmall
+                } else {
+                    MaterialTheme.typography.headlineLarge
+                },
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.semantics { heading() },
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(if (compact) 6.dp else 10.dp))
 
             // Two or three lines: enough to make the title worth opening, never a wall.
             Text(
                 text = danak.summary,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 3,
+                maxLines = if (compact) 2 else 3,
                 overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
             )
-            Spacer(Modifier.height(10.dp))
 
-            ReadingTime(danak.readingSeconds)
-            Spacer(Modifier.height(20.dp))
+            if (!compact) {
+                Spacer(Modifier.height(10.dp))
+                ReadingTime(danak.readingSeconds)
+            }
+            Spacer(Modifier.height(if (compact) 12.dp else 20.dp))
 
             Row(
                 Modifier.fillMaxWidth(),

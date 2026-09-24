@@ -1,9 +1,11 @@
 package ir.danak.app
 
+import android.app.UiAutomation
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -14,12 +16,13 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import ir.danak.app.data.MockDanaks
 import ir.danak.app.model.Category
 import org.junit.Assert.assertTrue
 import org.junit.Rule
-import org.junit.rules.RuleChain
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
 /**
@@ -42,6 +45,7 @@ class AppJourneyTest {
     fun fullJourney() {
         onboarding()
         feedAndSwipe()
+        landscape()
         saveAndDetail()
         savedList()
         settingsAndTheme()
@@ -82,6 +86,23 @@ class AppJourneyTest {
         rule.onNodeWithText(first.title).assertIsDisplayed()
     }
 
+    /** A landscape phone leaves ~360dp of height; the text must stay clear of the top bar. */
+    private fun landscape() {
+        val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        automation.setRotation(UiAutomation.ROTATION_FREEZE_90)
+        try {
+            rule.waitUntil(5_000) { rule.onRoot().fetchSemanticsNode().size.let { it.width > it.height } }
+            val title = rule.visibleNodeWithText(expectedFeed[0].title).fetchSemanticsNode().boundsInRoot
+            val bar = rule.onNodeWithContentDescription("تنظیمات").fetchSemanticsNode().boundsInRoot
+            assertTrue("the title must clear the top bar in landscape", title.top >= bar.bottom)
+            rule.visibleNodeWithText("بیشتر بدان").assertIsDisplayed()
+            UiAudit.screenshot(rule, "03b_feed_landscape")
+        } finally {
+            automation.setRotation(UiAutomation.ROTATION_FREEZE_0)
+            rule.waitUntil(5_000) { rule.onRoot().fetchSemanticsNode().size.let { it.height > it.width } }
+        }
+    }
+
     /** Persian reads right to left, so the start of every row must be on the right. */
     private fun assertRtlLayout() {
         val width = rule.onRoot().fetchSemanticsNode().size.width
@@ -111,7 +132,10 @@ class AppJourneyTest {
         rule.onRoot().performTouchInput { swipeUp() }
         UiAudit.screenshot(rule, "07_detail_scrolled")
 
-        rule.onNodeWithContentDescription("بازگشت").performClick()
+        // A double tap on back: the outgoing detail is still on top during the transition,
+        // so the second tap lands on its back button again. It must not pop the feed too.
+        rule.onNodeWithContentDescription("بازگشت").performTouchInput { doubleClick() }
+        rule.visibleNodeWithText("بیشتر بدان").assertIsDisplayed()
         rule.onNodeWithText(first.title).assertIsDisplayed()
     }
 

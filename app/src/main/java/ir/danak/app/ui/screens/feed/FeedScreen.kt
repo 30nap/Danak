@@ -35,11 +35,13 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ir.danak.app.model.Danak
 import ir.danak.app.ui.components.TopScrim
+import ir.danak.app.ui.components.prefetchHero
 import kotlinx.coroutines.launch
 
 /**
@@ -95,6 +97,7 @@ fun FeedScreen(
             }
 
             SettleHaptics(pagerState)
+            PrefetchAhead(danaks, pagerState)
         }
 
         FeedTopBar(
@@ -106,6 +109,9 @@ fun FeedScreen(
 }
 
 private const val END_OF_FEED_KEY = "end-of-feed"
+
+/** Height of the top bar below the status bar; each page keeps its text clear of it. */
+internal val FeedTopBarHeight = 56.dp
 
 /**
  * Jumps back to the first Danak when the feed's contents change (for example after the
@@ -142,6 +148,20 @@ private fun SettleHaptics(pagerState: PagerState) {
     }
 }
 
+/**
+ * The pager already composes the next page, which starts its photo loading; this decodes
+ * the one after it too, so two quick swipes in a row still land on a finished photo.
+ */
+@Composable
+private fun PrefetchAhead(danaks: List<Danak>, pagerState: PagerState) {
+    val context = LocalContext.current
+    LaunchedEffect(danaks, pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            danaks.getOrNull(page + 2)?.let { prefetchHero(context, it.image) }
+        }
+    }
+}
+
 @Composable
 private fun FeedTopBar(
     onOpenSaved: () -> Unit,
@@ -160,7 +180,8 @@ private fun FeedTopBar(
             Modifier
                 .fillMaxWidth()
                 .padding(WindowInsets.statusBars.asPaddingValues())
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .height(FeedTopBarHeight)
+                .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
