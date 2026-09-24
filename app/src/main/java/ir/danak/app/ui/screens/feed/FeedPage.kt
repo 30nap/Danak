@@ -28,16 +28,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.danak.app.data.MockDanaks
+import ir.danak.app.data.BundledContent
 import ir.danak.app.model.Danak
 import ir.danak.app.model.ThemeMode
 import ir.danak.app.ui.components.CategoryChip
@@ -232,7 +234,7 @@ private fun ReadingTime(seconds: Int, modifier: Modifier = Modifier) {
 private fun FeedPageDarkPreview() {
     DanakTheme(themeMode = ThemeMode.Dark) {
         FeedPage(
-            danak = MockDanaks.all.first(),
+            danak = previewDanaks()[0],
             saved = false,
             onToggleSave = {},
             onOpenDetail = {},
@@ -246,11 +248,18 @@ private fun FeedPageDarkPreview() {
 private fun FeedPageLightPreview() {
     DanakTheme(themeMode = ThemeMode.Light) {
         FeedPage(
-            danak = MockDanaks.all[1],
+            danak = previewDanaks()[1],
             saved = true,
             onToggleSave = {},
             onOpenDetail = {},
             pageOffset = { 0f },
         )
     }
+}
+
+/** Previews render the real bundled content rather than a copy of it. */
+@Composable
+private fun previewDanaks(): List<Danak> {
+    val context = LocalContext.current
+    return remember { BundledContent.read(context) }
 }

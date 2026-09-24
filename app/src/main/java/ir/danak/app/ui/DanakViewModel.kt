@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import ir.danak.app.data.BundledContent
 import ir.danak.app.data.DanakStore
-import ir.danak.app.data.MockDanaks
 import ir.danak.app.data.UserPrefs
 import ir.danak.app.data.danakDataStore
 import ir.danak.app.model.Category
 import ir.danak.app.model.Danak
 import ir.danak.app.model.ThemeMode
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,19 +25,24 @@ import kotlinx.coroutines.launch
  * The whole of Danak's state. One ViewModel scoped to the activity: V0 has little state and
  * every screen reads the same few values, so splitting it would only add wiring.
  *
- * State is loaded from [DanakStore] once at start-up and written back after every change.
- * The UI waits for [DanakUiState.isLoaded] (behind the splash screen) so it never flashes
- * onboarding for a returning user.
+ * The user's state is loaded from [DanakStore] and the Danaks from [loadContent], both once
+ * at start-up; the state is written back after every change. The UI waits for
+ * [DanakUiState.isLoaded] (behind the splash screen) so it never flashes onboarding for a
+ * returning user, or an empty feed.
  */
-class DanakViewModel(private val store: DanakStore) : ViewModel() {
+class DanakViewModel(
+    private val store: DanakStore,
+    private val loadContent: suspend () -> List<Danak>,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(DanakUiState())
     val state: StateFlow<DanakUiState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val prefs = store.read()
-            _state.update { it.copy(prefs = prefs, isLoaded = true) }
+            val prefs = async { store.read() }
+            val danaks = async { loadContent() }
+            _state.update { it.copy(prefs = prefs.await(), danaks = danaks.await(), isLoaded = true) }
         }
     }
 
@@ -75,7 +81,7 @@ class DanakViewModel(private val store: DanakStore) : ViewModel() {
 
     fun setThemeMode(mode: ThemeMode) = edit { it.copy(themeMode = mode) }
 
-    fun danakById(id: String): Danak? = MockDanaks.all.firstOrNull { it.id == id }
+    fun danakById(id: String): Danak? = _state.value.danaks.firstOrNull { it.id == id }
 
     private fun edit(transform: (UserPrefs) -> UserPrefs) {
         val updated = _state.updateAndGet { it.copy(prefs = transform(it.prefs)) }.prefs
@@ -88,7 +94,10 @@ class DanakViewModel(private val store: DanakStore) : ViewModel() {
         val Factory = viewModelFactory {
             initializer {
                 val app = requireNotNull(this[APPLICATION_KEY])
-                DanakViewModel(DanakStore(app.danakDataStore))
+                DanakViewModel(
+                    store = DanakStore(app.danakDataStore),
+                    loadContent = { BundledContent.load(app) },
+                )
             }
         }
     }
@@ -97,6 +106,8 @@ class DanakViewModel(private val store: DanakStore) : ViewModel() {
 @Immutable
 data class DanakUiState(
     val prefs: UserPrefs = UserPrefs(),
+    /** Every Danak the app has, in feed order. */
+    val danaks: List<Danak> = emptyList(),
     val isLoaded: Boolean = false,
 ) {
     val interests: Set<Category> get() = prefs.interests
@@ -111,12 +122,14 @@ data class DanakUiState(
      * recomposition skipping.
      */
     val feed: List<Danak> by lazy {
-        if (interests.isEmpty()) MockDanaks.all else MockDanaks.all.filter { it.category in interests }
+        if (interests.isEmpty()) danaks else danaks.filter { it.category in interests }
     }
 
     /** Saved items, most recently saved first. */
     val saved: List<Danak> by lazy {
-        prefs.savedIds.asReversed().mapNotNull { id -> MockDanaks.all.firstOrNull { it.id == id } }
+        val byId = danaks.associateBy { it.id }
+        // An id whose Danak is no longer in the content is skipped, not shown broken.
+        prefs.savedIds.asReversed().mapNotNull { id -> byId[id] }
     }
 
     fun isSaved(id: String): Boolean = id in prefs.savedIds

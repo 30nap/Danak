@@ -4,7 +4,7 @@ Fetches Danak's hero photos from Wikimedia Commons.
 
 This runs in CI, not locally: the development environment cannot reach Commons, and a CI
 job can. Each photo is printed into the job log as base64 between markers, and a local
-script decodes the log into res/drawable-nodpi.
+script decodes the log into app/src/main/assets/content/images.
 
 tools/photos.json drives it, one entry per Danak id:
   {"query": "..."}                         -> candidates mode: print 6 small previews

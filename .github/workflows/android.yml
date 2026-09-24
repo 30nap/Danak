@@ -90,11 +90,15 @@ jobs:
           if-no-files-found: ignore
 
   links:
-    name: Source links resolve
+    name: Content valid, source links resolve
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
+      - name: Validate the bundled content pack against schema v1
+        run: |
+          pip install --quiet jsonschema
+          python3 tools/validate_content.py
       - name: Check every Danak source link
         run: python3 tools/check_links.py --suggest-fa
 

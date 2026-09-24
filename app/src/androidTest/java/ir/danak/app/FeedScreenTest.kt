@@ -15,7 +15,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ir.danak.app.data.MockDanaks
+import androidx.test.platform.app.InstrumentationRegistry
+import ir.danak.app.data.BundledContent
 import ir.danak.app.ui.screens.feed.FeedScreen
 import ir.danak.app.ui.theme.DanakTheme
 import ir.danak.app.ui.theme.ImmersiveSurface
@@ -30,7 +31,8 @@ class FeedScreenTest {
     @get:Rule
     val rule = createAndroidComposeRule<ComponentActivity>()
 
-    private val danaks = MockDanaks.all.take(3)
+    private val danaks =
+        BundledContent.read(InstrumentationRegistry.getInstrumentation().targetContext).take(3)
 
     @Test
     fun theFirstDanakIsShownWithItsTitleAndActions() {

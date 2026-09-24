@@ -17,7 +17,7 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import ir.danak.app.data.MockDanaks
+import ir.danak.app.data.BundledContent
 import ir.danak.app.model.Category
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -38,8 +38,9 @@ class AppJourneyTest {
     @get:Rule
     val chain: RuleChain = RuleChain.outerRule(ClearAppStateRule()).around(rule)
 
+    private val allDanaks = BundledContent.read(InstrumentationRegistry.getInstrumentation().targetContext)
     private val chosen = listOf(Category.Psychology, Category.Science, Category.History)
-    private val expectedFeed = MockDanaks.all.filter { it.category in chosen }
+    private val expectedFeed = allDanaks.filter { it.category in chosen }
 
     @Test
     fun fullJourney() {
@@ -198,7 +199,7 @@ class AppJourneyTest {
 
         rule.onNodeWithContentDescription("بازگشت").performClick()
         // New feed, back at the top — not left on page 2 of a list that no longer exists.
-        rule.onNodeWithText(MockDanaks.all[0].title).assertIsDisplayed()
+        rule.onNodeWithText(allDanaks[0].title).assertIsDisplayed()
         UiAudit.screenshot(rule, "13_feed_light")
         UiAudit.auditScreen(rule, "feed_light")
 

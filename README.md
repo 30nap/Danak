@@ -61,7 +61,7 @@ automatically when the project is opened).
 app/src/main/java/ir/danak/app/
 ├── MainActivity.kt        entry point, splash screen, edge-to-edge
 ├── model/                 Danak, Category, DanakImage, ThemeMode
-├── data/                  MockDanaks (content), DanakStore (DataStore)
+├── data/                  ContentPack (JSON parser), BundledContent, DanakStore (DataStore)
 └── ui/
     ├── DanakApp.kt        navigation graph
     ├── DanakViewModel.kt  app state
@@ -70,7 +70,15 @@ app/src/main/java/ir/danak/app/
     ├── theme/             colours, typography, shapes
     └── util/              Persian numerals, paragraphs, links
 
+app/src/main/assets/content/
+├── content.json           the bundled Danaks (content pack, schema v1)
+└── images/                one hero photo per Danak, named by id
+
+schema/
+└── danak-v1.schema.json   JSON Schema for content packs
+
 tools/
+├── validate_content.py    validates a content pack against the schema
 ├── check_links.py         verifies every source and photo-credit link
 ├── fetch_photos.py        downloads hero photos from Wikimedia Commons (CI only)
 └── photos.json            the chosen photo for each Danak
@@ -83,12 +91,24 @@ tools/
 | Job | What it does |
 |---|---|
 | Build, unit tests, lint | debug and R8 release builds, unit tests, lint |
-| Source links resolve | opens every source and photo-credit URL |
+| Content valid, source links resolve | validates the bundled pack against schema v1, then opens every source and photo-credit URL |
 | UI tests on emulator | Compose tests on API 34 at normal and 1.3× font size, with screenshots and an accessibility audit |
 
 The debug APK, reports and screenshots are uploaded as workflow artifacts.
 
 `.github/workflows/photos.yml` runs only when `tools/photos.json` or the fetcher changes.
+
+## Content
+
+Danaks are data, not code. A *content pack* is a `content.json` file plus the photos it
+points to, in the format defined by [`schema/danak-v1.schema.json`](schema/danak-v1.schema.json).
+The app bundles one pack under `app/src/main/assets/content/` and reads it at start-up.
+Adding or editing a Danak means editing that file, then running:
+
+```bash
+pip install jsonschema
+python3 tools/validate_content.py
+```
 
 ## Content and credits
 
@@ -96,6 +116,6 @@ The debug APK, reports and screenshots are uploaded as workflow artifacts.
   it is based on.
 - **Photos** — from [Wikimedia Commons](https://commons.wikimedia.org), limited to CC0,
   public domain, CC BY and CC BY-SA. Each photo's author and licence are shown in the
-  app and recorded in `app/src/main/java/ir/danak/app/data/MockDanaks.kt`.
+  app and recorded in `app/src/main/assets/content/content.json`.
 - **Font** — [Vazirmatn](https://github.com/rastikerdar/vazirmatn), SIL Open Font
   License 1.1 (`third_party/Vazirmatn-OFL.txt`).

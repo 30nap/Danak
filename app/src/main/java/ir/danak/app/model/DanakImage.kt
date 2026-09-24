@@ -1,23 +1,21 @@
 package ir.danak.app.model
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 
 /**
- * Where a Danak's hero image comes from.
- *
- * V0 ships only [Local] artwork, but every hero is rendered through Coil via [model],
- * so switching an item to a [Remote] URL later is a data change and not a UI change.
+ * Where a Danak's hero image comes from. Every hero is rendered through Coil via [model],
+ * so a bundled photo and a published one differ only in data, never in UI code.
  */
 @Immutable
 sealed interface DanakImage {
 
-    /** Anything Coil can load: a drawable id or a URL string. */
+    /** Anything Coil can load: an asset URI or a URL string. */
     val model: Any
 
+    /** A photo shipped inside the APK, at [path] under `assets/`. */
     @JvmInline
-    value class Local(@param:DrawableRes val resId: Int) : DanakImage {
-        override val model: Any get() = resId
+    value class Asset(val path: String) : DanakImage {
+        override val model: Any get() = "file:///android_asset/$path"
     }
 
     @JvmInline

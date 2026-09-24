@@ -1,6 +1,5 @@
 package ir.danak.app
 
-import ir.danak.app.data.MockDanaks
 import ir.danak.app.ui.util.browsableUrl
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -26,7 +25,7 @@ class LinksTest {
 
     @Test
     fun `every shipped source becomes a plain ascii url`() {
-        for (danak in MockDanaks.all) {
+        for (danak in TestContent.all) {
             val url = browsableUrl(danak.sourceUrl)
             assertTrue("${danak.id}: $url", url.all { it.code < 128 })
         }

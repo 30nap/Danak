@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://30nap.github.io/Danak/schema/danak-v1.schema.json",
+  "title": "Danak content pack, schema v1",
+  "description": "A set of Danaks as the Android app reads them, bundled in the APK or published. Image paths are relative to the pack.",
+  "type": "object",
+  "required": ["schemaVersion", "danaks"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "danaks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/danak" }
+    }
+  },
+  "$defs": {
+    "danak": {
+      "title": "Danak",
+      "description": "One small piece of knowledge: one idea, one source.",
+      "type": "object",
+      "required": ["id", "category", "title", "summary", "sections", "keyTakeaway", "readingSeconds", "source", "image"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Stable identifier. Saved lists refer to it, so it never changes once published.",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(_[a-z0-9]+)*$",
+          "maxLength": 64
+        },
+        "category": {
+          "enum": ["technology", "programming", "science", "psychology", "economy", "history", "productivity", "curiosities"]
+        },
+        "title": { "type": "string", "minLength": 8, "maxLength": 80 },
+        "summary": {
+          "description": "The feed text: two or three lines on a phone.",
+          "type": "string", "minLength": 20, "maxLength": 115
+        },
+        "sections": {
+          "description": "The detail text. A section without a heading opens the text.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["body"],
+            "additionalProperties": false,
+            "properties": {
+              "heading": { "type": "string", "minLength": 2, "maxLength": 60 },
+              "body": { "type": "string", "minLength": 20, "maxLength": 900 }
+            }
+          }
+        },
+        "keyTakeaway": { "type": "string", "minLength": 10, "maxLength": 160 },
+        "readingSeconds": { "type": "integer", "minimum": 10, "maximum": 300 },
+        "conceptKey": {
+          "description": "What the Danak is about, for catching two Danaks on the same idea. A Wikidata id (Q…) where one exists.",
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "source": { "$ref": "#/$defs/source" },
+        "image": { "$ref": "#/$defs/image" }
+      }
+    },
+    "source": {
+      "description": "Where the idea comes from. Every field is copied from the source itself, never written by a model.",
+      "type": "object",
+      "required": ["url", "publisher"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://" },
+        "publisher": { "description": "Shown in the app, e.g. «ویکی‌پدیا».", "type": "string", "minLength": 2 },
+        "title": { "type": "string", "minLength": 1 },
+        "license": { "description": "Licence of the source text, when known, e.g. «CC BY-SA 4.0».", "type": "string" },
+        "retrievedAt": { "description": "When the source snapshot was taken (ISO 8601).", "type": "string", "format": "date-time" },
+        "snapshotSha256": { "description": "SHA-256 of the extracted source text the Danak was written from.", "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["src", "credit"],
+      "additionalProperties": false,
+      "properties": {
+        "src": {
+          "description": "Path relative to the pack (images/<id>.webp), or an absolute https URL.",
+          "type": "string",
+          "pattern": "^(images/[a-z0-9_]+\\.(webp|jpg|png)|https://.+)$"
+        },
+        "credit": {
+          "description": "Shown under the Danak, as CC BY and CC BY-SA require.",
+          "type": "object",
+          "required": ["author", "license", "pageUrl"],
+          "additionalProperties": false,
+          "properties": {
+            "author": { "type": "string", "minLength": 1 },
+            "license": { "type": "string", "minLength": 2 },
+            "pageUrl": { "type": "string", "pattern": "^https://" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,15 +1,31 @@
 package ir.danak.app
 
-import ir.danak.app.data.MockDanaks
 import ir.danak.app.model.Category
+import ir.danak.app.model.DanakImage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
-/** Guards the content itself — these are the mistakes that are easy to make by hand. */
-class MockDanaksTest {
+/** Guards the bundled content itself — these are the mistakes that are easy to make by hand. */
+class BundledContentTest {
 
-    private val all = MockDanaks.all
+    private val all = TestContent.all
+
+    @Test
+    fun `every entry in the pack is read`() {
+        assertTrue("rejected: ${TestContent.parsed.rejected}", TestContent.parsed.rejected.isEmpty())
+    }
+
+    @Test
+    fun `every photo exists and every photo file is used`() {
+        val referenced = all.map { (it.image as DanakImage.Asset).path.removePrefix("content/") }.toSet()
+        for (path in referenced) {
+            assertTrue("missing $path", File(TestContent.dir, path).isFile)
+        }
+        val files = File(TestContent.dir, "images").list().orEmpty().map { "images/$it" }.toSet()
+        assertEquals("unused photos", emptySet<String>(), files - referenced)
+    }
 
     @Test
     fun `ships at least thirty danaks`() {
