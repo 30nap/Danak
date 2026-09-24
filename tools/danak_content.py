@@ -6,6 +6,7 @@ checks that the pack bundled in the app is an exact copy of reviewed content.
     python3 tools/danak_content.py validate      [--content DIR]
     python3 tools/danak_content.py build --out DIR [--content DIR]
     python3 tools/danak_content.py check-bundle  [--content DIR] [--bundle DIR]
+    python3 tools/danak_content.py verify-site URL
 
 Needs: pip install jsonschema pyyaml
 
@@ -21,7 +22,10 @@ import pathlib
 import re
 import sys
 import unicodedata
+import time
+import urllib.error
 import urllib.parse
+import urllib.request
 
 import jsonschema
 import yaml
@@ -410,11 +414,52 @@ def check_bundle(content, bundle):
     return problems
 
 
+# ---------------------------------------------------------------------- verify-site
+
+def fetch(url, attempts=6):
+    """GET with retries: a fresh Pages deployment can take a little while to be served."""
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(url, timeout=30) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError) as e:
+            if attempt == attempts - 1:
+                raise SystemExit(f"cannot fetch {url}: {e}")
+            time.sleep(2 ** attempt)
+
+
+def verify_site(base):
+    """Reads a published site the way a client will: index, every content file against its
+    hash, every image. Run after a deployment, against the live URL."""
+    base = base.rstrip("/") + "/v1/"
+    index = json.loads(fetch(base + "index.json"))
+    jsonschema.validate(index, load_schema("index-v1.schema.json"))
+    validator = jsonschema.Draft202012Validator(load_schema("danak-v1.schema.json"))
+    problems = []
+    for entry in index["danaks"]:
+        body = fetch(base + entry["path"])
+        if hashlib.sha256(body).hexdigest() != entry["sha256"]:
+            problems.append(Problem("site", entry["path"], "served bytes do not match the index hash"))
+            continue
+        danak = json.loads(body)
+        for e in validator.iter_errors({"schemaVersion": 1, "danaks": [danak]}):
+            problems.append(Problem("site", entry["path"], e.message))
+        src = danak["image"]["src"]
+        if not re.fullmatch(r"images/[a-z0-9_]+\.(webp|jpg|png)", src):
+            problems.append(Problem("site", entry["path"], f"unexpected image path {src}"))
+            continue
+        image = fetch(base + src)
+        if not IMAGE_MAGIC[src.rsplit(".", 1)[1]](image):
+            problems.append(Problem("site", src, "served image is not a real image"))
+    return len(index["danaks"]), problems
+
+
 # ---------------------------------------------------------------------------- main
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("command", choices=["validate", "build", "check-bundle"])
+    parser.add_argument("command", choices=["validate", "build", "check-bundle", "verify-site"])
+    parser.add_argument("url", nargs="?", help="site URL, for verify-site")
     parser.add_argument("--content", default=str(DEFAULT_CONTENT))
     parser.add_argument("--bundle", default=str(DEFAULT_BUNDLE))
     parser.add_argument("--out")
@@ -425,6 +470,14 @@ def main(argv=None):
             parser.error("build needs --out")
         build(args.content, args.out)
         return 0
+    if args.command == "verify-site":
+        if not args.url or not args.url.startswith("https://"):
+            parser.error("verify-site needs an https URL")
+        count, problems = verify_site(args.url)
+        for p in problems:
+            print("FAIL", p)
+        print(f"{count} danaks served, {len(problems)} problem(s)")
+        return 1 if problems else 0
     if args.command == "validate":
         danaks, problems = validate(args.content)
     else:

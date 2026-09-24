@@ -69,4 +69,6 @@ hash, and resolves `image.src` against the `v1/` directory. The index format is
 [`schema/index-v1.schema.json`](../schema/index-v1.schema.json).
 
 The build is deterministic (the same content produces the same bytes), writes only files
-it generates, and refuses to write into an existing directory.
+it generates, and refuses to write into an existing directory. After each deployment,
+`verify-site` reads the live site back the way a client will: the index, every content file
+against its hash, and every image.

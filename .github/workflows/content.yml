@@ -91,6 +91,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     # One deployment at a time, and never cancel one half-way.
     concurrency:
       group: pages
@@ -98,3 +100,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  verify:
+    name: Published site reads back correctly
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - run: pip install --quiet jsonschema pyyaml
+      - name: Fetch the live index, every content file (hash-checked) and every image
+        run: python3 tools/danak_content.py verify-site "${{ needs.deploy.outputs.page_url }}"

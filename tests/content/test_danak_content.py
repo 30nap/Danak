@@ -7,13 +7,16 @@ and the problem code the validator must report for it.
 
 Run: python3 -m unittest discover -s tests/content -v
 """
+import functools
 import hashlib
+import http.server
 import json
 import os
 import pathlib
 import shutil
 import sys
 import tempfile
+import threading
 import unittest
 
 import jsonschema
@@ -171,6 +174,32 @@ class BuildTest(TempTree):
             dc.build(self.tree, self.tree / "site")
         with self.assertRaises(SystemExit):
             dc.build(self.tree, dc.ROOT)
+
+
+class VerifySiteTest(TempTree):
+    """verify-site against a real HTTP server serving a freshly built site."""
+
+    def serve(self, root):
+        handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(root))
+        handler.log_message = lambda *args: None
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.shutdown)
+        return f"http://127.0.0.1:{server.server_address[1]}"
+
+    def test_a_correct_site_verifies(self):
+        site = self.tmp / "site"
+        dc.build(self.tree, site)
+        count, problems = dc.verify_site(self.serve(site))
+        self.assertEqual((2, []), (count, [str(p) for p in problems]))
+
+    def test_a_tampered_file_is_caught(self):
+        site = self.tmp / "site"
+        dc.build(self.tree, site)
+        target = next((site / "v1" / "content").glob("beta_*.json"))
+        target.write_bytes(target.read_bytes().replace("خط".encode(), "خـط".encode(), 1))
+        _, problems = dc.verify_site(self.serve(site))
+        self.assertIn("site", {p.code for p in problems})
 
 
 class BundleCheckTest(TempTree):
