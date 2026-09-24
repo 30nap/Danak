@@ -6,17 +6,19 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import ir.danak.app.data.BundledContent
+import ir.danak.app.data.ContentRepository
 import ir.danak.app.data.DanakStore
 import ir.danak.app.data.UserPrefs
 import ir.danak.app.data.danakDataStore
 import ir.danak.app.model.Category
 import ir.danak.app.model.Danak
 import ir.danak.app.model.ThemeMode
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
@@ -26,17 +28,33 @@ import kotlinx.coroutines.launch
  * every screen reads the same few values, so splitting it would only add wiring.
  *
  * The user's state is loaded from [DanakStore] and the Danaks from [loadContent], both once
- * at start-up; the state is written back after every change. The UI waits for
- * [DanakUiState.isLoaded] (behind the splash screen) so it never flashes onboarding for a
- * returning user, or an empty feed.
+ * at start-up and from disk only; the state is written back after every change. The UI
+ * waits for [DanakUiState.isLoaded] (behind the splash screen) so it never flashes
+ * onboarding for a returning user, or an empty feed.
+ *
+ * Published content is checked with [refreshContent] whenever the app comes to the
+ * foreground (at most every [REFRESH_INTERVAL_MS]), in the background: the feed is usable
+ * long before, and a new set simply replaces the content when it has been verified.
  */
 class DanakViewModel(
     private val store: DanakStore,
     private val loadContent: suspend () -> List<Danak>,
+    private val refreshContent: suspend () -> ContentRepository.Refresh = { ContentRepository.Refresh.UpToDate },
+    private val clockMs: () -> Long = { System.nanoTime() / 1_000_000 },
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DanakUiState())
     val state: StateFlow<DanakUiState> = _state.asStateFlow()
+
+    /**
+     * Danaks a refresh took out of the content during this session. A detail screen that is
+     * open on one keeps showing it instead of being closed under the reader.
+     */
+    private val retired = mutableMapOf<String, Danak>()
+
+    private var refreshJob: Job? = null
+    private var lastSuccessMs: Long? = null
+    private var lastAttemptMs: Long? = null
 
     init {
         viewModelScope.launch {
@@ -81,7 +99,38 @@ class DanakViewModel(
 
     fun setThemeMode(mode: ThemeMode) = edit { it.copy(themeMode = mode) }
 
-    fun danakById(id: String): Danak? = _state.value.danaks.firstOrNull { it.id == id }
+    fun danakById(id: String): Danak? = _state.value.danaks.firstOrNull { it.id == id } ?: retired[id]
+
+    /**
+     * Called when the app comes to the foreground. Checks for published content unless a
+     * check succeeded recently or is already running; after a failure (offline, say) the
+     * next foreground tries again, but not more than every [RETRY_INTERVAL_MS].
+     */
+    fun onForeground() {
+        val now = clockMs()
+        if (refreshJob?.isActive == true) return
+        if (lastSuccessMs?.let { now - it < REFRESH_INTERVAL_MS } == true) return
+        if (lastAttemptMs?.let { now - it < RETRY_INTERVAL_MS } == true) return
+        lastAttemptMs = now
+        refreshJob = viewModelScope.launch {
+            // The local content must be in place first, or it would overwrite the update.
+            _state.first { it.isLoaded }
+            when (val result = refreshContent()) {
+                is ContentRepository.Refresh.Updated -> {
+                    applyContent(result.danaks)
+                    lastSuccessMs = clockMs()
+                }
+                ContentRepository.Refresh.UpToDate -> lastSuccessMs = clockMs()
+                is ContentRepository.Refresh.Failed -> Unit
+            }
+        }
+    }
+
+    private fun applyContent(danaks: List<Danak>) {
+        val ids = danaks.mapTo(HashSet()) { it.id }
+        _state.value.danaks.filter { it.id !in ids }.associateByTo(retired) { it.id }
+        _state.update { it.copy(danaks = danaks) }
+    }
 
     private fun edit(transform: (UserPrefs) -> UserPrefs) {
         val updated = _state.updateAndGet { it.copy(prefs = transform(it.prefs)) }.prefs
@@ -91,12 +140,17 @@ class DanakViewModel(
     }
 
     companion object {
+        const val REFRESH_INTERVAL_MS = 15 * 60 * 1000L
+        const val RETRY_INTERVAL_MS = 30 * 1000L
+
         val Factory = viewModelFactory {
             initializer {
                 val app = requireNotNull(this[APPLICATION_KEY])
+                val content = ContentRepository.create(app)
                 DanakViewModel(
                     store = DanakStore(app.danakDataStore),
-                    loadContent = { BundledContent.load(app) },
+                    loadContent = content::loadLocal,
+                    refreshContent = content::refresh,
                 )
             }
         }

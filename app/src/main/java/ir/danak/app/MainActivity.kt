@@ -21,4 +21,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent { DanakApp(viewModel) }
     }
+
+    override fun onStart() {
+        super.onStart()
+        // Published content is checked in the background; the feed never waits for it.
+        viewModel.onForeground()
+    }
 }

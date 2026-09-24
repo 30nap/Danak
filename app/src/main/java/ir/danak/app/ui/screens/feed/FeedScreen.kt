@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -58,12 +59,18 @@ fun FeedScreen(
     onOpenSettings: () -> Unit,
     onEditInterests: () -> Unit,
     modifier: Modifier = Modifier,
+    /**
+     * Changes when the reader asks for a different feed (new interests): the feed then
+     * starts again from the top. Any other change to [danaks] — published content arriving
+     * in the background — keeps the reader on the Danak they are looking at.
+     */
+    resetKey: String = "",
 ) {
     // One extra page past the last Danak, so the feed ends on purpose instead of just
     // refusing to scroll.
     val pagerState = rememberPagerState(pageCount = { danaks.size + 1 })
     val scope = rememberCoroutineScope()
-    ResetWhenFeedChanges(danaks, pagerState)
+    KeepPlaceOrReset(danaks, resetKey, pagerState)
 
     Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         if (danaks.isEmpty()) {
@@ -114,18 +121,43 @@ private const val END_OF_FEED_KEY = "end-of-feed"
 internal val FeedTopBarHeight = 56.dp
 
 /**
- * Jumps back to the first Danak when the feed's contents change (for example after the
- * interests are edited). Keyed on the ids rather than the list instance, and remembered
- * across the back stack, so returning from a detail screen keeps the reader's place.
+ * Decides where the feed stands when its contents change.
+ *
+ * - [resetKey] changed (interests edited): back to the first Danak.
+ * - Only the contents changed (a background refresh added, reordered or replaced Danaks):
+ *   stay on the Danak being read, wherever it now sits. If it was taken out, the pager
+ *   stays at the same position.
+ *
+ * Keyed on ids rather than the list instance, and remembered across the back stack, so
+ * returning from a detail screen keeps the reader's place.
  */
 @Composable
-private fun ResetWhenFeedChanges(danaks: List<Danak>, pagerState: PagerState) {
+private fun KeepPlaceOrReset(danaks: List<Danak>, resetKey: String, pagerState: PagerState) {
     val signature = danaks.joinToString(",") { it.id }
-    var seen by rememberSaveable { mutableStateOf(signature) }
-    LaunchedEffect(signature) {
-        if (signature != seen) {
-            seen = signature
-            pagerState.scrollToPage(0)
+    var seenSignature by rememberSaveable { mutableStateOf(signature) }
+    var seenResetKey by rememberSaveable { mutableStateOf(resetKey) }
+    var readingId by rememberSaveable { mutableStateOf(danaks.getOrNull(pagerState.currentPage)?.id) }
+
+    // Follows the Danak the reader has settled on. It reads the list through
+    // rememberUpdatedState and is keyed on the pager only, so a new list alone never
+    // rewrites it before the effect below has used it.
+    val latest by rememberUpdatedState(danaks)
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page -> readingId = latest.getOrNull(page)?.id }
+    }
+
+    LaunchedEffect(signature, resetKey) {
+        when {
+            resetKey != seenResetKey -> {
+                seenResetKey = resetKey
+                seenSignature = signature
+                pagerState.scrollToPage(0)
+            }
+            signature != seenSignature -> {
+                seenSignature = signature
+                val index = danaks.indexOfFirst { it.id == readingId }
+                if (index >= 0 && index != pagerState.currentPage) pagerState.scrollToPage(index)
+            }
         }
     }
 }

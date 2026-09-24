@@ -102,6 +102,62 @@ class FeedScreenTest {
     }
 
     @Test
+    fun newContentKeepsTheReaderOnTheirDanak() {
+        val all = BundledContent.read(InstrumentationRegistry.getInstrumentation().targetContext)
+        var feed by mutableStateOf(all.take(3))
+        rule.setContent {
+            DanakTheme {
+                FeedScreen(
+                    danaks = feed,
+                    isSaved = { false },
+                    onToggleSave = {},
+                    onOpenDetail = {},
+                    onOpenSaved = {},
+                    onOpenSettings = {},
+                    onEditInterests = {},
+                    resetKey = "same interests",
+                )
+            }
+        }
+        rule.onRoot().performTouchInput { swipeUp() }
+        val reading = feed[1]
+        rule.visibleNodeWithText(reading.title).assertIsDisplayed()
+
+        // A refresh puts two new Danaks in front of the one being read, and drops another.
+        rule.runOnIdle { feed = listOf(all[5], all[6], feed[1], feed[2]) }
+        rule.waitForIdle()
+        rule.visibleNodeWithText(reading.title).assertIsDisplayed()
+    }
+
+    @Test
+    fun newInterestsStartTheFeedAgain() {
+        val all = BundledContent.read(InstrumentationRegistry.getInstrumentation().targetContext)
+        var feed by mutableStateOf(all.take(3))
+        var interests by mutableStateOf("a")
+        rule.setContent {
+            DanakTheme {
+                FeedScreen(
+                    danaks = feed,
+                    isSaved = { false },
+                    onToggleSave = {},
+                    onOpenDetail = {},
+                    onOpenSaved = {},
+                    onOpenSettings = {},
+                    onEditInterests = {},
+                    resetKey = interests,
+                )
+            }
+        }
+        rule.onRoot().performTouchInput { swipeUp() }
+        rule.runOnIdle {
+            feed = all.drop(3).take(3)
+            interests = "b"
+        }
+        rule.waitForIdle()
+        rule.visibleNodeWithText(all[3].title).assertIsDisplayed()
+    }
+
+    @Test
     fun theFeedEndsWithAWayForward() {
         rule.setContent {
             // Wrapped the way the app wraps it, so the screenshot shows the real, dark page.

@@ -128,6 +128,7 @@ private fun DanakNavHost(
                     onOpenSaved = { entry.whenResumed { navController.navigate(Routes.SAVED) } },
                     onOpenSettings = { entry.whenResumed { navController.navigate(Routes.SETTINGS) } },
                     onEditInterests = { entry.whenResumed { navController.navigate(Routes.EDIT_INTERESTS) } },
+                    resetKey = state.interests.map { it.name }.sorted().joinToString(","),
                 )
             }
         }

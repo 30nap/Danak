@@ -46,6 +46,12 @@ object UiAudit {
         }
     }
 
+    /** Adds a line to the report the CI job prints (used for measurements). */
+    fun note(line: String) {
+        Log.i(TAG, line)
+        File(dir, "a11y-report.txt").appendText(line + "\n")
+    }
+
     /**
      * Records clickable nodes whose touch target is under 48dp or that have no label a
      * screen reader could announce. Findings are reported, not asserted: they are UX

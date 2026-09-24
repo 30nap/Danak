@@ -7,7 +7,7 @@ Persian. Each vertical swipe shows one short, well-sourced idea — psychology, 
 technology, programming, economics, history, productivity and curiosities — with a
 deeper read one tap away. No account, no social feed, no clutter.
 
-Current version: **0.1.1**
+Current version: **0.2.0**
 
 ## Features
 
@@ -120,6 +120,24 @@ Danaks are data, not code, in the format defined by
 [`content/`](content/README.md), one file per Danak, and is published to GitHub Pages as
 static files under `/v1/`. The app bundles a copy under `app/src/main/assets/content/` and
 reads it at start-up; CI checks that the copy matches `content/` exactly.
+
+### How content reaches the app
+
+1. At start-up the app shows what it already has, from disk only: the last verified
+   published set if there is one, the bundled pack otherwise. The network never delays it.
+2. When the app comes to the foreground (at most every 15 minutes after a success), it
+   fetches `v1/index.json` from GitHub Pages in the background, downloads only files whose
+   hash it does not have, and checks each one against the index before storing it.
+3. Only when every file of the new index is on disk and verified does it switch over, in
+   one atomic step; the feed updates without moving the reader off the Danak they are on.
+4. Any failure — offline, an HTTP error, a malformed or oversized file, a hash mismatch,
+   an interrupted download — leaves the previous content in place. A Danak whose published
+   version is invalid keeps its bundled version; a photo that fails keeps the bundled photo
+   (or shows none).
+
+Downloaded content lives in app-private storage (`noBackupFilesDir/content/v1`), outside
+backups. The only requests the app makes are for these public files: no accounts, no
+analytics, no identifiers.
 
 ```bash
 pip install jsonschema pyyaml

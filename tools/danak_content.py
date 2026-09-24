@@ -428,10 +428,27 @@ def fetch(url, attempts=6):
             time.sleep(2 ** attempt)
 
 
+def http_behaviour(url):
+    """What the server says about caching: the ETag and Cache-Control of [url], and whether
+    a conditional request with that ETag is answered 304. Printed, never enforced."""
+    with urllib.request.urlopen(url, timeout=30) as response:
+        etag, cache_control = response.headers.get("ETag"), response.headers.get("Cache-Control")
+    conditional = "no ETag"
+    if etag:
+        request = urllib.request.Request(url, headers={"If-None-Match": etag})
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                conditional = f"HTTP {response.status} (full body again)"
+        except urllib.error.HTTPError as e:
+            conditional = f"HTTP {e.code}"
+    return f"ETag={etag} Cache-Control={cache_control} If-None-Match -> {conditional}"
+
+
 def verify_site(base):
     """Reads a published site the way a client will: index, every content file against its
     hash, every image. Run after a deployment, against the live URL."""
     base = base.rstrip("/") + "/v1/"
+    print("index.json:", http_behaviour(base + "index.json"))
     index = json.loads(fetch(base + "index.json"))
     jsonschema.validate(index, load_schema("index-v1.schema.json"))
     validator = jsonschema.Draft202012Validator(load_schema("danak-v1.schema.json"))

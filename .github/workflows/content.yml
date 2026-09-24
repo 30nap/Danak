@@ -13,6 +13,8 @@ on:
       - "tools/check_links.py"
       - "tests/content/**"
       - "app/src/main/assets/content/**"
+      - "app/src/main/java/ir/danak/app/data/**"
+      - "app/src/test/java/ir/danak/app/LiveSiteTest.kt"
       - ".github/workflows/content.yml"
   pull_request:
     paths:
@@ -22,6 +24,8 @@ on:
       - "tools/check_links.py"
       - "tests/content/**"
       - "app/src/main/assets/content/**"
+      - "app/src/main/java/ir/danak/app/data/**"
+      - "app/src/test/java/ir/danak/app/LiveSiteTest.kt"
       - ".github/workflows/content.yml"
   schedule:
     # Weekly, so a source article that moves or disappears is noticed.
@@ -111,3 +115,24 @@ jobs:
       - run: pip install --quiet jsonschema pyyaml
       - name: Fetch the live index, every content file (hash-checked) and every image
         run: python3 tools/danak_content.py verify-site "${{ needs.deploy.outputs.page_url }}"
+
+  android-client:
+    name: The app's client syncs the live site
+    needs: [deploy, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Sync the live site with the app's own code (JVM)
+        env:
+          DANAK_LIVE_BASE_URL: ${{ needs.deploy.outputs.page_url }}v1/
+        run: ./gradlew --no-daemon :app:testDebugUnitTest --tests ir.danak.app.LiveSiteTest -i | grep -E "live:|LiveSiteTest|FAILED|BUILD" || true
+      - name: Fail if the live sync failed
+        run: |
+          f=app/build/test-results/testDebugUnitTest/TEST-ir.danak.app.LiveSiteTest.xml
+          test -f "$f" && ! grep -q "<failure" "$f" && ! grep -q "<skipped" "$f"

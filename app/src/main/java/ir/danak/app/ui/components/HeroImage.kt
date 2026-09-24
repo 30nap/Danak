@@ -44,7 +44,8 @@ fun DanakHeroImage(
  * later [DanakHeroImage] of the same image looks up.
  */
 fun prefetchHero(context: Context, image: DanakImage) {
-    context.imageLoader.enqueue(ImageRequest.Builder(context).data(image.model).build())
+    val model = image.model ?: return
+    context.imageLoader.enqueue(ImageRequest.Builder(context).data(model).build())
 }
 
 /**

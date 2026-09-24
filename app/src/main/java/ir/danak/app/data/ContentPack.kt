@@ -62,6 +62,13 @@ object ContentPack {
 
     class Parsed(val danaks: List<Danak>, val rejected: List<String>)
 
+    /**
+     * Reads one Danak on its own, as published under `v1/content/`. Null if it is malformed,
+     * breaks a rule above, or has a category this version does not know.
+     */
+    fun parseDanak(text: String, resolveImage: (String) -> DanakImage): Danak? =
+        runCatching { toDanak(json.parseToJsonElement(text), resolveImage) }.getOrNull()
+
     private fun toDanak(element: JsonElement, resolveImage: (String) -> DanakImage): Danak? {
         val entry = json.decodeFromJsonElement<DanakJson>(element)
         // A category this version does not know yet: skip it rather than mislabel it.

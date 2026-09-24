@@ -1,5 +1,6 @@
 package ir.danak.app
 
+import ir.danak.app.data.ContentRepository
 import ir.danak.app.data.DanakStore
 import ir.danak.app.model.Category
 import ir.danak.app.model.ThemeMode
@@ -136,6 +137,53 @@ class DanakViewModelTest {
         vm.toggleSaved("retired-danak")
         vm.toggleSaved(TestContent.all[0].id)
         assertEquals(listOf(TestContent.all[0].id), vm.state.value.saved.map { it.id })
+    }
+
+    @Test
+    fun `a verified refresh replaces the content once the app is in the foreground`() = test {
+        val fresh = TestContent.all.take(5).reversed()
+        val vm = DanakViewModel(newStore(folder), { TestContent.all }, { ContentRepository.Refresh.Updated(fresh) })
+        vm.loaded()
+        vm.onForeground()
+        vm.state.first { it.danaks == fresh }
+    }
+
+    @Test
+    fun `refreshes are spaced out after a success and retried after a failure`() = test {
+        var now = 0L
+        var calls = 0
+        var result: ContentRepository.Refresh = ContentRepository.Refresh.Failed("offline")
+        val vm = DanakViewModel(newStore(folder), { TestContent.all }, { calls++; result }, clockMs = { now })
+        vm.loaded()
+
+        vm.onForeground()
+        vm.onForeground()
+        assertEquals("a failure is not retried at once", 1, calls)
+        now += DanakViewModel.RETRY_INTERVAL_MS
+        result = ContentRepository.Refresh.UpToDate
+        vm.onForeground()
+        assertEquals("but it is retried on a later foreground", 2, calls)
+        now += DanakViewModel.RETRY_INTERVAL_MS
+        vm.onForeground()
+        assertEquals("a success is not repeated within the interval", 2, calls)
+        now += DanakViewModel.REFRESH_INTERVAL_MS
+        vm.onForeground()
+        assertEquals(3, calls)
+    }
+
+    @Test
+    fun `a danak taken out by a refresh stays openable but leaves the feed and saved list`() = test {
+        val all = TestContent.all
+        val removed = all.first()
+        val vm = DanakViewModel(newStore(folder), { all }, { ContentRepository.Refresh.Updated(all.drop(1)) })
+        vm.loaded()
+        vm.toggleSaved(removed.id)
+        vm.onForeground()
+        val state = vm.state.first { it.danaks.size == all.size - 1 }
+        assertEquals(removed, vm.danakById(removed.id))
+        assertTrue(state.feed.none { it.id == removed.id })
+        assertTrue(state.saved.isEmpty())
+        assertTrue("the saved id is kept, in case it comes back", state.isSaved(removed.id))
     }
 
     @Test
