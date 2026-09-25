@@ -331,6 +331,25 @@ class SecurityTest(IngestTestCase):
         self.assertEqual([11], body.read_sizes)
 
 
+class LicenceTest(unittest.TestCase):
+
+    def test_creative_commons_deeds_and_legal_codes_are_the_same_licence(self):
+        base = ds.canonical_license_url("https://creativecommons.org/licenses/by-sa/4.0/")
+        for url in ("https://creativecommons.org/licenses/by-sa/4.0/deed.fa",
+                    "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+                    "http://creativecommons.org/licenses/by-sa/4.0/legalcode",
+                    "https://creativecommons.org/licenses/by-sa/4.0"):
+            self.assertEqual(base, ds.canonical_license_url(url), url)
+        self.assertNotEqual(base, ds.canonical_license_url("https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fa"))
+        self.assertNotEqual(base, ds.canonical_license_url("https://creativecommons.org/licenses/by-sa/3.0/"))
+
+    def test_the_wikipedia_apis_deed_url_matches_the_policy(self):
+        source = ds.Policy(FIXTURES / "sources.yml").wikipedia("fa")
+        status, licence, reasons = ds.license_state(
+            {"url": "https://creativecommons.org/licenses/by-sa/4.0/deed.fa", "text": "CC BY-SA 4.0"}, source)
+        self.assertEqual(("explicit", "CC BY-SA 4.0", []), (status, licence, reasons))
+
+
 class DeterminismTest(unittest.TestCase):
 
     def test_normalisation_is_deterministic_and_idempotent(self):
@@ -339,6 +358,12 @@ class DeterminismTest(unittest.TestCase):
         self.assertEqual("متن با فاصلههای پنهان و نیم‌فاصله", once)
         self.assertEqual(once, ds.normalize_text(once))
         self.assertIn("‌", once)  # the half-space is Persian spelling, kept
+
+    def test_a_heading_left_without_content_is_dropped(self):
+        html = ("<body><p>متن.</p><h2>نگارخانه</h2><div class='gallery'><img/></div>"
+                "<h2>بخش</h2><h3>زیربخش خالی</h3><h3>زیربخش</h3><p>متن دوم.</p></body>")
+        blocks = ds.extract_blocks(ds.parse_html(html), "wikipedia")
+        self.assertEqual(["متن.", "بخش", "زیربخش", "متن دوم."], [b["text"] for b in blocks])
 
     def test_the_hash_depends_only_on_the_blocks(self):
         root = lambda: ds.parse_html(fixture("wikipedia/fa-revision.html").decode())  # noqa: E731

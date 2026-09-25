@@ -450,7 +450,21 @@ def extract_blocks(root, mode):
         flush()
 
     walk(root)
-    return blocks
+    return without_empty_headings(blocks)
+
+
+def without_empty_headings(blocks):
+    """A heading whose section had nothing left after extraction (a gallery, a table) is
+    dropped, so no snapshot ends on, or jumps over, an empty section."""
+    kept = []
+    for i, block in enumerate(blocks):
+        if block["type"] == "heading":
+            end = next((j for j in range(i + 1, len(blocks))
+                        if blocks[j]["type"] == "heading" and blocks[j]["level"] <= block["level"]), len(blocks))
+            if not any(b["type"] != "heading" for b in blocks[i + 1:end]):
+                continue
+        kept.append(block)
+    return kept
 
 
 def content_sha256(blocks):
@@ -464,14 +478,25 @@ def utc_now():
     return datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def canonical_license_url(url):
+    """One licence, one URL: Creative Commons pages come as the licence
+    (…/by-sa/4.0/), its deed in a language (…/deed.fa) or its legal code (…/legalcode.en).
+    These all name the same licence; anything else is compared as it is."""
+    parts = urllib.parse.urlsplit(url.strip())
+    path = re.sub(r"/(deed|legalcode)(\.[a-zA-Z_-]+)?/?$", "/", parts.path)
+    if not path.endswith("/"):
+        path += "/"
+    return f"https://{(parts.hostname or '').lower()}{path}"
+
+
 def license_state(from_source_license, source):
     """(status, effective licence, reasons it cannot back a Danak)."""
     configured, configured_url = source.get("license"), source.get("licenseUrl")
     reasons = []
     if from_source_license and from_source_license.get("url"):
         status = "explicit"
-        declared = from_source_license["url"].rstrip("/").replace("http://", "https://")
-        if configured_url and declared == configured_url.rstrip("/"):
+        declared = canonical_license_url(from_source_license["url"])
+        if configured_url and declared == canonical_license_url(configured_url):
             effective = configured
         else:
             effective = from_source_license.get("text") or from_source_license["url"]

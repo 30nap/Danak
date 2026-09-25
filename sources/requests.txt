@@ -4,6 +4,7 @@
 #
 # First experiment (Phase 4): three Persian and three English articles. There is no approved
 # non-Wikipedia source in content/sources.yml yet, so there are no url lines.
+# Run 2: re-ingested after Creative Commons deed URLs were matched to the policy licence.
 wikipedia fa فتوسنتز
 wikipedia fa کافئین
 wikipedia fa کهکشان راه شیری
