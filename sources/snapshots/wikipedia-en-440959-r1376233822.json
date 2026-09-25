@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "wikipedia-en-440959-r1376233822",
+  "sourceType": "wikipedia",
+  "sourceId": "wikipedia-en",
+  "requestedUrl": "https://en.wikipedia.org/wiki/Mpemba_effect",
+  "retrievedAt": "2026-09-25T09:07:19Z",
+  "fromSource": {
+    "title": "Mpemba effect",
+    "language": "en",
+    "pageId": 440959,
+    "revisionId": 1376233822,
+    "revisionTimestamp": "2026-09-22T23:17:54Z",
+    "canonicalUrl": "https://en.wikipedia.org/wiki/Mpemba_effect",
+    "wikidataId": "Q723510",
+    "license": {
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+      "text": "Creative Commons Attribution-Share Alike 4.0"
+    },
+    "contentType": "text/html; charset=utf-8; profile=\"https://www.mediawiki.org/wiki/Specs/HTML/2.8.0\""
+  },
+  "fromConfig": {
+    "publisher": "ویکی‌پدیا (انگلیسی)",
+    "derivatives": "share-alike",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "language": "en"
+  },
+  "derived": {
+    "canonicalUrl": "https://en.wikipedia.org/wiki/Mpemba_effect",
+    "title": "Mpemba effect",
+    "language": "en",
+    "licenseStatus": "explicit",
+    "license": "CC BY-SA 4.0",
+    "usableForDanak": true,
+    "notUsableBecause": [],
+    "extractor": "wikipedia-parsoid/1",
+    "blockCount": 53,
+    "characterCount": 14110,
+    "contentSha256": "974c8441d72559578edfb50162bcb0d76948ffb94aaa54ebb07f36e5e2ed0829"
+  },
+  "content": {
+    "trust": "untrusted-source-text",
+    "format": "blocks/1",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The Mpemba effect is the observation that very hot liquids or colloids (such as ice cream) can freeze more quickly than colder ones, for similar volumes and surrounding conditions. The effect is named after Erasto Mpemba, a Tanzanian teenager who studied it scientifically in the 1960s for the first time, along with Denis Osborne."
+      },
+      {
+        "type": "paragraph",
+        "text": "The Mpemba effect was initially observed in only ice cream and water, and later in other colloids. It has also been studied in magnetic alloys, nanomechanical systems, and quantum systems. In some colloids, a \"strong\" Mpemba effect is observed, where starting in certain hot temperature ranges leads to freezing much faster than starting in a cooler range."
+      },
+      {
+        "type": "paragraph",
+        "text": "The effect is not observed in all environments or experimental setups. Studies of the effect in water have mixed results, with some experiments finding no reproducible effect. Physicists remain divided on the effect's precise definition and underlying mechanisms."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Definition"
+      },
+      {
+        "type": "paragraph",
+        "text": "The definition of the Mpemba effect used in theoretical studies varies, making it difficult to compare experiments. Monwhea Jeng proposed this definition for the effect in water: \"There exists a set of initial parameters, and a pair of temperatures, such that given two bodies of water identical in these parameters, and differing only in initial uniform temperatures, the hot one will freeze sooner.\" Even this definition does not specify whether \"freezing\" refers to the point at which a visible surface layer of ice has formed, or the point at which the liquid is completely frozen."
+      },
+      {
+        "type": "paragraph",
+        "text": "A generalized definition is \"A hotter system equilibrates faster than a colder one, when both are quenched to the same low temperature.\" In water, this would be when the liquid has completely frozen."
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "Mpemba's observation"
+      },
+      {
+        "type": "paragraph",
+        "text": "The effect is named after Tanzanian student Erasto Mpemba, who described it in 1963 in Form 3 of Magamba Secondary School, Tanganyika; when freezing a hot ice cream mixture in a cookery class, he noticed that it froze before a cold mixture. He later became a student at Mkwawa Secondary (formerly High) School in Iringa. The headmaster invited Dr. Denis Osborne from the University College in Dar es Salaam to give a lecture on physics. After the lecture, Mpemba asked him, \"If you take two similar containers with equal volumes of water, one at 35 °C (95 °F) and the other at 100 °C (212 °F), and put them into a freezer, the one that started at 100 °C (212 °F) freezes first. Why?\" Osborne thought the student was mistaken at first, but, intrigued by the question, he experimented on the issue back at his workplace, and was amused to see he was able to confirm Mpemba's finding. Osborne and Mpemba later published the results together in 1969, while Mpemba was studying at the College of African Wildlife Management."
+      },
+      {
+        "type": "paragraph",
+        "text": "Mpemba and Osborne described placing 70 ml (2.5 imp fl oz; 2.4 US fl oz) samples of water in 100 ml (3.5 imp fl oz; 3.4 US fl oz) beakers in the icebox of a domestic refrigerator on a sheet of polystyrene foam. They showed the time for freezing to start was longest with an initial temperature of 25 °C (77 °F) and that it was much less at around 90 °C (194 °F). They ruled out loss of liquid volume by evaporation and the effect of dissolved air as significant factors. In their setup, most heat loss was found to be from the liquid surface."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "History"
+      },
+      {
+        "type": "paragraph",
+        "text": "Various effects of heat on the freezing of water were described by ancient scientists, including Aristotle: \"The fact that the water has previously been warmed contributes to its freezing quickly: for so it cools sooner. Hence many people, when they want to cool water quickly, begin by putting it in the sun.\" Aristotle's explanation involved antiperistasis: \"...the supposed increase in the intensity of a quality as a result of being surrounded by its contrary quality.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "Francis Bacon noted that \"slightly tepid water freezes more easily than that which is utterly cold.\" René Descartes wrote in his Discourse on the Method, relating the phenomenon to his vortex theory: \"One can see by experience that water that has been kept on a fire for a long time freezes faster than other, the reason being that those of its particles that are least able to stop bending evaporate while the water is being heated.\""
+      },
+      {
+        "type": "paragraph",
+        "text": "Scottish scientist Joseph Black in 1775 investigated a special case of the phenomenon by comparing previously boiled with unboiled water. He found that the previously boiled water froze more quickly, even when evaporation was controlled for. He discussed the influence of stirring on the results of the experiment, noting that stirring the unboiled water led to it freezing at the same time as the previously boiled water, and also noted that stirring the very cold unboiled water led to immediate freezing. Joseph Black then discussed Daniel Gabriel Fahrenheit's description of supercooling of water, arguing that the previously boiled water could not be as readily supercooled."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Modern experimental work"
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "Studies of the effect in water"
+      },
+      {
+        "type": "paragraph",
+        "text": "Modern studies using freezers with well-understood properties have observed the Mpemba effect where water supercools before freezing. Water that starts out cooler tends to reach a lower supercooled temperature before freezing. Some studies measure the time it takes for a sample to begin to freeze (the start of recalescence, the moment where the heat of freezing first starts to be released) the time it takes to completely freeze, or the difference: the time from the onset of recalescence to the completion of freezing. Some also measure the time it takes for a sample to reach the freezing point of the fluid, before any freezing has begun."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 1995, David Auerbach studied glass beakers placed into a liquid cooling bath, where the water supercooled to −6 to −18 °C (21 to 0 °F; 267 to 255 K) before freezing. In some cases water which started off hotter began freezing first. Considerable random variation was observed in the time required for spontaneous freezing to start, and Auerbach observed the Mpemba effect more frequently when the ambient temperature was between −6 and −12 °C (21 and 10 °F). James Brownridge later studied a variety of initial conditions and containers, measuring the time to the onset of recalescence, and found that while hot samples sometimes froze first this was also affected by properties of the container holding the liquid."
+      },
+      {
+        "type": "paragraph",
+        "text": "Writing for New Scientist, Mick O'Hare recommended starting the experiment with containers at 35 and 5 °C (95 and 41 °F; 308 and 278 K), respectively, to maximize the effect."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2021, John Bechhoefer described a way to reliably reproduce the effect. In 2024, Argelia Ortega, et al. studied the freezing of small (1 to 20 mL or 0.03 to 0.7 US fl oz) drops in a Peltier cell with a thermographic camera, and found that hot drops consistently froze faster than cold ones, with a more pronounced difference for larger drops. In particular, hot drops finished freezing sooner after the onset of recalescence, and experienced less of a temperature spike during the freezing process."
+      },
+      {
+        "type": "heading",
+        "level": 4,
+        "text": "Criticisms of experiments with water"
+      },
+      {
+        "type": "paragraph",
+        "text": "Some researchers have criticized studies of the Mpemba effect for not accounting for dissolved solids and gases, and other confounding factors. Even among experiments that agree on a definition and observe the Mpemba effect for some experimental setups, they may not observe it for all setups and starting conditions."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2006, Philip Ball, a reviewer for Physics World noted that experiments studying the effect need to control a large number of initial parameters. They must choose a method to establish the time of freezing, and then choose the type and initial temperature of the water, the amount of allowed dissolved gas and other impurities, the size, shape and material of the container, the method of cooling, and the temperature of the refrigerator. Ball described simple ways in which the effect might be observed, such as if a warmer temperature melts the frost on a cooling surface, thereby increasing thermal conductivity between the cooling surface and the water container."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2016, Burridge and Linden studied a slightly different measure, the time it took water samples to reach 0 °C but not freeze. Their review of related work noted that the large effects observed in early experiments had not been replicated in other studies of cooling to 0 °C, and that studies showing small effects could be influenced by variations in the positioning of thermometers. They concluded that \"there is no evidence to support meaningful observations of the Mpemba effect.\""
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "text": "Studies of the effect in colloids and other systems"
+      },
+      {
+        "type": "heading",
+        "level": 4,
+        "text": "Classical systems"
+      },
+      {
+        "type": "paragraph",
+        "text": "The original classroom observations of the Mpemba effect were of fresh ice cream, a colloid, freezing in a freezer."
+      },
+      {
+        "type": "paragraph",
+        "text": "A generalized version of the Mpemba effect is \"when a hotter system equilibrates faster than a colder one, when both are quenched to the same low temperature.\" This has been modeled theoretically for simple systems such as single particles under Brownian motion."
+      },
+      {
+        "type": "paragraph",
+        "text": "The possibility of a \"strong Mpemba effect\" where exponentially faster cooling can occur in a system at particular initial temperatures was predicted in 2019 by Klich, Raz, Hirschberg and Vucelja. If they existed, the effect in such systems would be easy to observe experimentally. In 2020 the strong Mpemba effect was demonstrated experimentally by Avinash Kumar and John Boechhoefer in a single-particle colloidal system. In 2022, that group also demonstrated an \"inverse Mpemba effect\" in a single-particle colloid where a cold system heats up much faster than a warmer one, under the right conditions."
+      },
+      {
+        "type": "heading",
+        "level": 4,
+        "text": "Quantum systems"
+      },
+      {
+        "type": "paragraph",
+        "text": "Since 2020, quantum researchers have studied Mpemba effects in quantum systems as an example of how initial conditions of a system affects its thermal evolution. In 2024, a team in John Goold's lab at Trinity College described their quantum-mechanical analysis of an abstract problem wherein \"an initially hot system is quenched into a cold bath and reaches equilibrium faster than an initially cooler system.\" They included computational studies of spin systems which exhibit the effect, concluding that certain initial conditions of a quantum system can lead to a simultaneous increase in the thermalization rate and the free energy."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2025, experimental observations by Zhang, et al. found a quantum strong Mpemba effect for a single trapped ion, and Chatterjee, et al. found the Mpemba effect occurs naturally during the cooling of nuclear spin states."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Theoretical explanations"
+      },
+      {
+        "type": "paragraph",
+        "text": "While the definition of the Mpemba effect used in theoretical studies varies, several explanations have been offered for its occurrence."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2017, two research groups independently and simultaneously found a theoretical Mpemba effect and also predicted a new \"inverse\" Mpemba effect in which heating a cooled, far-from-equilibrium system takes less time than another system that is initially closer to equilibrium. Zhiyue Lu and Oren Raz yielded a general criterion based on Markovian statistical mechanics, predicting the appearance of the inverse Mpemba effect in the Ising model and diffusion dynamics. Antonio Lasanta and co-authors also predicted the direct and inverse Mpemba effects for a granular gas in a far-from-equilibrium initial state. Lasanta's paper also suggested that a very generic mechanism leading to both Mpemba effects is due to a particle velocity distribution function that significantly deviates from the Maxwell–Boltzmann distribution."
+      },
+      {
+        "type": "paragraph",
+        "text": "In 2024, building on Kumar's work, Isha Malhotra simulated single colloids placed in a different, double-well potential, and predicted conditions under which two specific ranges of hotter starting temperatures lead to faster freezing, but not temperatures in between those ranges."
+      },
+      {
+        "type": "paragraph",
+        "text": "Supercooling is a component of many theoretical explanations, particularly the tendency of hot liquids that are cooled rapidly to start freezing at a higher supercool temperature. Several molecular dynamics simulations have also supported that changes in hydrogen bonding during supercooling play a role in the process. In 2017, Yunwen Tao and co-authors suggested that the vast diversity and peculiar occurrence of different hydrogen bonds could contribute to the effect. They argued that the number of strong hydrogen bonds increases as temperature is elevated, and that the existence of the small strongly bonded clusters facilitates in turn the nucleation of hexagonal ice when warm water is rapidly cooled down. The authors used vibrational spectroscopy and modelling with density functional theory-optimized water clusters."
+      },
+      {
+        "type": "paragraph",
+        "text": "The following additional explanations have been proposed:"
+      },
+      {
+        "type": "paragraph",
+        "text": "Solutes"
+      },
+      {
+        "type": "paragraph",
+        "text": "Calcium carbonate, magnesium carbonate, and other mineral salts dissolved in water can precipitate out when water is boiled, leading to an increase in the freezing point compared to non-boiled water that contains all the dissolved minerals."
+      },
+      {
+        "type": "paragraph",
+        "text": "Dissolved gases"
+      },
+      {
+        "type": "paragraph",
+        "text": "Cold water can contain more dissolved gases than hot water, which may somehow change the properties of the water with respect to convection currents."
+      },
+      {
+        "type": "paragraph",
+        "text": "Microbubble-induced heat transfer"
+      },
+      {
+        "type": "paragraph",
+        "text": "Boiling may induce microbubbles in water that remain stably suspended as the water cools, then act by convection to transfer heat more quickly as the water cools."
+      },
+      {
+        "type": "paragraph",
+        "text": "Convection accelerating heat transfers"
+      },
+      {
+        "type": "paragraph",
+        "text": "Reduction of water density below 4 °C (39 °F) tends to suppress the convection currents that cool the inner or lower parts of a liquid mass. Some experiments account for this factor."
+      },
+      {
+        "type": "paragraph",
+        "text": "Frost"
+      },
+      {
+        "type": "paragraph",
+        "text": "Frost has insulating effects. A container of hotter liquid may melt through a layer of frost that would acting as an insulator around a cooler container, allowing the container to work more effectively within the same refrigeration setup."
+      },
+      {
+        "type": "paragraph",
+        "text": "Crystallization"
+      },
+      {
+        "type": "paragraph",
+        "text": "A relatively higher population of water hexamer states in warm water might be responsible for the faster crystallization."
+      },
+      {
+        "type": "paragraph",
+        "text": "Distribution function"
+      },
+      {
+        "type": "paragraph",
+        "text": "Strong deviations from the Maxwell–Boltzmann distribution can result in a Mpemba effect in gases and granular fluids."
+      },
+      {
+        "type": "paragraph",
+        "text": "Variability in freezing speed"
+      },
+      {
+        "type": "paragraph",
+        "text": "Andrei A. Klimov and Alexei V. Finkelstein state that variability in freezing speed at different parts of a fluid surface can contribute to the effect."
+      }
+    ]
+  }
+}

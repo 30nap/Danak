@@ -33,7 +33,7 @@ jobs:
           git status --porcelain --untracked-files=all sources/snapshots | awk '{print $2}' > new.txt
           echo "$(wc -l < new.txt) new snapshot(s)"
           while read -r f; do
-            python3 tools/danak_sources.py show "$(basename "$f" .json)" | head -40
+            python3 tools/danak_sources.py show "$(basename "$f" .json)" | sed -n "1,40p"
             echo "=====BEGIN $(basename "$f")====="
             gzip -9c "$f" | base64 -w 0; echo
             echo "=====END====="
