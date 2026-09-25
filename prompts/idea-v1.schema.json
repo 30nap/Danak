@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "reason",
+    "idea",
+    "evidence",
+    "concerns"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "IDEA",
+        "NO_SUITABLE_IDEA",
+        "SOURCE_REQUIRES_REVIEW"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "idea": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "concept",
+            "conceptFa",
+            "angle",
+            "whyUseful",
+            "category"
+          ],
+          "properties": {
+            "concept": {
+              "type": "string"
+            },
+            "conceptFa": {
+              "type": "string"
+            },
+            "angle": {
+              "type": "string"
+            },
+            "whyUseful": {
+              "type": "string"
+            },
+            "category": {
+              "enum": [
+                "technology",
+                "programming",
+                "science",
+                "psychology",
+                "economy",
+                "history",
+                "productivity",
+                "curiosities"
+              ]
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "block",
+          "excerpt",
+          "supports"
+        ],
+        "properties": {
+          "block": {
+            "type": "integer"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "supports": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "concerns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "severity",
+          "block",
+          "excerpt",
+          "explanation"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "contradiction",
+              "suspicious-number",
+              "mistranslation",
+              "inconsistency",
+              "unsupported-certainty",
+              "poor-language",
+              "other"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "note",
+              "serious"
+            ]
+          },
+          "block": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "excerpt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "title": "Danak idea stage answer, v1"
+}

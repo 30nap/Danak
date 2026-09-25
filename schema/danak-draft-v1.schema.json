@@ -1,0 +1,763 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/30nap/Danak/schema/danak-draft-v1.schema.json",
+  "title": "Danak draft review artifact, v1",
+  "description": "Everything a reviewer needs to decide whether an AI-written Danak draft should be published: the proposed Danak, the snapshot it came from, the evidence, claim-by-claim verification, warnings, deterministic validation and generation metadata. Pipeline audit data; never shipped to the app. Evidence always names its snapshot so corroborating snapshots can be added later (corroboration).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "status",
+    "statusReason",
+    "review",
+    "snapshot",
+    "policy",
+    "idea",
+    "concerns",
+    "danak",
+    "pendingForPublication",
+    "claims",
+    "nonFactual",
+    "unclaimedStatements",
+    "verifierNotes",
+    "attention",
+    "problems",
+    "normalizations",
+    "corroboration",
+    "failure",
+    "generation",
+    "suspectedInjection"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "danak-draft"
+    },
+    "status": {
+      "enum": [
+        "ready-for-review",
+        "rejected",
+        "source-requires-review",
+        "no-suitable-idea",
+        "policy-blocked",
+        "failed"
+      ]
+    },
+    "statusReason": {
+      "type": "string"
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanApprovalRequired",
+        "autoPublish"
+      ],
+      "properties": {
+        "humanApprovalRequired": {
+          "const": true
+        },
+        "autoPublish": {
+          "const": false
+        }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshotId",
+        "contentSha256",
+        "sourceType",
+        "sourceId",
+        "retrievedAt",
+        "title",
+        "language",
+        "canonicalUrl",
+        "publisher",
+        "license",
+        "pageId",
+        "revisionId",
+        "revisionTimestamp",
+        "wikidataId"
+      ],
+      "properties": {
+        "snapshotId": {
+          "type": "string"
+        },
+        "contentSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sourceType": {
+          "type": "string"
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "retrievedAt": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "language": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "canonicalUrl": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "license": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pageId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "revisionId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "revisionTimestamp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wikidataId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "policy": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "usable",
+            "reasons",
+            "notes",
+            "storedUsableForDanak"
+          ],
+          "properties": {
+            "usable": {
+              "type": "boolean"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "notes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "storedUsableForDanak": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "idea": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason",
+            "idea",
+            "evidence"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "IDEA",
+                "NO_SUITABLE_IDEA",
+                "SOURCE_REQUIRES_REVIEW"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "idea": {
+              "anyOf": [
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "snapshotId",
+                  "block",
+                  "excerpt",
+                  "supports"
+                ],
+                "properties": {
+                  "snapshotId": {
+                    "type": "string"
+                  },
+                  "block": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "excerpt": {
+                    "type": "string"
+                  },
+                  "supports": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "concerns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "severity",
+          "block",
+          "excerpt",
+          "explanation",
+          "snapshotId",
+          "locationVerified"
+        ]
+      }
+    },
+    "danak": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "category",
+            "title",
+            "summary",
+            "sections",
+            "keyTakeaway",
+            "readingSeconds",
+            "source"
+          ],
+          "not": {
+            "required": [
+              "image"
+            ]
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pendingForPublication": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "location",
+          "claim",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "claim": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "snapshotId",
+                "block",
+                "excerpt"
+              ],
+              "properties": {
+                "snapshotId": {
+                  "type": "string"
+                },
+                "block": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "excerpt": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "verifierStatus",
+                  "adjusted",
+                  "reason",
+                  "evidence",
+                  "sourceReliabilityConcern"
+                ],
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "SUPPORTED",
+                      "PARTIALLY_SUPPORTED",
+                      "UNSUPPORTED",
+                      "CONTRADICTED",
+                      "UNCERTAIN"
+                    ]
+                  },
+                  "verifierStatus": {
+                    "enum": [
+                      "SUPPORTED",
+                      "PARTIALLY_SUPPORTED",
+                      "UNSUPPORTED",
+                      "CONTRADICTED",
+                      "UNCERTAIN"
+                    ]
+                  },
+                  "adjusted": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "snapshotId",
+                        "block",
+                        "excerpt"
+                      ],
+                      "properties": {
+                        "snapshotId": {
+                          "type": "string"
+                        },
+                        "block": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "excerpt": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "sourceReliabilityConcern": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "nonFactual": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "reason"
+        ],
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "unclaimedStatements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "text",
+          "reason"
+        ],
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verifierNotes": {
+      "type": "string"
+    },
+    "attention": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "severity",
+          "where",
+          "message"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "serious",
+              "note",
+              "review",
+              "info"
+            ]
+          },
+          "where": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage",
+          "code",
+          "where",
+          "message"
+        ],
+        "properties": {
+          "stage": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "where": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "normalizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "before",
+          "after"
+        ],
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "before": {
+            "type": "string"
+          },
+          "after": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "corroboration": {
+      "description": "Reserved for later phases: additional snapshots that corroborate or contradict claims.",
+      "type": "array"
+    },
+    "failure": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stage",
+            "code",
+            "message"
+          ],
+          "properties": {
+            "stage": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pipeline",
+        "generator",
+        "verifier",
+        "prompts",
+        "startedAt",
+        "finishedAt",
+        "requests"
+      ],
+      "properties": {
+        "pipeline": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "object",
+          "required": [
+            "provider",
+            "model"
+          ]
+        },
+        "verifier": {
+          "type": "object",
+          "required": [
+            "provider",
+            "model"
+          ]
+        },
+        "prompts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "idea",
+            "generate",
+            "verify"
+          ],
+          "properties": {
+            "idea": {
+              "type": "string"
+            },
+            "generate": {
+              "type": "string"
+            },
+            "verify": {
+              "type": "string"
+            }
+          }
+        },
+        "startedAt": {
+          "type": "string"
+        },
+        "finishedAt": {
+          "type": "string"
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage",
+              "provider",
+              "model",
+              "attempts",
+              "ms"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "attempts": {
+                "type": "integer"
+              },
+              "inputTokens": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "outputTokens": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "ms": {
+                "type": "integer"
+              },
+              "error": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "suspectedInjection": {
+      "description": "Blocks whose text reads like instructions to an AI (heuristic).",
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ready-for-review"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "danak": {
+            "type": "object"
+          },
+          "problems": {
+            "maxItems": 0
+          },
+          "claims": {
+            "minItems": 1,
+            "items": {
+              "required": [
+                "verdict"
+              ],
+              "properties": {
+                "verdict": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "SUPPORTED",
+                        "PARTIALLY_SUPPORTED",
+                        "UNCERTAIN"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rejected"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "problems": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

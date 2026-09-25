@@ -1,0 +1,66 @@
+name: Generation
+
+# Tests the AI draft pipeline without any AI: every model answer comes from scripted fixtures,
+# so this workflow needs no API key and never talks to a model provider. It also checks any
+# committed drafts still agree with their snapshots and with the current source policy.
+
+on:
+  push:
+    paths:
+      - "tools/danak_generate.py"
+      - "tools/danak_ai.py"
+      - "tools/danak_sources.py"
+      - "tools/danak_content.py"
+      - "prompts/**"
+      - "schema/**"
+      - "drafts/**"
+      - "evals/**"
+      - "tests/generate/**"
+      - "sources/snapshots/**"
+      - "content/sources.yml"
+      - ".github/workflows/generation.yml"
+  pull_request:
+    paths:
+      - "tools/danak_generate.py"
+      - "tools/danak_ai.py"
+      - "tools/danak_sources.py"
+      - "tools/danak_content.py"
+      - "prompts/**"
+      - "schema/**"
+      - "drafts/**"
+      - "evals/**"
+      - "tests/generate/**"
+      - "sources/snapshots/**"
+      - "content/sources.yml"
+      - ".github/workflows/generation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Pipeline tests (no API key)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: pip install --quiet jsonschema pyyaml
+
+      - name: Tests (scripted provider, adversarial and failure cases)
+        run: python3 -m unittest discover -s tests/generate -v
+
+      - name: Prompt versions
+        run: python3 tools/danak_generate.py prompts | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: End-to-end dry run with the scripted provider
+        env:
+          DANAK_AI_PROVIDER: fake
+        run: |
+          python3 tools/danak_generate.py run wikipedia-en-2678638-r1374122898 \
+            --script tests/generate/fixtures/dunbar.json --out _dry-run
+          python3 tools/danak_generate.py validate-drafts _dry-run
+          grep -q '"status": "ready-for-review"' _dry-run/wikipedia-en-2678638-r1374122898/draft.json
+
+      - name: Committed drafts still match their snapshots and the policy
+        run: python3 tools/danak_generate.py validate-drafts drafts

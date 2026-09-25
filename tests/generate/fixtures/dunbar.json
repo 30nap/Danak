@@ -1,0 +1,261 @@
+{
+  "idea": {
+    "status": "IDEA",
+    "reason": "The snapshot explains where the number comes from and how uncertain it is: enough for one self-contained Danak.",
+    "idea": {
+      "concept": "Dunbar's number",
+      "conceptFa": "عدد دانبار",
+      "angle": "150 is an extrapolated estimate of how many stable relationships a person can keep, and its uncertainty is large.",
+      "whyUseful": "A widely quoted number that is usually presented as a law; knowing where it comes from changes how much weight it deserves.",
+      "category": "psychology"
+    },
+    "evidence": [
+      {
+        "block": 0,
+        "excerpt": "Dunbar's number is a suggested cognitive limit to the number of people with whom one can maintain stable social relationships",
+        "supports": "definition"
+      },
+      {
+        "block": 0,
+        "excerpt": "he proposed that humans can comfortably maintain 150 stable relationships",
+        "supports": "the number"
+      },
+      {
+        "block": 4,
+        "excerpt": "Using a regression equation on data for 38 primate genera, Dunbar predicted a human \"mean group size\" of 148 (casually rounded to 150)",
+        "supports": "how it was derived"
+      },
+      {
+        "block": 16,
+        "excerpt": "implied that specifying any one number is of limited value",
+        "supports": "its uncertainty"
+      }
+    ],
+    "concerns": []
+  },
+  "generate": {
+    "category": "psychology",
+    "title": "چرا می‌گویند هر آدم حدود ۱۵۰ رابطهٔ پایدار دارد؟",
+    "summary": "عدد دانبار حدی پیشنهادی برای شمار رابطه‌های اجتماعی پایدار است؛ حدود ۱۵۰ نفر، اما با تردید زیاد.",
+    "sections": [
+      {
+        "heading": null,
+        "body": "رابین دانبار، انسان‌شناس بریتانیایی، دید که در نخستی‌ها اندازهٔ مغز با اندازهٔ گروه اجتماعی رابطه دارد. او با داده‌های ۳۸ سردهٔ نخستی و یک معادلهٔ رگرسیون، برای انسان گروهی با میانگین ۱۴۸ نفر پیش‌بینی کرد که به ۱۵۰ گرد شد."
+      },
+      {
+        "heading": "عددی با حاشیهٔ خطای بزرگ",
+        "body": "خود دانبار این نتیجه را اکتشافی می‌دانست، چون خطای برآورد بزرگ بود. تکرار تحلیل او با داده‌ها و روش‌های تازه، عددهای بسیار متفاوتی داد و نشان داد که انتخاب یک عدد مشخص ارزش محدودی دارد."
+      }
+    ],
+    "keyTakeaway": "۱۵۰ را برآوردی تقریبی بدان که بین ۱۰۰ تا ۲۵۰ پیشنهاد شده است، نه قانونی دربارهٔ دوستی‌ها.",
+    "claims": [
+      {
+        "id": "c1",
+        "location": "title",
+        "claim": "عدد ۱۵۰ برآوردی از شمار رابطه‌های پایدار یک انسان است.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "he proposed that humans can comfortably maintain 150 stable relationships"
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "location": "summary",
+        "claim": "عدد دانبار حدی پیشنهادی برای شمار رابطه‌های اجتماعی پایدار است.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "Dunbar's number is a suggested cognitive limit to the number of people with whom one can maintain stable social relationships"
+          }
+        ]
+      },
+      {
+        "id": "c3",
+        "location": "summary",
+        "claim": "مقدار رایج آن ۱۵۰ است و دربارهٔ آن تردید زیادی هست.",
+        "evidence": [
+          {
+            "block": 1,
+            "excerpt": "It has been proposed to lie between 100 and 250, with a commonly used value of 150."
+          },
+          {
+            "block": 16,
+            "excerpt": "implied that specifying any one number is of limited value"
+          }
+        ]
+      },
+      {
+        "id": "c4",
+        "location": "sections[0].body",
+        "claim": "دانبار انسان‌شناس بریتانیایی بود و در نخستی‌ها رابطهٔ اندازهٔ مغز و اندازهٔ گروه را دید.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "Robin Dunbar, a British anthropologist who found a correlation between primate brain size and average social group size"
+          }
+        ]
+      },
+      {
+        "id": "c5",
+        "location": "sections[0].body",
+        "claim": "با داده‌های ۳۸ سرده و رگرسیون، ۱۴۸ پیش‌بینی شد و به ۱۵۰ گرد شد.",
+        "evidence": [
+          {
+            "block": 4,
+            "excerpt": "Using a regression equation on data for 38 primate genera, Dunbar predicted a human \"mean group size\" of 148 (casually rounded to 150)"
+          }
+        ]
+      },
+      {
+        "id": "c6",
+        "location": "sections[1].body",
+        "claim": "دانبار نتیجه را به دلیل خطای بزرگ اکتشافی می‌دانست.",
+        "evidence": [
+          {
+            "block": 4,
+            "excerpt": "a result he considered exploratory because of the large error measure"
+          }
+        ]
+      },
+      {
+        "id": "c7",
+        "location": "sections[1].body",
+        "claim": "تکرار تحلیل عددهای بسیار متفاوت داد و یک عدد مشخص ارزش محدودی دارد.",
+        "evidence": [
+          {
+            "block": 16,
+            "excerpt": "A replication of Dunbar's analysis on updated complementary datasets using different comparative phylogenetic methods yielded wildly different numbers."
+          },
+          {
+            "block": 16,
+            "excerpt": "implied that specifying any one number is of limited value"
+          }
+        ]
+      },
+      {
+        "id": "c8",
+        "location": "keyTakeaway",
+        "claim": "عدد بین ۱۰۰ تا ۲۵۰ پیشنهاد شده و ۱۵۰ مقدار رایج آن است.",
+        "evidence": [
+          {
+            "block": 1,
+            "excerpt": "It has been proposed to lie between 100 and 250, with a commonly used value of 150."
+          }
+        ]
+      }
+    ],
+    "nonFactual": []
+  },
+  "verify": {
+    "verdicts": [
+      {
+        "claim": "c1",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "he proposed that humans can comfortably maintain 150 stable relationships"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c2",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "Dunbar's number is a suggested cognitive limit to the number of people with whom one can maintain stable social relationships"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c3",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 1,
+            "excerpt": "It has been proposed to lie between 100 and 250, with a commonly used value of 150."
+          },
+          {
+            "block": 16,
+            "excerpt": "implied that specifying any one number is of limited value"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c4",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 0,
+            "excerpt": "Robin Dunbar, a British anthropologist who found a correlation between primate brain size and average social group size"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c5",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 4,
+            "excerpt": "Using a regression equation on data for 38 primate genera, Dunbar predicted a human \"mean group size\" of 148 (casually rounded to 150)"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c6",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 4,
+            "excerpt": "a result he considered exploratory because of the large error measure"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c7",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 16,
+            "excerpt": "A replication of Dunbar's analysis on updated complementary datasets using different comparative phylogenetic methods yielded wildly different numbers."
+          },
+          {
+            "block": 16,
+            "excerpt": "implied that specifying any one number is of limited value"
+          }
+        ],
+        "sourceReliabilityConcern": null
+      },
+      {
+        "claim": "c8",
+        "status": "SUPPORTED",
+        "reason": "The cited block states this with the same hedging.",
+        "evidence": [
+          {
+            "block": 1,
+            "excerpt": "It has been proposed to lie between 100 and 250, with a commonly used value of 150."
+          }
+        ],
+        "sourceReliabilityConcern": null
+      }
+    ],
+    "unclaimedStatements": [],
+    "notes": ""
+  }
+}

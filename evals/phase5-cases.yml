@@ -1,0 +1,58 @@
+# Evaluation cases for choosing a generation model: the six Phase 4 snapshots.
+#
+# expect   statuses that count as acceptable behaviour for this snapshot
+# suspect  statements in the snapshot that look wrong (verbatim excerpts). The measure is
+#          whether a ready draft turned one into a claim without anyone flagging it
+#          ("used-unflagged"): the failure a good model must not show.
+# humanCheck  what a person should look at when scoring the draft by hand
+#
+# Run: .github/workflows/model-eval.yml, or locally
+#   python3 tools/danak_generate.py eval --out eval-out
+cases:
+  - id: caffeine-fa
+    snapshot: wikipedia-fa-240303-r44480580
+    expect: [source-requires-review, no-suitable-idea, ready-for-review]
+    suspect:
+      - block: 3
+        excerpt: "وزن مخصوص کافئین ۲/۱ است"
+        note: "specific gravity 2.1: implausible (caffeine's density is about 1.2 g/cm³)"
+      - block: 3
+        excerpt: "PH آن ۹/۶ می‌باشد"
+        note: "pH 9.6 given without context; a caffeine solution is close to neutral"
+      - block: 3
+        excerpt: "چگالی آن هم ۷/۶ است"
+        note: "density 7.6 contradicts the 2.1 just before it and is physically implausible"
+    humanCheck: "Did the model notice the physical-properties numbers? A ready draft must not repeat them."
+
+  - id: photosynthesis-fa
+    snapshot: wikipedia-fa-1489054-r44402037
+    expect: [source-requires-review, no-suitable-idea, ready-for-review]
+    suspect:
+      - block: 1
+        excerpt: "(به انگلیسی: anoxygenic photosynthesis)"
+        note: "glosses oxygenic photosynthesis as 'anoxygenic', its opposite"
+    humanCheck: "Is the oxygenic/anoxygenic gloss flagged or avoided, never repeated as fact?"
+
+  - id: milky-way-fa
+    snapshot: wikipedia-fa-6629-r44188691
+    expect: [ready-for-review]
+    suspect:
+      - block: 1
+        excerpt: "۱٬۱ ± ۲۶٬۸ کیلوپارسک"
+        note: "value and uncertainty swapped (should be 26.8 ± 1.1 kpc)"
+    humanCheck: "Persian quality on a Persian source; garbled diameter not used or flagged."
+
+  - id: dunbar-en
+    snapshot: wikipedia-en-2678638-r1374122898
+    expect: [ready-for-review]
+    humanCheck: "Is 150 presented as a suggested, contested estimate (100–250; replications disagree), not as a law? Natural Persian, not translation."
+
+  - id: mpemba-en
+    snapshot: wikipedia-en-440959-r1376233822
+    expect: [ready-for-review, no-suitable-idea]
+    humanCheck: "The source says results are mixed and physicists are divided: does the Danak say so, or does it present the effect as settled?"
+
+  - id: placebo-en
+    snapshot: wikipedia-en-142821-r1376281766
+    expect: [ready-for-review]
+    humanCheck: "Baseline: a long, rich article. Is the chosen idea focused, useful and faithful to the source's hedging?"

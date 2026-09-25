@@ -83,17 +83,25 @@ sources/                   source snapshots: evidence for writing Danaks, never 
 ├── requests.txt           sources to ingest next (see sources/README.md)
 └── snapshots/             one immutable snapshot per source revision
 
+prompts/                   versioned AI prompts and their answer schemas (see prompts/README.md)
+drafts/                    AI-written Danak drafts awaiting a person's review, never published
+evals/                     model-evaluation cases and the evaluation request
+
 schema/
 ├── danak-v1.schema.json   Danak / content pack format: the contract with the app
 ├── index-v1.schema.json   published index format
-└── source-snapshot-v1.schema.json   source snapshot format
+├── source-snapshot-v1.schema.json   source snapshot format
+└── danak-draft-v1.schema.json       draft review artifact format
 
 tests/content/             validator tests with valid and invalid fixtures
 tests/sources/             ingestion tests with fixtures and a fake network
+tests/generate/            draft pipeline tests with a scripted model (no API key)
 
 tools/
 ├── danak_content.py       validates content/, builds the static site, checks the app bundle
 ├── danak_sources.py       snapshots trusted sources (Wikipedia, allowlisted pages)
+├── danak_generate.py      turns one snapshot into a reviewable Danak draft (AI, evidence-checked)
+├── danak_ai.py            provider interface: scripted fake, Anthropic, OpenAI-compatible
 ├── check_links.py         verifies every source and photo-credit link
 ├── fetch_photos.py        downloads hero photos from Wikimedia Commons (CI only)
 └── photos.json            the chosen photo for each Danak
@@ -121,6 +129,10 @@ The debug APK, reports and screenshots are uploaded as workflow artifacts.
 `.github/workflows/sources.yml` validates source snapshots and rejects any change to an
 existing one; `.github/workflows/ingest.yml` snapshots the sources listed in
 `sources/requests.txt` when that file changes.
+
+`.github/workflows/generation.yml` tests the draft pipeline with scripted model answers (no
+API key) and checks committed drafts; `.github/workflows/model-eval.yml` runs a real model
+over the evaluation cases, by hand only, when its secret is configured.
 
 `.github/workflows/photos.yml` runs only when `tools/photos.json` or the fetcher changes.
 
@@ -156,6 +168,17 @@ python3 tools/danak_content.py validate          # check content/
 python3 tools/danak_content.py build --out _site # build the site locally
 python3 -m unittest discover -s tests/content     # validator tests
 ```
+
+### AI drafts
+
+An AI can turn one approved source snapshot into a Danak **draft**; it never publishes.
+`tools/danak_generate.py` asks the model for one idea with evidence, then a Persian draft
+with every factual claim mapped to verbatim snapshot excerpts, then an independent
+claim-by-claim check. Deterministic checks refuse invented evidence, numbers without
+evidence, links and any attempt to set provenance; source URL, publisher, licence,
+revision, concept key and reading time always come from the snapshot. The result is
+`drafts/<snapshotId>/review.md` for a person to decide on. See
+[`drafts/README.md`](drafts/README.md).
 
 ## Content and credits
 

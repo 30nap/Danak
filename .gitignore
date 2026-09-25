@@ -11,3 +11,5 @@ captures/
 *.aab
 __pycache__/
 _site/
+eval-out/
+_dry-run/

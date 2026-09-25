@@ -1,0 +1,7 @@
+# Editing this file runs the Model evaluation workflow (or run it by hand from the Actions tab).
+# It needs the provider's secret; without it the workflow does nothing.
+provider: anthropic          # anthropic | openai-compatible
+model: claude-opus-5         # writer (stages A and B)
+verifierModel:               # stage C; empty = same model. A different model makes the check more independent.
+baseUrl:                     # openai-compatible only
+effort:                      # anthropic only, optional: low | medium | high | xhigh | max

@@ -1,0 +1,114 @@
+name: Model evaluation
+
+# Runs the draft pipeline with a REAL model over the evaluation cases (evals/phase5-cases.yml:
+# the six Phase 4 snapshots) and uploads the drafts and a summary for a person to score.
+# Nothing is committed or published. It runs only by hand, or when evals/request.yml
+# changes, and does nothing (successfully) when the provider's secret is not configured.
+#
+# Secrets (Settings → Secrets and variables → Actions):
+#   ANTHROPIC_API_KEY   for provider anthropic
+#   DANAK_AI_API_KEY    for provider openai-compatible (hosted endpoints)
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: "anthropic or openai-compatible"
+        type: choice
+        options: [anthropic, openai-compatible]
+        default: anthropic
+      model:
+        description: "Model id for writing (stages A and B)"
+        required: true
+      verifier_model:
+        description: "Model id for verification (stage C); empty = same model"
+        required: false
+      base_url:
+        description: "openai-compatible only: https://…/v1"
+        required: false
+  push:
+    paths:
+      - "evals/request.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: model-eval
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    name: Evaluate a model on the six snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: pip install --quiet jsonschema pyyaml
+
+      - name: Settings
+        env:
+          IN_PROVIDER: ${{ inputs.provider }}
+          IN_MODEL: ${{ inputs.model }}
+          IN_VERIFIER: ${{ inputs.verifier_model }}
+          IN_BASE_URL: ${{ inputs.base_url }}
+        run: |
+          python3 - <<'PY'
+          import os, re, yaml
+          if os.environ.get("IN_MODEL"):
+              req = {"provider": os.environ["IN_PROVIDER"], "model": os.environ["IN_MODEL"],
+                     "verifierModel": os.environ.get("IN_VERIFIER"), "baseUrl": os.environ.get("IN_BASE_URL")}
+          else:
+              req = yaml.safe_load(open("evals/request.yml")) or {}
+          safe = re.compile(r"^[A-Za-z0-9._:/@+-]{1,200}$")
+          out = {"DANAK_AI_PROVIDER": req.get("provider"), "DANAK_AI_MODEL": req.get("model"),
+                 "DANAK_VERIFIER_MODEL": req.get("verifierModel"), "DANAK_AI_BASE_URL": req.get("baseUrl"),
+                 "DANAK_AI_EFFORT": req.get("effort")}
+          assert out["DANAK_AI_PROVIDER"] in ("anthropic", "openai-compatible"), "provider"
+          assert out["DANAK_AI_MODEL"], "model"
+          with open(os.environ["GITHUB_ENV"], "a") as env:
+              for k, v in out.items():
+                  if v:
+                      assert safe.match(str(v)), k
+                      env.write(f"{k}={v}\n")
+          PY
+
+      - name: Is the provider's secret configured?
+        id: secret
+        env:
+          HAS_ANTHROPIC: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+          HAS_OTHER: ${{ secrets.DANAK_AI_API_KEY != '' }}
+        run: |
+          if [ "$DANAK_AI_PROVIDER" = anthropic ] && [ "$HAS_ANTHROPIC" != true ]; then
+            echo "::notice::ANTHROPIC_API_KEY is not configured; nothing to evaluate."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          elif [ "$DANAK_AI_PROVIDER" = openai-compatible ] && [ "$HAS_OTHER" != true ]; then
+            echo "::notice::DANAK_AI_API_KEY is not configured; nothing to evaluate."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install
+        if: steps.secret.outputs.ready == 'true'
+        run: if [ "$DANAK_AI_PROVIDER" = anthropic ]; then pip install --quiet anthropic; fi
+
+      - name: Run the evaluation
+        if: steps.secret.outputs.ready == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DANAK_AI_API_KEY: ${{ secrets.DANAK_AI_API_KEY }}
+        run: python3 tools/danak_generate.py eval --out eval-out
+
+      - name: Summary
+        if: always() && steps.secret.outputs.ready == 'true'
+        run: test -f eval-out/summary.md && cat eval-out/summary.md >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Upload drafts and summary
+        if: always() && steps.secret.outputs.ready == 'true'
+        uses: actions/upload-artifact@v5
+        with:
+          name: model-eval
+          path: eval-out/
+          if-no-files-found: ignore

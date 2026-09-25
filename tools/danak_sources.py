@@ -751,10 +751,32 @@ def ingest_url(url, fetcher, policy, directory=SNAPSHOT_DIR, now=utc_now):
 
 # ============================================================================ validation
 
+def snapshot_validator():
+    schema = json.loads(SCHEMA_FILE.read_text(encoding="utf-8"))
+    return jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+
+
+def snapshot_problems(snapshot, name, validator=None):
+    """What is wrong with one snapshot: schema, id rule, content hash. name is its file stem."""
+    validator = validator or snapshot_validator()
+    errors = list(validator.iter_errors(snapshot))
+    problems = [f"{name}: {'/'.join(map(str, e.absolute_path)) or '(root)'}: {e.message}" for e in errors]
+    if errors:
+        return problems
+    if name != snapshot["snapshotId"]:
+        problems.append(f"{name}: file name does not match snapshotId")
+    if content_sha256(snapshot["content"]["blocks"]) != snapshot["derived"]["contentSha256"]:
+        problems.append(f"{name}: content does not match contentSha256")
+    if expected_snapshot_id(snapshot) != snapshot["snapshotId"]:
+        problems.append(f"{name}: snapshotId does not follow from its metadata")
+    if snapshot["derived"]["usableForDanak"] == bool(snapshot["derived"]["notUsableBecause"]):
+        problems.append(f"{name}: usableForDanak disagrees with notUsableBecause")
+    return problems
+
+
 def validate(directory=SNAPSHOT_DIR):
     """Every stored snapshot: schema, file name, id rule and content hash."""
-    schema = json.loads(SCHEMA_FILE.read_text(encoding="utf-8"))
-    validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
+    validator = snapshot_validator()
     problems, count = [], 0
     for path in sorted(pathlib.Path(directory).glob("*")):
         count += 1
@@ -766,18 +788,7 @@ def validate(directory=SNAPSHOT_DIR):
         except (UnicodeDecodeError, ValueError) as e:
             problems.append(f"{path.name}: not JSON ({e})")
             continue
-        errors = list(validator.iter_errors(snapshot))
-        problems += [f"{path.name}: {'/'.join(map(str, e.absolute_path)) or '(root)'}: {e.message}" for e in errors]
-        if errors:
-            continue
-        if path.stem != snapshot["snapshotId"]:
-            problems.append(f"{path.name}: file name does not match snapshotId")
-        if content_sha256(snapshot["content"]["blocks"]) != snapshot["derived"]["contentSha256"]:
-            problems.append(f"{path.name}: content does not match contentSha256")
-        if expected_snapshot_id(snapshot) != snapshot["snapshotId"]:
-            problems.append(f"{path.name}: snapshotId does not follow from its metadata")
-        if snapshot["derived"]["usableForDanak"] == bool(snapshot["derived"]["notUsableBecause"]):
-            problems.append(f"{path.name}: usableForDanak disagrees with notUsableBecause")
+        problems += [p.replace(path.stem, path.name, 1) for p in snapshot_problems(snapshot, path.stem, validator)]
     return count, problems
 
 
