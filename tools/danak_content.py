@@ -66,11 +66,17 @@ def load_sources(content, problems):
     data = yaml.safe_load((content / "sources.yml").read_text(encoding="utf-8")) or {}
     text, images = data.get("text") or [], data.get("images") or []
     for i, s in enumerate(text):
-        missing = [k for k in ("id", "publisher", "hosts", "license", "licenseUrl", "derivatives") if not s.get(k)]
+        missing = [k for k in ("id", "publisher", "hosts", "derivatives") if not s.get(k)]
         if missing:
             problems.append(Problem("sources", f"sources.yml text[{i}]", f"missing {', '.join(missing)}"))
         if s.get("derivatives") not in (None, "allowed", "share-alike", "none"):
             problems.append(Problem("sources", f"sources.yml text[{i}]", "derivatives must be allowed, share-alike or none"))
+        # A licence is optional (an unknown licence is valid metadata), but a name without
+        # its URL, or the reverse, is a typo.
+        if bool(s.get("license")) != bool(s.get("licenseUrl")):
+            problems.append(Problem("sources", f"sources.yml text[{i}]", "license and licenseUrl go together"))
+        if s.get("ingest", "web") not in ("wikipedia", "web"):
+            problems.append(Problem("sources", f"sources.yml text[{i}]", "ingest must be wikipedia or web"))
     for i, s in enumerate(images):
         missing = [k for k in ("id", "hosts", "pageUrlPrefix", "licenses") if not s.get(k)]
         if missing:
@@ -270,6 +276,9 @@ def check_source(danak, text_sources, problems):
         return
     if trusted.get("derivatives") not in ("allowed", "share-alike"):
         problems.append(Problem("license", rel, f"{trusted['id']} does not allow rewritten content"))
+    if not trusted.get("license"):
+        # Unknown is valid metadata for a source, never permission to publish from it.
+        problems.append(Problem("license", rel, f"{trusted['id']} has no known licence"))
     if source["publisher"] != trusted["publisher"]:
         problems.append(Problem("source-publisher", rel, f"publisher should be {trusted['publisher']!r}"))
     if trusted.get("license") and source.get("license") != trusted["license"]:

@@ -1,0 +1,53 @@
+name: Sources
+
+# Source snapshots are audit evidence: validated on every change, and never edited. They are
+# not part of the published site (see content.yml, which builds only from content/).
+
+on:
+  push:
+    paths:
+      - "sources/**"
+      - "content/sources.yml"
+      - "schema/source-snapshot-v1.schema.json"
+      - "tools/danak_sources.py"
+      - "tests/sources/**"
+      - ".github/workflows/sources.yml"
+  pull_request:
+    paths:
+      - "sources/**"
+      - "content/sources.yml"
+      - "schema/source-snapshot-v1.schema.json"
+      - "tools/danak_sources.py"
+      - "tests/sources/**"
+      - ".github/workflows/sources.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Snapshots valid and unchanged
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - run: pip install --quiet jsonschema pyyaml
+
+      - name: Ingestion tests (fixtures and a fake network only)
+        run: python3 -m unittest discover -s tests/sources -v
+
+      - name: Every snapshot matches the schema, its id and its hash
+        run: python3 tools/danak_sources.py validate
+
+      - name: Existing snapshots were only added to, never changed
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE" 2>/dev/null; then
+            echo "No earlier commit to compare with; skipping."
+            exit 0
+          fi
+          python3 tools/danak_sources.py check-immutable --base "$BASE"

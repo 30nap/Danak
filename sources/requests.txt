@@ -1,0 +1,12 @@
+# Sources to snapshot, one per line. Editing this file runs the Ingest sources workflow.
+#   wikipedia <fa|en> <title or https://<lang>.wikipedia.org/wiki/... URL>
+#   url <https URL of a page from a web source in content/sources.yml>
+#
+# First experiment (Phase 4): three Persian and three English articles. There is no approved
+# non-Wikipedia source in content/sources.yml yet, so there are no url lines.
+wikipedia fa فتوسنتز
+wikipedia fa کافئین
+wikipedia fa کهکشان راه شیری
+wikipedia en Mpemba effect
+wikipedia en Dunbar's number
+wikipedia en Placebo

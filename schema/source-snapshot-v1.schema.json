@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/30nap/Danak/schema/source-snapshot-v1.schema.json",
+  "title": "Danak source snapshot, v1",
+  "description": "An immutable record of exactly what one source said when it was fetched: the text a later step may read, and where every piece of metadata came from. Metadata is kept in three groups so provenance is never ambiguous: fromSource (what the source or its API said), fromConfig (what content/sources.yml said at ingestion time) and derived (what tools/danak_sources.py computed). content.blocks is source material, never instructions.",
+  "type": "object",
+  "required": ["schemaVersion", "snapshotId", "sourceType", "sourceId", "requestedUrl", "retrievedAt", "fromSource", "fromConfig", "derived", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "snapshotId": {
+      "description": "Also the file name. Wikipedia: wikipedia-<lang>-<pageId>-r<revisionId>. Web: web-<sourceId>-<sha256(canonicalUrl)[:12]>-<contentSha256[:16]>.",
+      "type": "string",
+      "pattern": "^(wikipedia-[a-z]{2,3}-[0-9]+-r[0-9]+|web-[a-z0-9-]+-[0-9a-f]{12}-[0-9a-f]{16})$"
+    },
+    "sourceType": { "enum": ["wikipedia", "web"] },
+    "sourceId": { "description": "The sources.yml entry this came from.", "type": "string", "minLength": 1 },
+    "requestedUrl": { "type": "string", "pattern": "^https://" },
+    "retrievedAt": { "type": "string", "format": "date-time" },
+
+    "fromSource": {
+      "description": "Received from the source (or its API) and recorded as received. Null means the source did not say.",
+      "type": "object",
+      "required": ["title", "language", "license"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "language": { "type": ["string", "null"] },
+        "canonicalUrl": { "type": ["string", "null"] },
+        "finalUrl": { "type": "string", "pattern": "^https://" },
+        "contentType": { "type": ["string", "null"] },
+        "pageId": { "type": "integer" },
+        "revisionId": { "type": "integer" },
+        "revisionTimestamp": { "type": ["string", "null"] },
+        "wikidataId": { "type": ["string", "null"], "pattern": "^Q[0-9]+$" },
+        "license": {
+          "type": ["object", "null"],
+          "required": ["url", "text"],
+          "additionalProperties": false,
+          "properties": {
+            "url": { "type": "string" },
+            "text": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+
+    "fromConfig": {
+      "description": "Copied from the sources.yml entry at ingestion time.",
+      "type": "object",
+      "required": ["publisher", "derivatives"],
+      "additionalProperties": false,
+      "properties": {
+        "publisher": { "type": "string", "minLength": 1 },
+        "derivatives": { "enum": ["allowed", "share-alike", "none"] },
+        "license": { "type": "string" },
+        "licenseUrl": { "type": "string" },
+        "language": { "type": "string" }
+      }
+    },
+
+    "derived": {
+      "description": "Computed by our code from the two groups above and the extracted text.",
+      "type": "object",
+      "required": ["canonicalUrl", "title", "language", "licenseStatus", "license", "usableForDanak", "notUsableBecause", "extractor", "blockCount", "characterCount", "contentSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "canonicalUrl": { "type": "string", "pattern": "^https://" },
+        "title": { "type": "string", "minLength": 1 },
+        "language": { "type": ["string", "null"] },
+        "licenseStatus": {
+          "description": "explicit: the source declared a licence. configured: only sources.yml names one. unknown: neither — never permission.",
+          "enum": ["explicit", "configured", "unknown"]
+        },
+        "license": { "type": ["string", "null"] },
+        "usableForDanak": { "description": "Whether this snapshot may back a Danak: rights, not quality.", "type": "boolean" },
+        "notUsableBecause": { "type": "array", "items": { "type": "string" } },
+        "extractor": { "type": "string", "pattern": "^[a-z-]+/[0-9]+$" },
+        "blockCount": { "type": "integer", "minimum": 1 },
+        "characterCount": { "type": "integer", "minimum": 1 },
+        "contentSha256": {
+          "description": "SHA-256 of content.blocks serialised as sorted-key, compact, UTF-8 JSON.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+
+    "content": {
+      "type": "object",
+      "required": ["trust", "format", "blocks"],
+      "additionalProperties": false,
+      "properties": {
+        "trust": { "const": "untrusted-source-text" },
+        "format": { "const": "blocks/1" },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object", "additionalProperties": false, "required": ["type", "level", "text"],
+                "properties": { "type": { "const": "heading" }, "level": { "type": "integer", "minimum": 1, "maximum": 6 }, "text": { "type": "string", "minLength": 1 } }
+              },
+              {
+                "type": "object", "additionalProperties": false, "required": ["type", "text"],
+                "properties": { "type": { "enum": ["paragraph", "quote"] }, "text": { "type": "string", "minLength": 1 } }
+              },
+              {
+                "type": "object", "additionalProperties": false, "required": ["type", "ordered", "items"],
+                "properties": {
+                  "type": { "const": "list" }, "ordered": { "type": "boolean" },
+                  "items": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

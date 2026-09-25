@@ -79,14 +79,21 @@ content/                   reviewed content, published to GitHub Pages (see cont
 ├── danaks/                one Danak per file, NNNN-<id>.json
 └── images/                hero photos
 
+sources/                   source snapshots: evidence for writing Danaks, never published
+├── requests.txt           sources to ingest next (see sources/README.md)
+└── snapshots/             one immutable snapshot per source revision
+
 schema/
 ├── danak-v1.schema.json   Danak / content pack format: the contract with the app
-└── index-v1.schema.json   published index format
+├── index-v1.schema.json   published index format
+└── source-snapshot-v1.schema.json   source snapshot format
 
 tests/content/             validator tests with valid and invalid fixtures
+tests/sources/             ingestion tests with fixtures and a fake network
 
 tools/
 ├── danak_content.py       validates content/, builds the static site, checks the app bundle
+├── danak_sources.py       snapshots trusted sources (Wikipedia, allowlisted pages)
 ├── check_links.py         verifies every source and photo-credit link
 ├── fetch_photos.py        downloads hero photos from Wikimedia Commons (CI only)
 └── photos.json            the chosen photo for each Danak
@@ -110,6 +117,10 @@ The debug APK, reports and screenshots are uploaded as workflow artifacts.
 | Validate and build | validator tests, validates `content/`, checks the app bundle against it, builds the static site |
 | Source links resolve | opens every source and photo-credit URL |
 | Publish to GitHub Pages | on the default branch only, after validation passes |
+
+`.github/workflows/sources.yml` validates source snapshots and rejects any change to an
+existing one; `.github/workflows/ingest.yml` snapshots the sources listed in
+`sources/requests.txt` when that file changes.
 
 `.github/workflows/photos.yml` runs only when `tools/photos.json` or the fetcher changes.
 

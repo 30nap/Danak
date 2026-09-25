@@ -1,0 +1,48 @@
+name: Ingest sources
+
+# Live ingestion, kept apart from CI: it talks to real sites, so it runs only when the list
+# of requested sources changes (or by hand). New snapshots are uploaded as an artifact and
+# printed into the log; a reviewer commits the ones worth keeping.
+
+on:
+  push:
+    paths:
+      - "sources/requests.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ingest:
+    name: Snapshot requested sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: pip install --quiet jsonschema pyyaml
+
+      - name: Ingest every request in sources/requests.txt
+        run: python3 tools/danak_sources.py batch sources/requests.txt
+
+      - name: New snapshots
+        if: always()
+        run: |
+          python3 tools/danak_sources.py validate
+          git status --porcelain --untracked-files=all sources/snapshots | awk '{print $2}' > new.txt
+          echo "$(wc -l < new.txt) new snapshot(s)"
+          while read -r f; do
+            python3 tools/danak_sources.py show "$(basename "$f" .json)" | head -40
+            echo "=====BEGIN $(basename "$f")====="
+            gzip -9c "$f" | base64 -w 0; echo
+            echo "=====END====="
+          done < new.txt
+
+      - name: Upload new snapshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: new-snapshots
+          path: sources/snapshots/
+          if-no-files-found: ignore

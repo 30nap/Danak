@@ -5,6 +5,13 @@
 # under `images`, under one of that entry's licences. tools/danak_content.py enforces all of
 # this; adding a source is a reviewed change to this file, never something a pipeline does.
 #
+# ingest: how tools/danak_sources.py snapshots this source
+#   wikipedia    through the MediaWiki APIs (pinned revision, Wikidata id, licence from the API)
+#   web          a single page fetched by explicit URL; never crawled
+#
+# license / licenseUrl: optional, always together. Without them the licence is unknown:
+#   such a source can be snapshotted for review, never used for a Danak.
+#
 # derivatives: what the licence allows Danak to do with the text
 #   allowed      rewriting and summarising are fine
 #   share-alike  allowed, and the Danak must be shared under the same licence
@@ -13,6 +20,8 @@ version: 1
 
 text:
   - id: wikipedia-fa
+    ingest: wikipedia
+    language: fa
     publisher: ویکی‌پدیا
     hosts: [fa.wikipedia.org]
     license: CC BY-SA 4.0
@@ -20,6 +29,8 @@ text:
     derivatives: share-alike
 
   - id: wikipedia-en
+    ingest: wikipedia
+    language: en
     publisher: ویکی‌پدیا (انگلیسی)
     hosts: [en.wikipedia.org]
     license: CC BY-SA 4.0

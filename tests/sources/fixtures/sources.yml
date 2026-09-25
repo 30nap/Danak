@@ -1,0 +1,40 @@
+# Test policy: the two Wikipedias as in content/sources.yml, plus three made-up web sources.
+version: 1
+text:
+  - id: wikipedia-fa
+    ingest: wikipedia
+    language: fa
+    publisher: ویکی‌پدیا
+    hosts: [fa.wikipedia.org]
+    license: CC BY-SA 4.0
+    licenseUrl: https://creativecommons.org/licenses/by-sa/4.0/
+    derivatives: share-alike
+  - id: wikipedia-en
+    ingest: wikipedia
+    language: en
+    publisher: ویکی‌پدیا (انگلیسی)
+    hosts: [en.wikipedia.org]
+    license: CC BY-SA 4.0
+    licenseUrl: https://creativecommons.org/licenses/by-sa/4.0/
+    derivatives: share-alike
+  - id: trusted-news
+    ingest: web
+    language: fa
+    publisher: خبرنامهٔ آزمایشی
+    hosts: [news.example.org, cdn.example.org]
+    license: CC BY 4.0
+    licenseUrl: https://creativecommons.org/licenses/by/4.0/
+    derivatives: allowed
+  - id: unknown-licence-blog
+    ingest: web
+    publisher: وبلاگ آزمایشی
+    hosts: [blog.example.net]
+    derivatives: allowed
+  - id: no-derivatives-press
+    ingest: web
+    publisher: نشریهٔ آزمایشی
+    hosts: [press.example.com]
+    license: All rights reserved
+    licenseUrl: https://press.example.com/terms
+    derivatives: none
+images: []

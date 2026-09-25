@@ -1,7 +1,7 @@
 {
-  "description": "sources.yml loses a required field.",
+  "description": "sources.yml has a licence name without its URL.",
   "expect": "sources",
   "write": {
-    "sources.yml": "version: 1\ntext:\n  - id: wikipedia-fa\n    publisher: ویکی‌پدیا\n    hosts: [fa.wikipedia.org]\n    derivatives: share-alike\nimages: []\n"
+    "sources.yml": "version: 1\ntext:\n  - id: wikipedia-fa\n    publisher: ویکی‌پدیا\n    hosts: [fa.wikipedia.org]\n    license: CC BY-SA 4.0\n    derivatives: share-alike\nimages: []\n"
   }
 }
